@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en" ng-app="newsyApp">
+  <head>
+    <meta charset="utf-8">
+    <title>Newsy</title>
+    <link rel="stylesheet" href="css/app.css"/>
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css" />
+  </head>
+  <body>
+
+    <header data-ng-include="'modules/header/header.html'" class="navbar navbar-fixed-top navbar-inverse ng-scope"></header>
+
+    <section class="content">
+      <section class="container">
+        <div ng-view></div>
+      </section>
+    </section>
+
+    <!-- dependencies -->
+    <script src="lib/angular/angular.js"></script>
+    <script src="lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="lib/angular-route/angular-route.min.js"></script>
+
+    <!-- application core -->
+    <script src="app.js"></script>
+    <script src="config.js"></script>
+
+    <!-- controllers -->
+    <script src="modules/header/headercontroller.js"></script>
+    <script src="modules/articles/allarticlescontroller.js"></script>
+    <script src="modules/articles/onearticlecontroller.js"></script>
+    <script src="modules/user/profile/profilecontroller.js"></script>
+    <script src="modules/user/login/logincontroller.js"></script>
+
+    <!-- services -->
+    <script src="modules/articles/articleservice.js"></script>
+    <script src="modules/user/userservice.js"></script>
+  </body>
+</html>

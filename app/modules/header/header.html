@@ -1,0 +1,30 @@
+<nav class="navbar navbar-inverse navbar-fixed-top ng-scope" role="navigation" ng-controller="HeaderController">
+  <div class="container-fluid">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="#">Newsy</a>
+  </div>
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <ul class="nav navbar-nav navbar-left">
+      <li class="active">
+        <a class="" href="#/">Tech</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li ng-hide="auth">
+        <a class="" href="#/signup">Signup</a></li>
+      <li ng-hide="auth">
+        <a class="" href="#/login">Login</a></li>
+      <li class="dropdown" ng-show="auth">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{user.name}}<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="" ng-click="userProfile()">Profile</a></li>
+          <li><a href="" ng-click="logout()">Signout</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav>
