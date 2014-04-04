@@ -8,5 +8,6 @@ var app = angular.module('newsyApp',
   , 'newsyApp.controllers.profile'
   , 'newsyApp.controllers.onearticle'
   , 'newsyApp.controllers.allarticles'
+  , 'newsyApp.controllers.newpost'
   , 'ui.bootstrap', 'ngRoute']
   )

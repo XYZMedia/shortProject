@@ -7,6 +7,7 @@ app.config(['$routeProvider',
     function($routeProvider) {
       $routeProvider
       .when('/',        { templateUrl: 'modules/articles/allarticles.html' })
+      .when('/newpost',  { templateUrl: 'modules/articles/newpost.html' })
       .when('/login',  { templateUrl: 'modules/user/login/login.html' })
       .when('/signup',  { templateUrl: 'modules/user/login/signup.html' })
       .otherwise({ redirectTo: '/' });

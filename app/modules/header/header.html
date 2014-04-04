@@ -1,36 +1,42 @@
 <nav class="navbar navbar-inverse navbar-fixed-top ng-scope" role="navigation" ng-controller="HeaderController">
   <div class="container-fluid">
+
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
         <span class="sr-only">Toggle navigation</span>
         <span class="glyphicon glyphicon-globe white"></span>
       </button>
       <a class="navbar-brand" href="#">Newsy</a>
     </div>
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+    <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-left">
         <li>
-          <a class="" href="#/">World News</a></li>
+          <a data-toggle="collapse" data-target=".navbar-collapse" href="#">World News</a></li>
         <li class="active">
-          <a class="" href="#/">Tech</a></li>
+          <a data-toggle="collapse" data-target=".navbar-collapse" href="#">Tech</a></li>
         <li>
-          <a class="" href="#/">Science</a></li>
+          <a data-toggle="collapse" data-target=".navbar-collapse" href="#">Science</a></li>
         <li>
-          <a class="" href="#/">Business</a></li>
+          <a data-toggle="collapse" data-target=".navbar-collapse" href="#">Business</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li ng-hide="auth">
-          <a class="" href="#/signup">Signup</a></li>
+          <a data-toggle="collapse" data-target=".navbar-collapse" href="#/newpost">Post</a></li>
         <li ng-hide="auth">
-          <a class="" href="#/login">Login</a></li>
+          <a data-toggle="collapse" data-target=".navbar-collapse" href="#/signup">Signup</a></li>
+        <li ng-hide="auth">
+          <a data-toggle="collapse" data-target=".navbar-collapse" href="#/login">Login</a></li>
         <li class="dropdown" ng-show="auth">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{user.name}}<b class="caret"></b></a>
           <ul class="dropdown-menu">
+            <li><a href="" ng-click="newPost()">Add a post</a></li>
             <li><a href="" ng-click="userProfile()">Profile</a></li>
             <li><a href="" ng-click="logout()">Signout</a></li>
           </ul>
         </li>
       </ul>
     </div>
+
   </div>
 </nav>
