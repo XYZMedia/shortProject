@@ -1,3 +1,7 @@
+.white, .white a {
+  color: #fff;
+}
+
 .content {
   margin-top: 50px;
   width: 100%;
