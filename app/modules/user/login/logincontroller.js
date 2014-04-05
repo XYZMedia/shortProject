@@ -24,4 +24,3 @@ angular.module('newsyApp.controllers.login', ['newsyApp.services.user'])
         });
       };
     }])
-  

@@ -9,11 +9,11 @@
     exports.userRoles = userRoles;
     
     exports.accessLevels = {
-        public: userRoles.public || // 111
-                userRoles.user   ||
+        public: userRoles.public | // 111
+                userRoles.user   |
                 userRoles.admin,   
         anon:   userRoles.public,  // 001
-        user:   userRoles.user ||   // 110
+        user:   userRoles.user |   // 110
                 userRoles.admin,                    
         admin:  userRoles.admin    // 100
     };
