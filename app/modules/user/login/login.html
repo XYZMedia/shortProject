@@ -1,5 +1,15 @@
-implement a modal
-
-forms/inputs
-nest the input group inside of the form group
-play with class="form-control"
+<div class="row" data-ng-controller="LoginController">
+  <h1>Login</h1>
+    <form role="form">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" class="form-control" ng-model="username">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="text" class="form-control" ng-model="password">
+      </div>
+      <button type="submit" class="btn btn-info" ng-click="login()">Login</button>
+    </form>
+  <br>
+</div>

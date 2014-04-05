@@ -11,15 +11,10 @@
 
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-left">
-        <li>
-          <a data-toggle="collapse" data-target=".navbar-collapse" href="#">World News</a></li>
-        <li class="active">
-          <a data-toggle="collapse" data-target=".navbar-collapse" href="#">Tech</a></li>
-        <li>
-          <a data-toggle="collapse" data-target=".navbar-collapse" href="#">Science</a></li>
-        <li>
-          <a data-toggle="collapse" data-target=".navbar-collapse" href="#">Business</a></li>
+        <li data-ng-repeat="entry in navbarEntries" data-ng-class="{ active: entry.isActive }">
+          <a data-toggle="collapse" data-target=".navbar-collapse" href="#{{entry.link}}">{{entry.title}}</a></li>
       </ul>
+      
       <ul class="nav navbar-nav navbar-right">
         <li ng-hide="auth">
           <a data-toggle="collapse" data-target=".navbar-collapse" href="#/newpost">Post</a></li>

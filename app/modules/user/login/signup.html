@@ -1,1 +1,19 @@
-implement a modal
+<div class="row" data-ng-controller="LoginController">
+  <h1>Sign up</h1>
+    <form role="form">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="text" class="form-control" ng-model="email">
+      </div>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" class="form-control" ng-model="username">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="text" class="form-control" ng-model="password">
+      </div>
+      <button type="submit" class="btn btn-info" ng-click="signup()">Create account</button>
+    </form>
+  <br>
+</div>
