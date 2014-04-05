@@ -4,7 +4,7 @@
 angular.module('newsyApp.config', [])
 
 app.config(['$routeProvider', 
-    function($routeProvider) {
+    function($routeProvider, $locationProvider) {
       $routeProvider
       .when('/',        { templateUrl: 'modules/articles/allarticles.html' })
       //consolidate all routes to use location variables
@@ -17,7 +17,33 @@ app.config(['$routeProvider',
       .when('/login',  { templateUrl: 'modules/user/login/login.html' })
       .when('/signup',  { templateUrl: 'modules/user/login/signup.html' })
       .otherwise({ redirectTo: '/' });
+
+   var access = routingConfig.accessLevels;
+
+    $routeProvider.when('/register',
+        {
+            templateUrl:    'partials/register',
+            controller:     LoginController,
+            access:         access.anon
+        });
+    $routeProvider.when('/private',
+        {
+            templateUrl:    'partials/private',
+            controller:     PrivateCtrl,
+            access:         access.user
+        });
+    $routeProvider.when('/admin',
+        {
+            templateUrl:    'partials/admin',
+            controller:     AdminCtrl,
+            access:         access.admin
+        });
+
+
+
     }])
+
+
   
   // establish user authentication
   // .run(['angularFireAuth', 'FBURL', '$rootScope', 
