@@ -10,6 +10,15 @@
   width: 100%;
 }
 
+.homepageArticle {
+  margin-bottom: 15px;
+}
+
+.homepageArticle p {
+  font-size: 10px;
+  margin:0;
+}
+
 /*=======Contributor styling=======*/
 .contributorSection {
   float:right;
