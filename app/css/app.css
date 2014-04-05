@@ -1,8 +1,72 @@
+/*=======Homepage styling=======*/
 .white, .white a {
   color: #fff;
 }
 
+/*=======All articles styling=======*/
 .content {
-  margin-top: 50px;
+  margin-top: 70px;
+  margin-bottom: 50px;
   width: 100%;
+}
+
+/*=======Contributor styling=======*/
+.contributorSection {
+  float:right;
+}
+
+.contributorDiv{
+  float:left;
+  margin-bottom: 5px
+}
+
+.contributorImg {
+  height: 45px;
+  width: 40px;
+  float:left;
+}
+
+.contributorTitle{
+  float:left;
+  margin:1px;
+}
+
+.contributorStats{
+  float:left;
+  margin:2px;
+}
+
+/*=======Single article styling=======*/
+.headerSection{
+  float:left;
+  margin-bottom: 10px;
+}
+
+.articleHeader{
+}
+.articleHeader h2, h4{
+  margin-top: 10px
+}
+
+.articleHeader p {
+  font-size: 10px;
+  margin:0;
+}
+
+.articleContent{
+  float:left;
+  padding-right: 
+}
+
+.articleImg {
+  max-width: 30%;
+  max-height: 250px;
+  float:left;
+}
+
+.articleHeader {
+  margin-top: -10px;
+  padding-left: 10px;
+  max-width: 65%;
+  float:left;
 }

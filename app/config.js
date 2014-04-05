@@ -7,9 +7,11 @@ app.config(['$routeProvider',
     function($routeProvider) {
       $routeProvider
       .when('/',        { templateUrl: 'modules/articles/allarticles.html' })
+      //consolidate all routes to use location variables
       .when('/breakingnews',        { templateUrl: 'modules/articles/allarticles.html' })
       .when('/tech',        { templateUrl: 'modules/articles/allarticles.html' })
       .when('/science',        { templateUrl: 'modules/articles/allarticles.html' })
+      .when('/science/article1',        { templateUrl: 'modules/articles/onearticle.html' })
       .when('/business',        { templateUrl: 'modules/articles/allarticles.html' })
       .when('/newpost',  { templateUrl: 'modules/articles/newpost.html' })
       .when('/login',  { templateUrl: 'modules/user/login/login.html' })
