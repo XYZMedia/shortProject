@@ -5,39 +5,93 @@ angular.module('newsyApp.config', [])
 
 app.config(['$routeProvider', 
     function($routeProvider, $locationProvider) {
+    
+      var access = routingConfig.accessLevels;
+      
       $routeProvider
-      .when('/',        { templateUrl: 'modules/articles/allarticles.html' })
+      .when('/',
+              { 
+                templateUrl: 'modules/articles/allarticles.html',
+                access: access.anon
+              }
+      )
       //consolidate all routes to use location variables
-      .when('/breakingnews',        { templateUrl: 'modules/articles/allarticles.html' })
-      .when('/tech',        { templateUrl: 'modules/articles/allarticles.html' })
-      .when('/science',        { templateUrl: 'modules/articles/allarticles.html' })
-      .when('/science/article1',        { templateUrl: 'modules/articles/onearticle.html' })
-      .when('/business',        { templateUrl: 'modules/articles/allarticles.html' })
-      .when('/newpost',  { templateUrl: 'modules/articles/newpost.html' })
-      .when('/login',  { templateUrl: 'modules/user/login/login.html' })
-      .when('/signup',  { templateUrl: 'modules/user/login/signup.html' })
+      
+      .when('/breakingnews',
+              {
+               templateUrl: 'modules/articles/allarticles.html',
+               access: access.anon
+              }
+      )
+      
+      .when('/tech',
+              { 
+                templateUrl: 'modules/articles/allarticles.html',
+                access: access.anon
+              }
+      )
+      
+      .when('/science',
+              {
+               templateUrl: 'modules/articles/allarticles.html',
+               access: access.anon
+              }
+      )
+      
+      .when('/science/article1',
+              { 
+                templateUrl: 'modules/articles/onearticle.html',
+                access: access.anon
+              }
+      )
+
+      .when('/business',
+              {
+               templateUrl: 'modules/articles/allarticles.html',
+               access: access.anon
+              }
+      )
+
+      .when('/newpost',
+              {
+               templateUrl: 'modules/articles/newpost.html',
+               access: access.user
+              }
+      )
+
+      .when('/login',
+              { 
+                templateUrl: 'modules/user/login/login.html',
+                access: access.anon
+               }
+      )
+
+      .when('/signup',
+             {
+              templateUrl: 'modules/user/login/signup.html',
+              access: access.anon
+             }
+      )
+      
       .otherwise({ redirectTo: '/' });
 
-   var access = routingConfig.accessLevels;
 
-    $routeProvider.when('/register',
-        {
-            templateUrl:    'partials/register',
-            controller:     LoginController,
-            access:         access.anon
-        });
-    $routeProvider.when('/private',
-        {
-            templateUrl:    'partials/private',
-            controller:     PrivateCtrl,
-            access:         access.user
-        });
-    $routeProvider.when('/admin',
-        {
-            templateUrl:    'partials/admin',
-            controller:     AdminCtrl,
-            access:         access.admin
-        });
+
+
+
+
+    // $routeProvider.when('/private',
+    //     {
+    //         templateUrl:    'partials/private',
+    //         controller:     PrivateCtrl,
+    //         access:         access.user
+    //     });
+    // $routeProvider.when('/admin',
+    //     {
+    //         templateUrl:    'partials/admin',
+    //         controller:     AdminCtrl,
+    //         access:         access.admin
+    //     });
 
 
 
