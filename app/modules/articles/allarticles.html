@@ -1,28 +1,11 @@
-<div class="row" data-ng-controller="AllArticlesController">
-  <div class="row" ng-click="test()">
-    <img class="col-md-4 col-sm-6 col-xs-12" src="http://upload.wikimedia.org/wikipedia/commons/thumb/d/da/SF_From_Marin_Highlands3.jpg/1599px-SF_From_Marin_Highlands3.jpg" />
-    <div class="col-md-8 col-sm-6 col-xs-12">
-      <h2>Article 1</h2>
-      <h4>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h4>
-      <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<div class="row" data-ng-controller="AllArticlesController" ng-init="sampleData()">
+  <div class="row" ng-click="test()" ng-repeat="data in articles">
+    <img class="col-md-4 col-sm-6 col-xs-12" ng-src={{data.article.image}}>
+    <div class="col-md-8 col-sm-6 col-xs-12 articleHeader">
+      <h2>{{data.postTitle}}</h2>
+      <h4>{{data.article.title}}</h4>
+      <h6>{{data.postSource}}</h6>
+      <p ng-repeat="paragraph in articles.article.paragraphs">{{paragraph.currentText}}</p>
     </div>
   </div>
-
-  <div class="row">
-    <img class="col-md-4 col-sm-6 col-xs-12" src="http://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/San_Francisco_%28Evening%29.jpg/1600px-San_Francisco_%28Evening%29.jpg" />
-    <div class="col-md-8 col-sm-6 col-xs-12">
-      <h2>Article 2</h2>
-      <h4>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h4>
-      <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-    </div>
-  </div>
-
-  <div class="row">
-    <img class="col-md-4 col-sm-6 col-xs-12" src="http://upload.wikimedia.org/wikipedia/en/7/75/DowntownSF.jpg" />
-    <div class="col-md-8 col-sm-6 col-xs-12">
-      <h2>Article 3</h2>
-      <h4>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h4>
-      <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-    </div>
-  </div>
-</div>    
+</div>
