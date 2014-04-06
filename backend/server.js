@@ -8,7 +8,7 @@ app.configure(function() {
 
   app.use(express.bodyParser());
 
-  app.use(express.static(path.join(__dirname, '../frontend')));
+  app.use(express.static(path.join(__dirname, '../app')));
   app.listen(8080);
   console.log('Listening on port 8080');
 });
