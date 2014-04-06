@@ -4,8 +4,8 @@ angular.module('newsyApp.controllers.allarticles', ['newsyApp.services.articles'
   .controller('AllArticlesController', ['$scope','$routeParams', '$location',
     function($scope, $routeParams, $location, Articles) {
     
-      $scope.test = function(){
-        $location.path('/science/article1');
+      $scope.test = function(index){
+        console.log($scope.articles[index].poster)
       }
 
       $scope.findArticles = function() {
@@ -18,7 +18,7 @@ angular.module('newsyApp.controllers.allarticles', ['newsyApp.services.articles'
 
       $scope.sampleData = function(){
         $scope.articles = [{
-          "poster"    : "Cleveland Brown", 
+          "poster"    : "Cleveland Brown1", 
           "postTitle"     : "Steve Jobs and Pixar",
           "postSource": "http://gizmodo.com/how-steve-jobs-passion-shaped-pixar-into-an-oscar-winn-1557613093", 
           "article"   : {
@@ -52,7 +52,7 @@ angular.module('newsyApp.controllers.allarticles', ['newsyApp.services.articles'
             }] 
           }
         },{
-          "poster"    : "Cleveland Brown", 
+          "poster"    : "Cleveland Brown2", 
           "postTitle"     : "Steve Jobs and Pixar",
           "postSource": "http://gizmodo.com/how-steve-jobs-passion-shaped-pixar-into-an-oscar-winn-1557613093", 
           "article"   : {
@@ -86,7 +86,7 @@ angular.module('newsyApp.controllers.allarticles', ['newsyApp.services.articles'
             }] 
           }
         },{
-          "poster"    : "Cleveland Brown", 
+          "poster"    : "Cleveland Brown3", 
           "postTitle"     : "Steve Jobs and Pixar",
           "postSource": "http://gizmodo.com/how-steve-jobs-passion-shaped-pixar-into-an-oscar-winn-1557613093", 
           "article"   : {
