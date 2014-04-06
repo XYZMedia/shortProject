@@ -1,5 +1,5 @@
 <div class="row" data-ng-controller="AllArticlesController" ng-init="sampleData()">
-  <div class="row homepageArticle" ng-click="test()" ng-repeat="data in articles">
+  <div class="row homepageArticle" ng-click="test($index)" ng-repeat="data in articles">
     <img class="col-md-4 col-sm-6 col-xs-12" ng-src={{data.article.image}}>
     <div class="col-md-8 col-sm-6 col-xs-12 articleHeader">
       <h2>{{data.postTitle}}</h2>
