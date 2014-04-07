@@ -5,6 +5,7 @@ angular.module('newsyApp.controllers.allarticles', ['newsyApp.services.articles'
     function($scope, $routeParams, $location, Articles) {
     
       $scope.test = function(index){
+        console.log(index)
         console.log($scope.articles[index].poster)
       }
 
