@@ -1,14 +1,17 @@
 'use strict';
  
 angular.module('newsyApp.services.articles', [])
-  .factory('Articles', ['$location', 
+  .factory('Articles', ['$location',
     function($location) {
       return {
         collection: function(cb) {
-          // return all articles
+          // $http.get('URL')
         }
+
       , find: function(articleId) {
-          // return one article
+          // $http.get('URL', {
+          //   params.articleId = articleId
+          // })
         }
     }
   }])
