@@ -13,6 +13,24 @@ app.configure(function() {
   console.log('Listening on port 8080');
 });
 
+app.get('/', function(req, res){
+  console.log('inside auth');
+    var role = routingConfig.userRoles.public,
+        username = '';
+
+    if(req.user) {
+        role = req.user.role;
+        username = req.user.username;
+    }
+
+    res.cookie('user', JSON.stringify({
+        'username': username,
+        'role': role
+    }));
+
+    res.render('index');
+});
+
 app.get('/newestheadlines', handler.newestHeadlinesGet);
 // app.options('/newestheadlines', handler.newestHeadOptions);
 

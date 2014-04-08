@@ -2,8 +2,6 @@
 angular.module('newsyApp')  
   .factory('Auth', function($http, $rootScope, $cookieStore){
 
-    // ...
-
     $rootScope.accessLevels = accessLevels;
     $rootScope.userRoles = userRoles;
 

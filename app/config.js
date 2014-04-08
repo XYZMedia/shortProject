@@ -1,9 +1,9 @@
 'use strict';
 
 // Declare app level module which depends on filters, and services
-angular.module('newsyApp.config', [])
+angular.module('newsyApp.config', ['ngCookies'])
 
-app.config(['$routeProvider', 
+app.config(['$routeProvider', '$locationProvider',
     function($routeProvider, $locationProvider) {
     
       var access = routingConfig.accessLevels;
