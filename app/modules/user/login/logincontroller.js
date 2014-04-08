@@ -16,6 +16,10 @@ angular.module('newsyApp.controllers.login', ['newsyApp.services.user'])
       // $scope.pass = null;
       // $scope.name = null;
 
+      $scope.signup = function(callback) {
+        userService.signup($scope.email, $scope.username, $scope.password);
+      };
+
       $scope.login = function(callback) {
         console.log($scope.username)
         $scope.err = null;
