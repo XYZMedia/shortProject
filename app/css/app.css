@@ -62,9 +62,15 @@
   margin:0;
 }
 
-.articleContent{
-  float:left;
-  padding-right: 
+.articleContent {
+  margin-bottom: 5px;
+}
+.articleContent p {
+  margin-bottom: 0;
+}
+
+.editCount {
+  font-size: 12px;
 }
 
 .articleImg {
@@ -78,4 +84,26 @@
   padding-left: 10px;
   max-width: 65%;
   float:left;
+}
+
+/*=======Modal styling=======*/
+#right h6, a {
+  font-size: 12px;
+}
+
+#left {
+  width:45px;
+  float:left;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+#up {
+  color:green;
+  padding-top: 50px
+}
+
+#down {
+  color:red;
+  margin-bottom: 0;
 }
