@@ -98,6 +98,7 @@ app.config(['$routeProvider',
     }])
 
 
+
   
   // establish user authentication
   // .run(['angularFireAuth', 'FBURL', '$rootScope', 
