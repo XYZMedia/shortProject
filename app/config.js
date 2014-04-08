@@ -1,7 +1,7 @@
 'use strict';
 
 // Declare app level module which depends on filters, and services
-angular.module('newsyApp.config', ['ngCookies'])
+angular.module('newsyApp.config', [])
 
 app.config(['$routeProvider', '$locationProvider',
     function($routeProvider, $locationProvider) {
@@ -74,6 +74,26 @@ app.config(['$routeProvider', '$locationProvider',
       )
       
       .otherwise({ redirectTo: '/' });
+
+app.run(['$rootScope', '$state', 'userService', function ($rootScope, $state, userService) {
+
+    $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
+        if (!Auth.authorize(toState.data.access)) {
+            $rootScope.error = "Seems like you tried accessing a route you don't have access to...";
+            event.preventDefault();
+            
+            if(fromState.url === '^') {
+                if(Auth.isLoggedIn()) {
+                    $state.go('user.home');
+                } else {
+                    $rootScope.error = null;
+                    $state.go('anon.login');
+                }
+            }
+        }
+    });
+
+}]);
 
 
 

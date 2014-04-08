@@ -6,18 +6,28 @@ angular.module('newsyApp.services.user', [])
       
     var accessLevels = routingConfig.accessLevels,
         userRoles = routingConfig.userRoles,
-        currentUser = $cookieStore.get('user');
+        currentUser = $cookieStore.get('user')|| { username: '', role: userRoles.public };
 
     $rootScope.accessLevels = accessLevels;
     $rootScope.userRoles = userRoles;
 
       return {
-        login: function(email, pass, redirect, callback) {
+        authorize: function(accessLevel, role){
+          if(role === undefined){
+            role - currentUser.role;
+          }
+          return accessLevel.bitMask & role.bitMask;
+        },
+        
+        login: function(email, username, password) {
+          var user = {
+            username: username,
+
+          }
           //send login request to server
-            $http.get(redirect, email).success(function(email){
-              $rootScope.user = email;
-              success(email);
-            }).error(function(){console.log('ef')});
+            $http.post('/login', email).success(function(email){
+              console.log(email + username + password)
+            });
         },
 
         logout: function(redirectPath) {

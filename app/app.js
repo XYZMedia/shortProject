@@ -9,5 +9,7 @@ var app = angular.module('newsyApp',
   , 'newsyApp.controllers.onearticle'
   , 'newsyApp.controllers.allarticles'
   , 'newsyApp.controllers.newpost'
-  , 'ui.bootstrap', 'ngRoute']
+  , 'ui.bootstrap'
+  ,'ngCookies'
+  ,'ngRoute']
   )
