@@ -4,6 +4,7 @@
 }
 
 /*=======All articles styling=======*/
+
 .content {
   margin-top: 70px;
   margin-bottom: 50px;
@@ -20,6 +21,7 @@
 }
 
 /*=======Contributor styling=======*/
+
 .contributorSection {
   float:right;
 }
@@ -46,6 +48,7 @@
 }
 
 /*=======Single article styling=======*/
+
 .headerSection{
   float:left;
   margin-bottom: 10px;
@@ -87,6 +90,15 @@
 }
 
 /*=======Modal styling=======*/
+.modal-header {
+  box-shadow: 0 2px 2px #aaaaaa;
+}
+
+.modal-body {
+  height: 400px;
+  overflow: auto;
+}
+
 #right h6, a {
   font-size: 12px;
 }
