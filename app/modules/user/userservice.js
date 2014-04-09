@@ -50,6 +50,7 @@ angular.module('newsyApp.services.user', [])
           
           $http.post('/login', userInfo)
             .success(function(res){ // res contains userInfo with updated role
+              console.log("success login");
               $rootScope.currentUser = res;
               console.log($rootScope.currentUser);
               $location.path('/')
