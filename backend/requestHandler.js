@@ -102,23 +102,51 @@ exports.login = function(req, res){
 
 
 
+exports.createArticle = function(req, res) {
+  var url = req.body.articleUrl;
+  var apiKey = 'c6da1b5b8fed3a1501866f95ff8fd91c';
 
-// Cannot complete until Will gets Scrape API to work
-// The POST object is at the end of this page
-exports.articlePost = function(req, res) {
-  var doc = null; // need to include doc from form
-                  // need to add redirect on sucessful save
-  DB.collection('posts').insert(doc, function(err, doc) {
-    if(err) throw err;
-    
-    console.log("Document being inserted: ", doc);
-    res.send(200, doc);
-    DB.close();
+  request('http://api.diffbot.com/v2/article?token=' + apiKey + '&url=' + url, function(error, response, body){
+    var obj = JSON.parse(body);
+    var cho = obj.text.split(/[\r\n]/g);
+        
+    var doc = {
+      poster    : "current_user", 
+      postTitle : "",
+      postSource: obj.url, 
+      article   : {
+        title     : obj.title,
+        image     : obj.images.url,
+        paragraphs: []
+      },
+      comments   : [{
+        commentor : "",
+        comment   : ""
+      }] 
+    };
+
+    for (var i = 0; i < cho.length; i++) {
+      var paragraph = {
+        currentText : cho[i],
+        proposedText: [{
+          editor: "", 
+          text  : "",
+          vote  : 0 
+        }] 
+      }
+
+      doc.article.paragraphs.push(paragraph);
+    }
+
+    DB.collection('posts').insert(doc, function(error, inserted) {
+      res.send(200, inserted);
+      DB.close();
+    });     
   });
 };
 
 // This function needs to eventually limit the number of documents being retrieved and sort those documents
-exports.newestHeadlinesGet = function(req, res) {
+exports.articles = function(req, res) {
   DB.collection('posts').find({}).toArray(function(err, docs) {
     if(err) throw err;
     
@@ -128,7 +156,18 @@ exports.newestHeadlinesGet = function(req, res) {
   });
 };
 
+exports.getArticle = function(req, res) {
+  var query = { '_id' : req.params.id };
+  DB.collection('posts').findOne(query, function(err, doc) {
+    if(err) throw err;
+    
+    console.log("Collection being requested: ", doc);
+    res.send(200, doc);
+    DB.close();
+  });
+};
 
+  
 exports.newestHeadlinesPost = function(req, res) {
 
 };
@@ -151,41 +190,4 @@ exports.newestHeadlinesPost = function(req, res) {
 //     return db.close();
 //   });
 // };
-
-
-// Scrape object
-// {
-//   poster    : current_user, 
-//   postTitle : input.text.val(), 
-//   postSource: scrapped.url, 
-//   article   : {
-//     title   : scraped.title,
-//     image   : scrapped.images[0].url,
-//     p1: {
-//       currentText : scrapped.text,
-//       proposedText: [{
-//         editor: "", 
-//         text  : "",
-//         vote  : ""  
-//       }] 
-//     }
-//   },
-//   comments  : [{
-//     commentor: "",
-//     comment  : ""
-//   }] 
-// }
-
-exports.articleGet = function(req, res) {
-  var url = 'http://www.huffingtonpost.com/2014/04/04/mental-health-fort-hood-shooting-factor_n_5093568.html';
-  var apiKey = 'c6da1b5b8fed3a1501866f95ff8fd91c';
-
-  request('http://api.diffbot.com/v2/article?token=' + apiKey + '&url=' + url, function(error, response, body){
-
-    if (!error && response.statusCode == 200) {
-      res.send(200, body);
-    }
-   });
-
-};
 

@@ -1,4 +1,4 @@
-<div data-ng-controller="OneArticleController">
+<div data-ng-controller="OneArticleController" ng-init="sampleData()">
 
 <!-- Main Article section -->
   <div class="col-md-10 col-sm-8 col-xs-12">
@@ -14,8 +14,9 @@
       </div>
     </div>
     <!-- Article content section -->
-    <div class="articleContent text-justify">
-      <p> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <div ng-repeat="paragraph in sampleData" class="articleContent text-justify">
+      <p ng-click="editParagraph(this.paragraph)">{{paragraph}}</p>
+      <p class="editCount"><b><em>Proposed edits: 3</em></b></p>
     </div>
   </div>
 
@@ -38,8 +39,33 @@
       <h6 class="contributorStats"># of edits: 1</h6>
     </div>
   </div>
-</div>
-<!-- 
-use a popover for editing
 
-Make a paragraph stand out by adding .lead. -->
+
+<!-- Script for creating a modal -->
+  <script type="text/ng-template" id="myModalContent.html">
+      <div class="modal-header text-justify">
+        <h5>Current Text:</h5>
+        <p>{{currentText}}</p>
+      </div>
+      <div class="modal-body text-justify">
+        <div ng-repeat="item in items">
+          <div id="left">
+            <img class="contributorImg" src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/960px-President_Barack_Obama.jpg">
+            <p id="up"><span ng-click="voteUp()" class="glyphicon glyphicon-circle-arrow-up"</span>127</p>
+            <p id="down"><span ng-click="voteDown()" class="glyphicon glyphicon-circle-arrow-down"</span>40</p>
+          </div>
+          <div id="right">
+            <div>
+              <h6>Edit proposed by: <a href="">POTUS</a></h6>
+              <p>{{item}}</p>
+            </div>
+          </div>
+          <hr>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="ok()">OK</button>
+        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+      </div>
+  </script>
+</div>
