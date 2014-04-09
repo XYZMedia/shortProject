@@ -108,7 +108,18 @@ exports.articles = function(req, res) {
   });
 };
 
+exports.getArticle = function(req, res) {
+  var query = { '_id' : req.params.id };
+  DB.collection('posts').findOne(query, function(err, doc) {
+    if(err) throw err;
+    
+    console.log("Collection being requested: ", doc);
+    res.send(200, doc);
+    DB.close();
+  });
+};
 
+  
 exports.newestHeadlinesPost = function(req, res) {
 
 };
@@ -131,41 +142,4 @@ exports.newestHeadlinesPost = function(req, res) {
 //     return db.close();
 //   });
 // };
-
-
-// Scrape object
-// {
-//   poster    : current_user, 
-//   postTitle : input.text.val(), 
-//   postSource: scrapped.url, 
-//   article   : {
-//     title   : scraped.title,
-//     image   : scrapped.images[0].url,
-//     p1: {
-//       currentText : scrapped.text,
-//       proposedText: [{
-//         editor: "", 
-//         text  : "",
-//         vote  : ""  
-//       }] 
-//     }
-//   },
-//   comments  : [{
-//     commentor: "",
-//     comment  : ""
-//   }] 
-// }
-
-exports.articleGet = function(req, res) {
-  var url = 'http://www.huffingtonpost.com/2014/04/04/mental-health-fort-hood-shooting-factor_n_5093568.html';
-  var apiKey = 'c6da1b5b8fed3a1501866f95ff8fd91c';
-
-  request('http://api.diffbot.com/v2/article?token=' + apiKey + '&url=' + url, function(error, response, body){
-
-    if (!error && response.statusCode == 200) {
-      res.send(200, body);
-    }
-   });
-
-};
 
