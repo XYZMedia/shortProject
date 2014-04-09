@@ -54,17 +54,46 @@ var headers = {
   //"Content-Type": "text/html"
 };
 
-// Cannot complete until Will gets Scrape API to work
-// The POST object is at the end of this page
-exports.articlePost = function(req, res) {
-  var doc = null; // need to include doc from form
-                  // need to add redirect on sucessful save
-  DB.collection('posts').insert(doc, function(err, doc) {
-    if(err) throw err;
-    
-    console.log("Document being inserted: ", doc);
-    res.send(200, doc);
-    DB.close();
+exports.createArticle = function(req, res) {
+  var url = req.body.articleUrl;
+  var apiKey = 'c6da1b5b8fed3a1501866f95ff8fd91c';
+
+  request('http://api.diffbot.com/v2/article?token=' + apiKey + '&url=' + url, function(error, response, body){
+    var obj = JSON.parse(body);
+    var cho = obj.text.split(/[\r\n]/g);
+        
+    var doc = {
+      poster    : "current_user", 
+      postTitle : "",
+      postSource: obj.url, 
+      article   : {
+        title     : obj.title,
+        image     : obj.images.url,
+        paragraphs: []
+      },
+      comments   : [{
+        commentor : "",
+        comment   : ""
+      }] 
+    };
+
+    for (var i = 0; i < cho.length; i++) {
+      var paragraph = {
+        currentText : cho[i],
+        proposedText: [{
+          editor: "", 
+          text  : "",
+          vote  : 0 
+        }] 
+      }
+
+      doc.article.paragraphs.push(paragraph);
+    }
+
+    DB.collection('posts').insert(doc, function(error, inserted) {
+      res.send(200, inserted);
+      DB.close();
+    });     
   });
 };
 

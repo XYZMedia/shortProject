@@ -16,6 +16,6 @@ app.configure(function() {
 app.get('/newestheadlines', handler.newestHeadlinesGet);
 // app.options('/newestheadlines', handler.newestHeadOptions);
 
-app.post('/article', handler.articlePost);
+app.post('/createArticle', handler.createArticle);
 app.get('/articleGet', handler.articleGet);
 // app.options('/article', handler.articleOptions);
