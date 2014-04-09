@@ -12,9 +12,7 @@ angular.module('newsyApp.controllers.login', ['newsyApp.services.user'])
       //   $location.path('/');
       // })
 
-      // $scope.email = null;
-      // $scope.pass = null;
-      // $scope.name = null;
+  //EUGENECHOI
 
       $scope.signup = function(callback) {
         userService.signup($scope.email, $scope.username, $scope.password);

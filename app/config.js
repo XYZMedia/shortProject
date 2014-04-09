@@ -76,7 +76,7 @@ app.config(['$routeProvider', '$locationProvider',
       .otherwise({ redirectTo: '/' });
     }
 ]);
-
+//EUGENECHOI
 app.run(['$rootScope', '$location', '$cookieStore', 'userService', function ($rootScope, $location, $cookieStore, userService) {
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
       current = $cookieStore.get('userInfo') || { username: '', role: 1 };
