@@ -74,6 +74,9 @@
 
 .editCount {
   font-size: 12px;
+  color:blue;
+  font-weight: bold;
+  cursor:pointer;
 }
 
 .articleImg {
@@ -94,9 +97,18 @@
   box-shadow: 0 2px 2px #aaaaaa;
 }
 
-.modal-body {
-  height: 400px;
+.Xmodal-body {
+  position: relative;
+  height: 300px;
   overflow: auto;
+  padding: 20px 20px 0 20px;
+}
+
+.Xmodal-footer {
+  padding: 19px 20px 20px;
+  margin-top: 5px;
+  text-align: right;
+  border-top: 1px solid #e5e5e5;
 }
 
 #right h6, a {
