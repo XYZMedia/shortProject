@@ -16,7 +16,7 @@
     <!-- Article content section -->
     <div ng-repeat="paragraph in sampleData" class="articleContent text-justify">
       <p>{{paragraph}}</p>
-      <p ng-click="editParagraph(this.paragraph)" class="editCount">Proposed edits: 3</p>
+      <p ng-click="editParagraph(this.paragraph)" class="editCount">Click to see proposed edits (3 total) or submit a new edit</p>
     </div>
   </div>
 
@@ -68,7 +68,7 @@
           <div id="right">
             <div>
               <h6>Edit proposed by: <a href="">POTUS</a></h6>
-              <p>{{item}}</p>
+              <p ng-bind-html="item"></p>
               <h6>Sources</h6>
               <a href="">http://www.cnn.com/2014/04/09/world/asia/malaysia-airlines-plane/index.html?hpt=hp_t1</a>
               <a href="">http://politicalticker.blogs.cnn.com/2014/04/08/hillary-clinton-on-2016-im-thinking-about-it/?hpt=hp_t2</a>
@@ -78,8 +78,40 @@
         </div>
       </div>
       <div class="Xmodal-footer">
-        <button class="btn btn-primary" ng-click="newEdit()">Add a new Edit</button>
+        <button class="btn btn-info" ng-click="newEdit()">Add a new Edit</button>
         <button class="btn btn-warning" ng-click="cancel()">Close</button>
       </div>
   </script>
+
+  <!-- Comments section -->
+  <div class="col-md-10 col-sm-8 col-xs-12 commentSection">
+    <h5>Comments</h5>
+    <div class="commentDiv">
+      <div class="contributorInfo">
+        <img class="contributorImg" src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/960px-President_Barack_Obama.jpg">
+      </div>
+      <div class="commentContent">
+        <h6 class="contributorTitle">POTUS</h6>
+        <p class="contributorComment">This article is great!  You're all awesome!</p>
+      </div>
+    </div>
+    <div class="commentDiv">
+      <div class="contributorInfo">
+        <img class="contributorImg" src="http://upload.wikimedia.org/wikipedia/commons/d/d4/George-W-Bush.jpeg">
+      </div>
+      <div class="commentContent">
+        <h6 class="contributorTitle">BushLeague</h6>
+        <p class="contributorComment">Rarely is the question asked, is our children learning?</p>
+      </div>
+    </div>
+    <div class="commentDiv">
+      <div class="contributorInfo">
+        <img class="contributorImg" src="https://pbs.twimg.com/profile_images/536177589/Hey_Ladies_-_Bill_Clinton.jpg">
+      </div>
+      <div class="commentContent">
+        <h6 class="contributorTitle">BillInsideYa</h6>
+        <p class="contributorComment">Hey girl hey</p>
+      </div>
+    </div>
+  </div>
 </div>
