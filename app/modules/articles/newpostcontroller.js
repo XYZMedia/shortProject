@@ -26,13 +26,11 @@ angular.module('newsyApp.controllers.newpost', ['newsyApp.services.articles', 'n
       }
 
       $scope.submit = function() {
-        if(asfd){
-
-        }
+        userService.newArticle($scope.url);
         // if($scope.url.charAt(0) === "w"){
         //   $scope.url = "http://" + $scope.url
         // }
-        console.log('submit works')
+        console.log('submit works', $scope.url)
       }
 
 }])

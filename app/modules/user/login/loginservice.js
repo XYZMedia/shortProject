@@ -18,8 +18,8 @@ angular.module('newsyApp')
             return user.role === userRoles.user || user.role === userRoles.admin;
         },
 
-        register: function(user, success, error) {
-            $http.post('/register', user).success(success).error(error);
+        signup: function(user, success, error) {
+            $http.post('/signup', user).success(success).error(error);
         },
 
         login: function(user, success, error) {

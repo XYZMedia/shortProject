@@ -18,6 +18,8 @@ app.configure(function() {
 
   app.post('/signup', handler.signup)
 
+  app.post('/newpost', handler.createArticle);
+
   // app.get('/login', function(req, res){
   //   console.log('inside auth');
   //   res.send('loginresponse');
@@ -48,11 +50,13 @@ app.configure(function() {
 });
 
 
-app.get('/articles', handler.articles);
-// app.options('/newestheadlines', handler.newestHeadOptions);
-app.post('/createArticle', handler.createArticle);
-app.get('/getArticle', handler.getArticle);
-// app.options('/article', handler.articleOptions);
 
-app.post('/createUser', handler.createUser);
-app.post('/getUser', handler.getUser);
+
+// app.get('/articles', handler.articles);
+// // app.options('/newestheadlines', handler.newestHeadOptions);
+// app.post('/createArticle', handler.createArticle);
+// app.get('/getArticle', handler.getArticle);
+// // app.options('/article', handler.articleOptions);
+
+// //app.post('/signup', handler.signup);
+// app.post('/getUser', handler.getUser);

@@ -55,7 +55,7 @@ app.config(['$routeProvider', '$locationProvider',
       .when('/newpost',
               {
                templateUrl: 'modules/articles/newpost.html',
-               access: access.admin
+               access: access.user
               }
       )
 

@@ -57,28 +57,29 @@ var headers = {
 };
 
 //EUGENECHOI
-  exports.signup = function(req, res){
-    console.log('inside signup');
+  // exports.signup = function(req, res){
+  //   console.log('inside signup');
 
-    var userInfo = req.body;
-    //send query to mongo to check if user exists
-    var users = DB.collection('users');
+  //   var userInfo = req.body;
+  //   //send query to mongo to check if user exists
+  //   var users = DB.collection('users');
 
-    users.insert(userInfo, function(err, inserted){
-      if(err){
-        throw err;
-      }
-      console.log(inserted);
-    });
+  //   users.insert(userInfo, function(err, inserted){
+  //     if(err){
+  //       throw err;
+  //     }
+  //     console.log(inserted);
+  //   });
 
-  };
+  // };
 
 exports.login = function(req, res){
     console.log('inside auth');
 
     var userInfo = req.body;
     //send query to mongo to check if user exists
-    // db.insert()
+
+    //db.insert();
     if(1===1){ // if the query to dbMongo identified the user as existing user
       userInfo.role = routingConfig.userRoles.user;
       res.cookie('userInfo', JSON.stringify(userInfo));
@@ -107,7 +108,9 @@ exports.createArticle = function(req, res) {
   var apiKey = 'c6da1b5b8fed3a1501866f95ff8fd91c';
 
   request('http://api.diffbot.com/v2/article?token=' + apiKey + '&url=' + url, function(error, response, body){
+    console.log('body is ', body);
     var obj = JSON.parse(body);
+    console.log(obj);
     var cho = obj.text.split(/[\r\n]/g);
         
     var doc = {
@@ -139,7 +142,7 @@ exports.createArticle = function(req, res) {
     }
 
     DB.collection('posts').insert(doc, function(error, inserted) {
-      res.send(200, inserted);
+      res.send(200);
       DB.close();
     });     
   });
@@ -172,30 +175,65 @@ exports.newestHeadlinesPost = function(req, res) {
 
 };
 
-exports.createUser = function(req, res) {
-  var user = {
-    email   : req.params.email, 
-    username: req.params.username,
-    password: re.params.password, 
-    role    : "role.public"
-  };
+exports.signup = function(req, res) {
 
-  DB.collection('users').insert(user, function(error, savedUser) {
-    res.send(200, savedUser);
-    DB.close();
-  });     
+  // var userInfo = req.body;
+  // var isNew = false;
+
+  // console.log(userInfo.email);
+
+  // DB.collection('users').findOne({email: userInfo.email}, function(error, userByEmail){
+  //   console.log('found ', userByEmail);
+  //   if(userByEmail.email.length === 0){ // there is no existing user with the email
+  //     DB.collection('users').find({username: userInfo.username}, function(error, userByName){
+  //       console.log('found ', userByName);
+  //       if(userByName.username.length === 0){ // there is no existing user with the same name
+  //         userInfo.role = routingConfig.userRoles.user;
+  //         res.cookie('userInfo', JSON.stringify(userInfo));
+  //         console.log('should have hit redirect');
+  //         isNew = true; // the information does not exist in our db(new user)
+  //       }else{
+  //         res.send('the username exists'); // the username already exists!
+  //       }
+  //     });
+  //   }else{
+  //     res.send(); //the email already exists!
+  //   }
+
+  // });
+
+  // if(isNew){
+  //   var user = {
+  //     email   : req.body.email, 
+  //     username: req.body.username,
+  //     password: req.body.password, 
+  //     role    : req.body.role
+  //   };
+
+  //   DB.collection('users').insert(user, function(error, savedUser) {
+  //     console.log(savedUser);
+  //     res.send(200);
+  //     DB.close();
+  //   });     
+  // }else{
+  //   res.send(); // 
+  // }
+
 };
 
-exports.getUser = function(req, res) {
-  var query = { 'username' : req.params.username, 'password': req.params.password };
-  DB.collection('users').findOne(query, function(err, user) {
-    if(err) throw err;
+
+
+
+// exports.getUser = function(req, res) {
+//   var query = { 'username' : req.params.username, 'password': req.params.password };
+//   DB.collection('users').findOne(query, function(err, user) {
+//     if(err) throw err;
     
-    console.log("Collection being requested: ", user);
-    res.send(200, user);
-    DB.close();
-  });
-};
+//     console.log("Collection being requested: ", user);
+//     res.send(200, user);
+//     DB.close();
+//   });
+// };
 // exports.articleUpdate = function(req, res) {
 
 //   // Set value of _id to id of current object
