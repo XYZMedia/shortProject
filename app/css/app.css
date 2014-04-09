@@ -4,6 +4,7 @@
 }
 
 /*=======All articles styling=======*/
+
 .content {
   margin-top: 70px;
   margin-bottom: 50px;
@@ -20,6 +21,7 @@
 }
 
 /*=======Contributor styling=======*/
+
 .contributorSection {
   float:right;
 }
@@ -46,6 +48,7 @@
 }
 
 /*=======Single article styling=======*/
+
 .headerSection{
   float:left;
   margin-bottom: 10px;
@@ -71,6 +74,9 @@
 
 .editCount {
   font-size: 12px;
+  color:blue;
+  font-weight: bold;
+  cursor:pointer;
 }
 
 .articleImg {
@@ -87,6 +93,24 @@
 }
 
 /*=======Modal styling=======*/
+.modal-header {
+  box-shadow: 0 2px 2px #aaaaaa;
+}
+
+.Xmodal-body {
+  position: relative;
+  height: 300px;
+  overflow: auto;
+  padding: 20px 20px 0 20px;
+}
+
+.Xmodal-footer {
+  padding: 19px 20px 20px;
+  margin-top: 5px;
+  text-align: right;
+  border-top: 1px solid #e5e5e5;
+}
+
 #right h6, a {
   font-size: 12px;
 }
