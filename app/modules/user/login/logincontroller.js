@@ -8,19 +8,23 @@ angular.module('newsyApp.controllers.login', ['newsyApp.services.user'])
         $location.path('/');
       }
 
-      $scope.$on('angularFireAuth:login', function () {
-        $location.path('/');
-      })
+      // $scope.$on('angularFireAuth:login', function () {
+      //   $location.path('/');
+      // })
 
-      $scope.email = null;
-      $scope.pass = null;
-      $scope.name = null;
+  //EUGENECHOI
+
+      $scope.signup = function(callback) {
+        userService.signup($scope.email, $scope.username, $scope.password);
+      };
 
       $scope.login = function(callback) {
+        console.log($scope.username)
         $scope.err = null;
-        userService.login($scope.email, $scope.pass, '/', function(err, user) {
-          $scope.err = err||null;
-          typeof(callback) === 'function' && callback(err, user);
-        });
+        userService.login($scope.email, $scope.username, $scope.password)
+         // '/', function(err, user) {
+         //  $scope.err = err||null;
+         //  typeof(callback) === 'function' && callback(err, user);
+        // });
       };
     }])

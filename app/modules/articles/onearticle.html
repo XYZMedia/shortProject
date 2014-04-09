@@ -15,8 +15,8 @@
     </div>
     <!-- Article content section -->
     <div ng-repeat="paragraph in sampleData" class="articleContent text-justify">
-      <p ng-click="editParagraph(this.paragraph)">{{paragraph}}</p>
-      <p class="editCount"><b><em>Proposed edits: 3</em></b></p>
+      <p>{{paragraph}}</p>
+      <p ng-click="editParagraph(this.paragraph)" class="editCount">Proposed edits: 3</p>
     </div>
   </div>
 
@@ -40,6 +40,17 @@
     </div>
   </div>
 
+  <!-- Twitter section -->
+  <div class="col-md-2 col-sm-4 col-xs-12 contributorSection">
+    <h5>Related Tweets</h5>
+      <h6 class="contributorTitle">CNN</h6>
+      <h6 class="contributorTitle">"Official in #MH370 search: Signals picked up are consistent with a flight data recorder. http://cnn.it/1g0BIyQ"</h6>
+      <h6 class="contributorTitle">CNN</h6>
+      <h6 class="contributorTitle">"Official in #MH370 search: Signals picked up are consistent with a flight data recorder. http://cnn.it/1g0BIyQ"</h6>
+      <h6 class="contributorTitle">CNN</h6>
+      <h6 class="contributorTitle">"Official in #MH370 search: Signals picked up are consistent with a flight data recorder. http://cnn.it/1g0BIyQ"</h6>
+  </div>
+
 
 <!-- Script for creating a modal -->
   <script type="text/ng-template" id="myModalContent.html">
@@ -47,8 +58,8 @@
         <h5>Current Text:</h5>
         <p>{{currentText}}</p>
       </div>
-      <div class="modal-body text-justify">
-        <div ng-repeat="item in items">
+      <div class="Xmodal-body text-justify">
+        <div ng-repeat="item in items" ng-init="item = getDiff(currentText, item)">
           <div id="left">
             <img class="contributorImg" src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/960px-President_Barack_Obama.jpg">
             <p id="up"><span ng-click="voteUp()" class="glyphicon glyphicon-circle-arrow-up"</span>127</p>
@@ -58,14 +69,17 @@
             <div>
               <h6>Edit proposed by: <a href="">POTUS</a></h6>
               <p>{{item}}</p>
+              <h6>Sources</h6>
+              <a href="">http://www.cnn.com/2014/04/09/world/asia/malaysia-airlines-plane/index.html?hpt=hp_t1</a>
+              <a href="">http://politicalticker.blogs.cnn.com/2014/04/08/hillary-clinton-on-2016-im-thinking-about-it/?hpt=hp_t2</a>
             </div>
           </div>
           <hr>
         </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+      <div class="Xmodal-footer">
+        <button class="btn btn-primary" ng-click="newEdit()">Add a new Edit</button>
+        <button class="btn btn-warning" ng-click="cancel()">Close</button>
       </div>
   </script>
 </div>

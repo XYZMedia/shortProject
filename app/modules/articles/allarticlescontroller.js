@@ -5,8 +5,8 @@ angular.module('newsyApp.controllers.allarticles', ['newsyApp.services.articles'
     function($scope, $routeParams, $location, Articles) {
     
       $scope.test = function(index){
-        console.log(index)
-        console.log($scope.articles[index].poster)
+        // console.log($scope.articles[index].poster)
+        $location.path('/science/article1')
       }
 
       $scope.findArticles = function() {
@@ -24,7 +24,7 @@ angular.module('newsyApp.controllers.allarticles', ['newsyApp.services.articles'
           "postSource": "http://gizmodo.com/how-steve-jobs-passion-shaped-pixar-into-an-oscar-winn-1557613093", 
           "article"   : {
             "title": "How Steve Job's Passion Shaped Pixar", 
-            "image":  "http://i.kinja-img.com/gawker-media/image/upload/s--PnklgGQP--/c_fit,fl_progressive,w_636/eafavaozr8ru44did0yu.jpg",
+            "image":  "http://upload.wikimedia.org/wikipedia/commons/thumb/d/da/SF_From_Marin_Highlands3.jpg/560px-SF_From_Marin_Highlands3.jpg",
             "paragraphs" : [
               {
                 "currentText" : "Pixar occupied a special place in Steve's world, and his role evolved during our time together. In the early years, he was our benefactor, the one who paid the bills to keep the lights on. Later, he became our protector—a constructive critic internally but our fiercest defender to the outside. We had some trying times together, to be sure, but through those difficulties, we forged a rare bond.",
@@ -58,7 +58,7 @@ angular.module('newsyApp.controllers.allarticles', ['newsyApp.services.articles'
           "postSource": "http://gizmodo.com/how-steve-jobs-passion-shaped-pixar-into-an-oscar-winn-1557613093", 
           "article"   : {
             "title": "How Steve Job's Passion Shaped Pixar", 
-            "image":  "http://i.kinja-img.com/gawker-media/image/upload/s--PnklgGQP--/c_fit,fl_progressive,w_636/eafavaozr8ru44did0yu.jpg",
+            "image":  "http://upload.wikimedia.org/wikipedia/en/thumb/7/75/DowntownSF.jpg/440px-DowntownSF.jpg",
             "paragraphs" : [
               {
                 "currentText" : "Pixar occupied a special place in Steve's world, and his role evolved during our time together. In the early years, he was our benefactor, the one who paid the bills to keep the lights on. Later, he became our protector—a constructive critic internally but our fiercest defender to the outside. We had some trying times together, to be sure, but through those difficulties, we forged a rare bond.",

@@ -5,6 +5,8 @@ var fs = require("fs");
 var path = require("path");
 var querystring = require("querystring");
 var request = require('request');
+var routingConfig = require ('../app/routingConfig.js');
+
 
 
 //////////////////////////////////////////////
@@ -53,6 +55,52 @@ var headers = {
   "access-control-max-age": 10, // Seconds.
   //"Content-Type": "text/html"
 };
+
+//EUGENECHOI
+  exports.signup = function(req, res){
+    console.log('inside signup');
+
+    var userInfo = req.body;
+    //send query to mongo to check if user exists
+    var users = DB.collection('users');
+
+    users.insert(userInfo, function(err, inserted){
+      if(err){
+        throw err;
+      }
+      console.log(inserted);
+    });
+
+  };
+
+exports.login = function(req, res){
+    console.log('inside auth');
+
+    var userInfo = req.body;
+    //send query to mongo to check if user exists
+    // db.insert()
+    if(1===1){ // if the query to dbMongo identified the user as existing user
+      userInfo.role = routingConfig.userRoles.user;
+      res.cookie('userInfo', JSON.stringify(userInfo));
+      console.log('should have hit redirect')
+    }else{
+     // res.send(300, '/login')
+    }
+      // if(req.user) {
+      //     role = req.user.role;
+      //     username = req.user.username;
+      // }
+
+      // res.cookie('user', JSON.stringify({
+      //     'username': username,
+      //     'role': role
+      // }));
+
+      // res.send('index');
+      res.send(200);
+  };
+
+
 
 exports.createArticle = function(req, res) {
   var url = req.body.articleUrl;

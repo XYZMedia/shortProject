@@ -1,21 +1,18 @@
 (function(exports){
-
+//EUGENECHOI
     var userRoles = {
-        public: 1, // 001
-        user:   2, // 010
-        admin:  4  // 100
+        public: 1,
+        user:   2,
+        admin:  4 
     };
 
     exports.userRoles = userRoles;
     
     exports.accessLevels = {
-        public: userRoles.public | // 111
-                userRoles.user   |
-                userRoles.admin,   
-        anon:   userRoles.public,  // 001
-        user:   userRoles.user |   // 110
-                userRoles.admin,                    
-        admin:  userRoles.admin    // 100
+        public: userRoles.public,
+        anon:   userRoles.public, 
+        user:   userRoles.user,
+        admin:  userRoles.admin
     };
 
 })(typeof exports === 'undefined'? this['routingConfig']={}: exports);

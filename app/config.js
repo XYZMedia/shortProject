@@ -1,13 +1,13 @@
 'use strict';
 
 // Declare app level module which depends on filters, and services
-angular.module('newsyApp.config', [])
+angular.module('newsyApp.config', ['ngCookies'])
 
-app.config(['$routeProvider', 
+app.config(['$routeProvider', '$locationProvider',
     function($routeProvider, $locationProvider) {
     
       var access = routingConfig.accessLevels;
-      
+      //EUGENECHOI
       $routeProvider
       .when('/',
               { 
@@ -55,7 +55,7 @@ app.config(['$routeProvider',
       .when('/newpost',
               {
                templateUrl: 'modules/articles/newpost.html',
-               access: access.user
+               access: access.admin
               }
       )
 
@@ -74,6 +74,41 @@ app.config(['$routeProvider',
       )
       
       .otherwise({ redirectTo: '/' });
+    }
+]);
+//EUGENECHOI
+app.run(['$rootScope', '$location', '$cookieStore', 'userService', function ($rootScope, $location, $cookieStore, userService) {
+    $rootScope.$on("$routeChangeStart", function (event, next, current) {
+      current = $cookieStore.get('userInfo') || { username: '', role: 1 };
+      console.log('access', next.access, 'role', current.role)
+        if (!userService.isAuthorized(next.access, current.role)) {
+          console.log(next.access)
+          console.log(current.role)
+          console.log('not authorized');
+            if(userService.isLoggedIn(current)){
+              console.log('logged in')
+              $location.path('/');
+            }else{
+              $location.path('/login');
+            }
+        }
+    });
+}]);
+//             $rootScope.error = "Seems like you tried accessing a route you don't have access to...";
+//             event.preventDefault();
+            
+//             if(fromState.url === '^') {
+//                 if(Auth.isLoggedIn()) {
+//                     $state.go('user.home');
+//                 } else {
+//                     $rootScope.error = null;
+//                     $state.go('anon.login');
+//                 }
+//             }
+//         }
+//     });
+
+// }]);
 
 
 
@@ -93,12 +128,6 @@ app.config(['$routeProvider',
     //         access:         access.admin
     //     });
 
-
-
-    }])
-
-
-  
   // establish user authentication
   // .run(['angularFireAuth', 'FBURL', '$rootScope', 
   //   function(angularFireAuth, FBURL, $rootScope) {
