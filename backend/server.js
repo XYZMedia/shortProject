@@ -13,7 +13,7 @@ app.configure(function() {
   console.log('Listening on port 8080');
 });
 
-app.get('/newestheadlines', handler.newestHeadlinesGet);
+app.get('/articles', handler.articles);
 // app.options('/newestheadlines', handler.newestHeadOptions);
 
 app.post('/createArticle', handler.createArticle);

@@ -98,7 +98,7 @@ exports.createArticle = function(req, res) {
 };
 
 // This function needs to eventually limit the number of documents being retrieved and sort those documents
-exports.newestHeadlinesGet = function(req, res) {
+exports.articles = function(req, res) {
   DB.collection('posts').find({}).toArray(function(err, docs) {
     if(err) throw err;
     
