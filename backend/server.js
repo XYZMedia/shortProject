@@ -15,7 +15,9 @@ app.configure(function() {
 
 app.get('/articles', handler.articles);
 // app.options('/newestheadlines', handler.newestHeadOptions);
-
 app.post('/createArticle', handler.createArticle);
 app.get('/getArticle', handler.getArticle);
 // app.options('/article', handler.articleOptions);
+
+app.post('/createUser', handler.createUser);
+app.post('/getUser', handler.getUser);

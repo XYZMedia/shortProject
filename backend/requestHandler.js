@@ -124,7 +124,30 @@ exports.newestHeadlinesPost = function(req, res) {
 
 };
 
+exports.createUser = function(req, res) {
+  var user = {
+    email   : req.params.email, 
+    username: req.params.username,
+    password: re.params.password, 
+    role    : "role.public"
+  };
 
+  DB.collection('users').insert(user, function(error, savedUser) {
+    res.send(200, savedUser);
+    DB.close();
+  });     
+};
+
+exports.getUser = function(req, res) {
+  var query = { 'username' : req.params.username, 'password': req.params.password };
+  DB.collection('users').findOne(query, function(err, user) {
+    if(err) throw err;
+    
+    console.log("Collection being requested: ", user);
+    res.send(200, user);
+    DB.close();
+  });
+};
 // exports.articleUpdate = function(req, res) {
 
 //   // Set value of _id to id of current object
