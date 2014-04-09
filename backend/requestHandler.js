@@ -78,7 +78,7 @@ exports.login = function(req, res){
 
     var userInfo = req.body;
     //send query to mongo to check if user exists
-    db.insert()
+    // db.insert()
     if(1===1){ // if the query to dbMongo identified the user as existing user
       userInfo.role = routingConfig.userRoles.user;
       res.cookie('userInfo', JSON.stringify(userInfo));
