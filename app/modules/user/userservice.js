@@ -32,8 +32,8 @@ angular.module('newsyApp.services.user', [])
           $http.post('/signup', userInfo)
             .success(function(res){ // res contains userInfo with updated role
               $rootScope.currentUser = res;
-              console.log($rootScope.currentUser);
-              $location.path('/')
+              console.log('hit signup success', $rootScope.currentUser);
+              $location.path('/');
             });
 
           //send login request to server
@@ -66,9 +66,13 @@ angular.module('newsyApp.services.user', [])
           }
         },
 
-        createAccount: function(name, email, pass, callback) {
-      
-        },
+        newArticle: function(url){
+          $http.post('/newpost', {url: url})
+            .success(function(res){
+              console.log(res);
+            })
+        }
+
         
 
       }

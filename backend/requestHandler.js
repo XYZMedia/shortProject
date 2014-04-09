@@ -57,21 +57,21 @@ var headers = {
 };
 
 //EUGENECHOI
-  exports.signup = function(req, res){
-    console.log('inside signup');
+  // exports.signup = function(req, res){
+  //   console.log('inside signup');
 
-    var userInfo = req.body;
-    //send query to mongo to check if user exists
-    var users = DB.collection('users');
+  //   var userInfo = req.body;
+  //   //send query to mongo to check if user exists
+  //   var users = DB.collection('users');
 
-    users.insert(userInfo, function(err, inserted){
-      if(err){
-        throw err;
-      }
-      console.log(inserted);
-    });
+  //   users.insert(userInfo, function(err, inserted){
+  //     if(err){
+  //       throw err;
+  //     }
+  //     console.log(inserted);
+  //   });
 
-  };
+  // };
 
 exports.login = function(req, res){
     console.log('inside auth');
@@ -102,18 +102,48 @@ exports.login = function(req, res){
 
 
 
+exports.createArticle = function(req, res) {
+  var url = req.body.articleUrl;
+  var apiKey = 'c6da1b5b8fed3a1501866f95ff8fd91c';
+  request('http://api.diffbot.com/v2/article?token=' + apiKey + '&url=' + url, function(error, response, body){
+    console.log('response is ', error);
+    console.log('body is ', body);
+    var obj = JSON.parse(body);
+    console.log(obj);
+    var cho = obj.text.split(/[\r\n]/g);
+        
+    var doc = {
+      poster    : "current_user", 
+      postTitle : "",
+      postSource: obj.url, 
+      article   : {
+        title     : obj.title,
+        image     : obj.images.url,
+        paragraphs: []
+      },
+      comments   : [{
+        commentor : "",
+        comment   : ""
+      }] 
+    };
 
-// Cannot complete until Will gets Scrape API to work
-// The POST object is at the end of this page
-exports.articlePost = function(req, res) {
-  var doc = null; // need to include doc from form
-                  // need to add redirect on sucessful save
-  DB.collection('posts').insert(doc, function(err, doc) {
-    if(err) throw err;
-    
-    console.log("Document being inserted: ", doc);
-    res.send(200, doc);
-    DB.close();
+    for (var i = 0; i < cho.length; i++) {
+      var paragraph = {
+        currentText : cho[i],
+        proposedText: [{
+          editor: "", 
+          text  : "",
+          vote  : 0 
+        }] 
+      }
+
+      doc.article.paragraphs.push(paragraph);
+    }
+
+    DB.collection('posts').insert(doc, function(error, inserted) {
+      res.send(200);
+      DB.close();
+    });     
   });
 };
 
@@ -133,7 +163,65 @@ exports.newestHeadlinesPost = function(req, res) {
 
 };
 
+exports.signup = function(req, res) {
 
+  // var userInfo = req.body;
+  // var isNew = false;
+
+  // console.log(userInfo.email);
+
+  // DB.collection('users').findOne({email: userInfo.email}, function(error, userByEmail){
+  //   console.log('found ', userByEmail);
+  //   if(userByEmail.email.length === 0){ // there is no existing user with the email
+  //     DB.collection('users').find({username: userInfo.username}, function(error, userByName){
+  //       console.log('found ', userByName);
+  //       if(userByName.username.length === 0){ // there is no existing user with the same name
+  //         userInfo.role = routingConfig.userRoles.user;
+  //         res.cookie('userInfo', JSON.stringify(userInfo));
+  //         console.log('should have hit redirect');
+  //         isNew = true; // the information does not exist in our db(new user)
+  //       }else{
+  //         res.send('the username exists'); // the username already exists!
+  //       }
+  //     });
+  //   }else{
+  //     res.send(); //the email already exists!
+  //   }
+
+  // });
+
+  // if(isNew){
+  //   var user = {
+  //     email   : req.body.email, 
+  //     username: req.body.username,
+  //     password: req.body.password, 
+  //     role    : req.body.role
+  //   };
+
+  //   DB.collection('users').insert(user, function(error, savedUser) {
+  //     console.log(savedUser);
+  //     res.send(200);
+  //     DB.close();
+  //   });     
+  // }else{
+  //   res.send(); // 
+  // }
+
+};
+
+
+
+
+// exports.getUser = function(req, res) {
+//   var query = { 'username' : req.params.username, 'password': req.params.password };
+//   DB.collection('users').findOne(query, function(err, user) {
+//     if(err) throw err;
+    
+//     console.log("Collection being requested: ", user);
+//     res.send(200, user);
+//     DB.close();
+//   });
+// };
 // exports.articleUpdate = function(req, res) {
 
 //   // Set value of _id to id of current object
