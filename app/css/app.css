@@ -15,6 +15,10 @@
   margin-bottom: 15px;
 }
 
+.homepageArticle img {
+  max-height: 300px;
+}
+
 .homepageArticle p {
   font-size: 10px;
   margin:0;

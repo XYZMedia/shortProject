@@ -109,11 +109,11 @@ exports.createArticle = function(req, res) {
   request('http://api.diffbot.com/v2/article?token=' + apiKey + '&url=' + url, function(error, response, body){
     var obj = JSON.parse(body);
     var cho = obj.text.split(/[\r\n]/g);
-        
+
     var doc = {
-      poster    : "current_user", 
+      poster    : "current_user",
       postTitle : "",
-      postSource: obj.url, 
+      postSource: obj.url,
       article   : {
         title     : obj.title,
         image     : obj.images.url,
@@ -122,17 +122,17 @@ exports.createArticle = function(req, res) {
       comments   : [{
         commentor : "",
         comment   : ""
-      }] 
+      }]
     };
 
     for (var i = 0; i < cho.length; i++) {
       var paragraph = {
         currentText : cho[i],
         proposedText: [{
-          editor: "", 
+          editor: "",
           text  : "",
-          vote  : 0 
-        }] 
+          vote  : 0
+        }]
       }
 
       doc.article.paragraphs.push(paragraph);
@@ -141,7 +141,7 @@ exports.createArticle = function(req, res) {
     DB.collection('posts').insert(doc, function(error, inserted) {
       res.send(200, inserted);
       DB.close();
-    });     
+    });
   });
 };
 
@@ -149,7 +149,7 @@ exports.createArticle = function(req, res) {
 exports.articles = function(req, res) {
   DB.collection('posts').find({}).toArray(function(err, docs) {
     if(err) throw err;
-    
+
     console.log("Collection being requested: ", docs);
     res.send(200, docs);
     DB.close();
@@ -160,37 +160,37 @@ exports.getArticle = function(req, res) {
   var query = { '_id' : req.params.id };
   DB.collection('posts').findOne(query, function(err, doc) {
     if(err) throw err;
-    
+
     console.log("Collection being requested: ", doc);
     res.send(200, doc);
     DB.close();
   });
 };
 
-  
+
 exports.newestHeadlinesPost = function(req, res) {
 
 };
 
 exports.createUser = function(req, res) {
   var user = {
-    email   : req.params.email, 
+    email   : req.params.email,
     username: req.params.username,
-    password: re.params.password, 
+    password: re.params.password,
     role    : "role.public"
   };
 
   DB.collection('users').insert(user, function(error, savedUser) {
     res.send(200, savedUser);
     DB.close();
-  });     
+  });
 };
 
 exports.getUser = function(req, res) {
   var query = { 'username' : req.params.username, 'password': req.params.password };
   DB.collection('users').findOne(query, function(err, user) {
     if(err) throw err;
-    
+
     console.log("Collection being requested: ", user);
     res.send(200, user);
     DB.close();
@@ -202,7 +202,7 @@ exports.getUser = function(req, res) {
 //   var query    = { '_id' : 'FILL_IN' };
 
 //   // Set value of article.p1 to input field
-//   var operator = { '$set' : { 'article.p1' : "FILL_IN" } }; 
+//   var operator = { '$set' : { 'article.p1' : "FILL_IN" } };
 
 //   db.collection('posts').update(query, operator, function(err, updated) {
 //     if(err) throw err;

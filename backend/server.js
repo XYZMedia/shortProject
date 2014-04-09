@@ -14,9 +14,11 @@ app.configure(function() {
 
   app.use(express.static(path.join(__dirname, '../app')));
 
+  app.get('/articles', handler.articles);
+
   app.post('/login', handler.login);
 
-  app.post('/signup', handler.signup)
+  app.post('/signup', handler.signup);
 
   // app.get('/login', function(req, res){
   //   console.log('inside auth');
@@ -48,7 +50,6 @@ app.configure(function() {
 });
 
 
-app.get('/articles', handler.articles);
 // app.options('/newestheadlines', handler.newestHeadOptions);
 app.post('/createArticle', handler.createArticle);
 app.get('/getArticle', handler.getArticle);

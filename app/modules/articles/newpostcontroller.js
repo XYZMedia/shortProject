@@ -1,5 +1,5 @@
 'use strict';
- 
+
 angular.module('newsyApp.controllers.newpost', ['newsyApp.services.articles', 'newsyApp.services.user'])
   .controller('NewPostController', ['$scope','$routeParams', '$location', 'Articles', 'userService',
     function($scope, $routeParams, $location, Articles, userService) {
@@ -26,9 +26,7 @@ angular.module('newsyApp.controllers.newpost', ['newsyApp.services.articles', 'n
       }
 
       $scope.submit = function() {
-        if(asfd){
 
-        }
         // if($scope.url.charAt(0) === "w"){
         //   $scope.url = "http://" + $scope.url
         // }

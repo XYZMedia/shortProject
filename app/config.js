@@ -5,41 +5,41 @@ angular.module('newsyApp.config', ['ngCookies'])
 
 app.config(['$routeProvider', '$locationProvider',
     function($routeProvider, $locationProvider) {
-    
+
       var access = routingConfig.accessLevels;
       //EUGENECHOI
       $routeProvider
       .when('/',
-              { 
+              {
                 templateUrl: 'modules/articles/allarticles.html',
                 access: access.anon
               }
       )
       //consolidate all routes to use location variables
-      
+
       .when('/breakingnews',
               {
                templateUrl: 'modules/articles/allarticles.html',
                access: access.anon
               }
       )
-      
+
       .when('/tech',
-              { 
+              {
                 templateUrl: 'modules/articles/allarticles.html',
                 access: access.anon
               }
       )
-      
+
       .when('/science',
               {
                templateUrl: 'modules/articles/allarticles.html',
                access: access.anon
               }
       )
-      
+
       .when('/science/article1',
-              { 
+              {
                 templateUrl: 'modules/articles/onearticle.html',
                 access: access.anon
               }
@@ -55,12 +55,12 @@ app.config(['$routeProvider', '$locationProvider',
       .when('/newpost',
               {
                templateUrl: 'modules/articles/newpost.html',
-               access: access.admin
+               access: access.user
               }
       )
 
       .when('/login',
-              { 
+              {
                 templateUrl: 'modules/user/login/login.html',
                 access: access.anon
                }
@@ -72,7 +72,7 @@ app.config(['$routeProvider', '$locationProvider',
               access: access.anon
              }
       )
-      
+
       .otherwise({ redirectTo: '/' });
     }
 ]);
@@ -96,7 +96,7 @@ app.run(['$rootScope', '$location', '$cookieStore', 'userService', function ($ro
 }]);
 //             $rootScope.error = "Seems like you tried accessing a route you don't have access to...";
 //             event.preventDefault();
-            
+
 //             if(fromState.url === '^') {
 //                 if(Auth.isLoggedIn()) {
 //                     $state.go('user.home');
@@ -129,7 +129,7 @@ app.run(['$rootScope', '$location', '$cookieStore', 'userService', function ($ro
     //     });
 
   // establish user authentication
-  // .run(['angularFireAuth', 'FBURL', '$rootScope', 
+  // .run(['angularFireAuth', 'FBURL', '$rootScope',
   //   function(angularFireAuth, FBURL, $rootScope) {
   //     angularFireAuth.initialize(new Firebase(FBURL), {scope: $rootScope, name: 'auth', path: '/signin'});
   //     $rootScope.FBURL = FBURL;
