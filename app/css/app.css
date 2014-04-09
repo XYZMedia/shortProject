@@ -130,6 +130,14 @@
   margin-bottom: 0;
 }
 
+del {
+  color: red;
+}
+
+ins {
+  color: green;
+}
+
 /*=======Comments styling=======*/
 .commentDiv {
   width: 100%;
