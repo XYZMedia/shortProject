@@ -10,6 +10,17 @@ angular.module('newsyApp.services.user', [])
       
       var user = {
 
+        isAuthorized: function(accessLevel, userRole){
+          if(userRole === 'undefined'){
+            userRole = $rootScope.currentUser.role;
+          }
+          return (accessLevel <= userRole);
+        },
+
+        isLoggedIn: function(currentUser){
+          return currentUser.role >= role.user;
+        },
+
         signup: function(email, username, password) {
           var userInfo = {
             email: email,

@@ -55,7 +55,7 @@ app.config(['$routeProvider', '$locationProvider',
       .when('/newpost',
               {
                templateUrl: 'modules/articles/newpost.html',
-               access: access.user
+               access: access.admin
               }
       )
 
@@ -74,26 +74,41 @@ app.config(['$routeProvider', '$locationProvider',
       )
       
       .otherwise({ redirectTo: '/' });
+    }
+]);
 
-app.run(['$rootScope', '$state', 'userService', function ($rootScope, $state, userService) {
-
-    $rootScope.$on("$stateChangeStart", function (event, toState, toParams, fromState, fromParams) {
-        if (!Auth.authorize(toState.data.access)) {
-            $rootScope.error = "Seems like you tried accessing a route you don't have access to...";
-            event.preventDefault();
-            
-            if(fromState.url === '^') {
-                if(Auth.isLoggedIn()) {
-                    $state.go('user.home');
-                } else {
-                    $rootScope.error = null;
-                    $state.go('anon.login');
-                }
+app.run(['$rootScope', '$location', '$cookieStore', 'userService', function ($rootScope, $location, $cookieStore, userService) {
+    $rootScope.$on("$routeChangeStart", function (event, next, current) {
+      current = $cookieStore.get('userInfo') || { username: '', role: 1 };
+      console.log('access', next.access, 'role', current.role)
+        if (!userService.isAuthorized(next.access, current.role)) {
+          console.log(next.access)
+          console.log(current.role)
+          console.log('not authorized');
+            if(userService.isLoggedIn(current)){
+              console.log('logged in')
+              $location.path('/');
+            }else{
+              $location.path('/login');
             }
         }
     });
-
 }]);
+//             $rootScope.error = "Seems like you tried accessing a route you don't have access to...";
+//             event.preventDefault();
+            
+//             if(fromState.url === '^') {
+//                 if(Auth.isLoggedIn()) {
+//                     $state.go('user.home');
+//                 } else {
+//                     $rootScope.error = null;
+//                     $state.go('anon.login');
+//                 }
+//             }
+//         }
+//     });
+
+// }]);
 
 
 
@@ -113,12 +128,6 @@ app.run(['$rootScope', '$state', 'userService', function ($rootScope, $state, us
     //         access:         access.admin
     //     });
 
-
-
-    }])
-
-
-  
   // establish user authentication
   // .run(['angularFireAuth', 'FBURL', '$rootScope', 
   //   function(angularFireAuth, FBURL, $rootScope) {

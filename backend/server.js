@@ -3,6 +3,8 @@ var path = require('path');
 var handler = require ('./requestHandler.js');
 var app = express();
 var cors = require('cors');
+var passport = require('passport');
+
 
 app.configure(function() {
 
