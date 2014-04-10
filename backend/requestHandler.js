@@ -26,7 +26,7 @@ var restartMongo = function(){
       console.log("Error connecting to DB.");
     }
   });
-}
+};
 
 restartMongo();
 
@@ -89,17 +89,17 @@ exports.login = function(req, res){
     console.log('req.body is, ', userInfo);
     DB.collection('users').findOne({username: userInfo.username}, function(error, found){
       console.log('error is, ', error);
-      console.log('userInfo.username is, ', userInfo.username)
-      console.log('user found is, ', found)
+      console.log('userInfo.username is, ', userInfo.username);
+      console.log('user found is, ', found);
       if(found === null){
-        res.send(200, found); 
-        DB.close(); 
+        res.send(200, found);
+        DB.close();
         restartMongo();
       }else if(found.password === userInfo.password){ //FIX LATER need to hash
-        console.log('password matches!')
+        console.log('password matches!');
         userInfo.role = routingConfig.userRoles.user;
         res.cookie('userInfo', JSON.stringify(userInfo));
-        console.log('should have hit redirect')
+        console.log('should have hit redirect');
         res.send(200, found);
         DB.close();
         restartMongo();
@@ -118,11 +118,11 @@ exports.createArticle = function(req, res) {
     var obj = JSON.parse(body);
     console.log(obj);
     var cho = obj.text.split(/[\r\n]/g);
-        
+
     var doc = {
-      poster    : "current_user", 
+      poster    : "current_user",
       postTitle : "",
-      postSource: obj.url, 
+      postSource: obj.url,
       article   : {
         title     : obj.title,
         image     : obj.images.url,
@@ -131,18 +131,18 @@ exports.createArticle = function(req, res) {
       comments   : [{
         commentor : "",
         comment   : ""
-      }] 
+      }]
     };
 
     for (var i = 0; i < cho.length; i++) {
       var paragraph = {
         currentText : cho[i],
         proposedText: [{
-          editor: "", 
+          editor: "",
           text  : "",
-          vote  : 0 
-        }] 
-      }
+          vote  : 0
+        }]
+      };
 
       doc.article.paragraphs.push(paragraph);
     }
@@ -151,7 +151,7 @@ exports.createArticle = function(req, res) {
       res.send(200);
       DB.close();
       restartMongo();
-    });     
+    });
   });
 };
 
@@ -159,7 +159,7 @@ exports.createArticle = function(req, res) {
 exports.articles = function(req, res) {
   DB.collection('posts').find({}).toArray(function(err, docs) {
     if(err) throw err;
-    
+
     console.log("Collection being requested: ", docs);
     res.send(200, docs);
     DB.close();
@@ -171,7 +171,7 @@ exports.getArticle = function(req, res) {
   var query = { '_id' : req.params.id };
   DB.collection('posts').findOne(query, function(err, doc) {
     if(err) throw err;
-    
+
     console.log("Collection being requested: ", doc);
     res.send(200, doc);
     DB.close();
@@ -179,16 +179,17 @@ exports.getArticle = function(req, res) {
 };
 
 exports.getArticle = function(req, res) {
-  var query = { '_id' : req.params.id };
-  DB.collection('posts').findOne(query, function(err, doc) {
+  console.log(req.params)
+  DB.collection('posts').findOne({ '_id': 'ObjectId("'+req.params.id+'")'}, function(err, doc) {
     if(err) throw err;
-    
-    console.log("Collection being requested: ", doc);
+
+    console.log("Single Article being requested: ", doc);
     res.send(200, doc);
     DB.close();
     restartMongo();
   });
 };
+
 
 exports.newestHeadlinesPost = function(req, res) {
 
@@ -208,7 +209,7 @@ exports.signup = function(req, res) {
     }
 
     if(userByEmail === null){ // there is no existing user with the email
-      console.log('isnull')
+      console.log('isnull');
       isNew = true;
     }
   //   else{
@@ -228,11 +229,11 @@ exports.signup = function(req, res) {
   //     res.send(); //the email already exists!
   //   }
     if(isNew){
-      console.log('isnew')
+      console.log('isnew');
       var user = {
-        email   : req.body.email, 
+        email   : req.body.email,
         username: req.body.username,
-        password: req.body.password, 
+        password: req.body.password,
         role    : req.body.role
       };
 
@@ -241,10 +242,10 @@ exports.signup = function(req, res) {
         res.send(200, savedUser);
         DB.close();
         restartMongo();
-      });     
+      });
     }else{ //not new
-      console.log('signup fail')
-      res.send(200, isNew); // 
+      console.log('signup fail');
+      res.send(200, isNew); //
       DB.close();
       restartMongo();
     }
@@ -260,7 +261,7 @@ exports.signup = function(req, res) {
 //   var query = { 'username' : req.params.username, 'password': req.params.password };
 //   DB.collection('users').findOne(query, function(err, user) {
 //     if(err) throw err;
-    
+
 //     console.log("Collection being requested: ", user);
 //     res.send(200, user);
 //     DB.close();
@@ -272,7 +273,7 @@ exports.signup = function(req, res) {
 //   var query    = { '_id' : 'FILL_IN' };
 
 //   // Set value of article.p1 to input field
-//   var operator = { '$set' : { 'article.p1' : "FILL_IN" } }; 
+//   var operator = { '$set' : { 'article.p1' : "FILL_IN" } };
 
 //   db.collection('posts').update(query, operator, function(err, updated) {
 //     if(err) throw err;

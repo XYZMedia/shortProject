@@ -1,5 +1,5 @@
 'use strict';
- 
+
 angular.module('newsyApp.controllers.newpost', ['newsyApp.services.articles', 'newsyApp.services.user'])
   .controller('NewPostController', ['$scope','$routeParams', '$location', 'Articles', 'userService',
     function($scope, $routeParams, $location, Articles, userService) {
@@ -11,19 +11,19 @@ angular.module('newsyApp.controllers.newpost', ['newsyApp.services.articles', 'n
         //any function you type here will only invoke if the user is logged in
         //
 
-      })
+      });
 
       $scope.addHTTP = function(){
         if($scope.url === undefined || $scope.url.charAt(0) !== 'h'){
-          $scope.url = 'http://'
+          $scope.url = 'http://';
         }
-      }
+      };
 
       $scope.removeHTTP = function(){
         if($scope.url === 'http://'){
-          $scope.url = ''
+          $scope.url = '';
         }
-      }
+      };
 
       $scope.submit = function() {
         userService.newArticle($scope.url);
@@ -31,6 +31,5 @@ angular.module('newsyApp.controllers.newpost', ['newsyApp.services.articles', 'n
         //   $scope.url = "http://" + $scope.url
         // }
         console.log('submit works', $scope.url)
-      }
-
-}])
+      };
+}]);

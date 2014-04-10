@@ -1,21 +1,25 @@
 'use strict';
- 
+
 angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles'])
-  .controller('OneArticleController', ['$scope','$routeParams', '$location', '$modal', '$log',
-    function($scope, $routeParams, $location, $modal, $log, Articles) {
-    
-      $scope.findParagraphs = function(){
-        $scope.paragraphs = [];
-      }
+  .controller('OneArticleController', ['$scope','$routeParams', '$location', '$modal', '$log', '$sce', 'Articles',
+    function($scope, $routeParams, $location, $modal, $log, $sce, Articles) {
+
+      $scope.findArticle = function(){
+        Articles.find('5345be07db5b609d098776d9', function(res){
+          $scope.article = res;
+        });
+      };
 
       $scope.sampleData = function() {
         $scope.sampleData = [
-        "A ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      "B ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      "C ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-      ]}
+          "A ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+          "B ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+          "C ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        ];
+      };
 
 //==========Modal Functionality===========
+
       //function to open the modal
       $scope.editParagraph = function(currentText) {
 
@@ -35,9 +39,12 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
 
     //function to create the modal that gets displayed
     var ModalInstanceCtrl = function ($scope, $modalInstance, currentText, items) {
-
+      
+      $scope.modalHeader = 'Current Text:'
       $scope.currentText = currentText;
       $scope.items = items;
+      $scope.showEdit = false;
+      $scope.newURLs = [0];
 
       $scope.voteUp = function(){
         console.log('up!')
@@ -48,7 +55,17 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
       }
 
       $scope.newEdit = function(){
-        
+        $scope.showEdit = true;
+        $scope.modalHeader = "Proposed Edit:";
+        $scope.items = []
+      }
+
+      $scope.addURL = function(){
+        $scope.newURLs.push($scope.newURLs.length)
+      }
+
+      $scope.submit = function(){
+        $modalInstance.dismiss();
       }
 
       $scope.cancel = function () {
@@ -56,7 +73,7 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
       };
 
       $scope.getDiff = function(currentText, item){
-        return diffString(currentText, item)
+        return $sce.trustAsHtml(diffString(currentText, item))
       }
 
 //==========Compare Text Functionality===========
@@ -115,49 +132,49 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
             }
           }
         }
-        
+
         return str;
       }
 
       function diff( o, n ) {
         var ns = new Object();
         var os = new Object();
-        
+
         for ( var i = 0; i < n.length; i++ ) {
           if ( ns[ n[i] ] == null )
             ns[ n[i] ] = { rows: new Array(), o: null };
           ns[ n[i] ].rows.push( i );
         }
-        
+
         for ( var i = 0; i < o.length; i++ ) {
           if ( os[ o[i] ] == null )
             os[ o[i] ] = { rows: new Array(), n: null };
           os[ o[i] ].rows.push( i );
         }
-        
+
         for ( var i in ns ) {
           if ( ns[i].rows.length == 1 && typeof(os[i]) != "undefined" && os[i].rows.length == 1 ) {
             n[ ns[i].rows[0] ] = { text: n[ ns[i].rows[0] ], row: os[i].rows[0] };
             o[ os[i].rows[0] ] = { text: o[ os[i].rows[0] ], row: ns[i].rows[0] };
           }
         }
-        
+
         for ( var i = 0; i < n.length - 1; i++ ) {
-          if ( n[i].text != null && n[i+1].text == null && n[i].row + 1 < o.length && o[ n[i].row + 1 ].text == null && 
+          if ( n[i].text != null && n[i+1].text == null && n[i].row + 1 < o.length && o[ n[i].row + 1 ].text == null &&
                n[i+1] == o[ n[i].row + 1 ] ) {
             n[i+1] = { text: n[i+1], row: n[i].row + 1 };
             o[n[i].row+1] = { text: o[n[i].row+1], row: i + 1 };
           }
         }
-        
+
         for ( var i = n.length - 1; i > 0; i-- ) {
-          if ( n[i].text != null && n[i-1].text == null && n[i].row > 0 && o[ n[i].row - 1 ].text == null && 
+          if ( n[i].text != null && n[i-1].text == null && n[i].row > 0 && o[ n[i].row - 1 ].text == null &&
                n[i-1] == o[ n[i].row - 1 ] ) {
             n[i-1] = { text: n[i-1], row: n[i].row - 1 };
             o[n[i].row-1] = { text: o[n[i].row-1], row: i - 1 };
           }
         }
-        
+
         return { o: o, n: n };
       }
     };
