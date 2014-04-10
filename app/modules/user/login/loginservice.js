@@ -19,7 +19,11 @@ angular.module('newsyApp')
         },
 
         signup: function(user, success, error) {
-            $http.post('/signup', user).success(success).error(error);
+            console.log('user is', user)
+            $http.post('/signup', user).success(function(user){
+                console.log('signup request successful')
+                console.log('response to signup is ', user);
+            }).error(error);
         },
 
         login: function(user, success, error) {

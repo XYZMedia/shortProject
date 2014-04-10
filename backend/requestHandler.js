@@ -17,14 +17,18 @@ var DB = null;
 // Connect to the db
 MONGODB_URI = "mongodb://127.0.0.1:27017/post";
 
-db.connect(MONGODB_URI, function(err, db) {
-  if(!err) {
-    console.log("We are connected to MongoDB");
-    DB = db;
-  } else {
-    console.log("Error connecting to DB.");
-  }
-});
+var restartMongo = function(){
+  db.connect(MONGODB_URI, function(err, db) {
+    if(!err) {
+      console.log("We are connected to MongoDB");
+      DB = db;
+    } else {
+      console.log("Error connecting to DB.");
+    }
+  });
+}
+
+restartMongo();
 
 
 //////////////////////////////////////////////
@@ -74,31 +78,33 @@ var headers = {
   // };
 
 exports.login = function(req, res){
-    console.log('inside auth');
-
+    console.log('inside login');
     var userInfo = req.body;
+    var isValid = false; //to check if the userinfo is correct
+
     //send query to mongo to check if user exists
     //db.insert();
-    if(1===1){ // if the query to dbMongo identified the user as existing user
-      userInfo.role = routingConfig.userRoles.user;
-      res.cookie('userInfo', JSON.stringify(userInfo));
-      console.log('should have hit redirect')
-    }else{
-     // res.send(300, '/login')
-    }
-      // if(req.user) {
-      //     role = req.user.role;
-      //     username = req.user.username;
-      // }
-
-      // res.cookie('user', JSON.stringify({
-      //     'username': username,
-      //     'role': role
-      // }));
-
-      // res.send('index');
-      res.send(200);
-  };
+     // DB.collection('users').insert(user, function(error, savedUser) {
+    console.log('req.body is, ', userInfo);
+    DB.collection('users').findOne({username: userInfo.username}, function(error, found){
+      console.log('error is, ', error);
+      console.log('userInfo.username is, ', userInfo.username)
+      console.log('user found is, ', found)
+      if(found === null){
+        res.send(200, found); 
+        DB.close(); 
+        restartMongo();
+      }else if(found.password === userInfo.password){ //FIX LATER need to hash
+        console.log('password matches!')
+        userInfo.role = routingConfig.userRoles.user;
+        res.cookie('userInfo', JSON.stringify(userInfo));
+        console.log('should have hit redirect')
+        res.send(200, found);
+        DB.close();
+        restartMongo();
+      }
+    })
+};
 
 
 
@@ -143,6 +149,7 @@ exports.createArticle = function(req, res) {
     DB.collection('posts').insert(doc, function(error, inserted) {
       res.send(200);
       DB.close();
+      restartMongo();
     });     
   });
 };
@@ -155,9 +162,22 @@ exports.newestHeadlinesGet = function(req, res) {
     console.log("Collection being requested: ", docs);
     res.send(200, docs);
     DB.close();
+    restartMongo();
   });
 };
 
+
+exports.getArticle = function(req, res) {
+  var query = { '_id' : req.params.id };
+  DB.collection('posts').findOne(query, function(err, doc) {
+    if(err) throw err;
+    
+    console.log("Collection being requested: ", doc);
+    res.send(200, doc);
+    DB.close();
+    restartMongo();
+  });
+};
 
 exports.newestHeadlinesPost = function(req, res) {
 
@@ -165,14 +185,23 @@ exports.newestHeadlinesPost = function(req, res) {
 
 exports.signup = function(req, res) {
 
-  // var userInfo = req.body;
-  // var isNew = false;
+  var userInfo = req.body;
+  var isNew = false;
 
-  // console.log(userInfo.email);
+  console.log('userinfo.email is', userInfo.email);
 
-  // DB.collection('users').findOne({email: userInfo.email}, function(error, userByEmail){
-  //   console.log('found ', userByEmail);
-  //   if(userByEmail.email.length === 0){ // there is no existing user with the email
+  DB.collection('users').findOne({email: userInfo.email}, function(error, userByEmail){
+    console.log('found ', userByEmail);
+    if(error){
+      throw error;
+    }
+
+    if(userByEmail === null){ // there is no existing user with the email
+      console.log('isnull')
+      isNew = true;
+    }
+  //   else{
+  //     if(userByEmail)
   //     DB.collection('users').find({username: userInfo.username}, function(error, userByName){
   //       console.log('found ', userByName);
   //       if(userByName.username.length === 0){ // there is no existing user with the same name
@@ -187,25 +216,29 @@ exports.signup = function(req, res) {
   //   }else{
   //     res.send(); //the email already exists!
   //   }
+    if(isNew){
+      console.log('isnew')
+      var user = {
+        email   : req.body.email, 
+        username: req.body.username,
+        password: req.body.password, 
+        role    : req.body.role
+      };
 
-  // });
+      DB.collection('users').insert(user, function(error, savedUser) {
+        console.log('saved', savedUser);
+        res.send(200, savedUser);
+        DB.close();
+        restartMongo();
+      });     
+    }else{ //not new
+      console.log('signup fail')
+      res.send(200, isNew); // 
+      DB.close();
+      restartMongo();
+    }
+  });
 
-  // if(isNew){
-  //   var user = {
-  //     email   : req.body.email, 
-  //     username: req.body.username,
-  //     password: req.body.password, 
-  //     role    : req.body.role
-  //   };
-
-  //   DB.collection('users').insert(user, function(error, savedUser) {
-  //     console.log(savedUser);
-  //     res.send(200);
-  //     DB.close();
-  //   });     
-  // }else{
-  //   res.send(); // 
-  // }
 
 };
 

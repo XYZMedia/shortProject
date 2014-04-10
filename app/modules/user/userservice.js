@@ -31,9 +31,15 @@ angular.module('newsyApp.services.user', [])
           
           $http.post('/signup', userInfo)
             .success(function(res){ // res contains userInfo with updated role
-              $rootScope.currentUser = res;
-              console.log('hit signup success', $rootScope.currentUser);
-              $location.path('/');
+              if(res === 'false'){  //signup failed
+                console.log('not new')
+                $location.path('/signup'); // ASK
+              }else{
+                console.log('on successful sign up, ', res);
+                $rootScope.currentUser = res;
+                $location.path('/'); 
+              }
+              
             });
 
           //send login request to server
@@ -50,10 +56,16 @@ angular.module('newsyApp.services.user', [])
           
           $http.post('/login', userInfo)
             .success(function(res){ // res contains userInfo with updated role
-              console.log("success login");
-              $rootScope.currentUser = res;
-              console.log($rootScope.currentUser);
-              $location.path('/')
+              console.log('login post request response is, ', res);
+              if(res === ''){
+                //user info does not match
+                console.log('user info does not match! make sure your username and password is correct');
+              }else{
+                console.log("success login");
+                $rootScope.currentUser = res;
+                console.log($rootScope.currentUser);
+                $location.path('/')
+              }
             });
 
           //send login request to server
