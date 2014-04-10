@@ -157,11 +157,11 @@ exports.articles = function(req, res) {
 };
 
 exports.getArticle = function(req, res) {
-  var query = { '_id' : req.params.id };
-  DB.collection('posts').findOne(query, function(err, doc) {
+  console.log(req.params)
+  DB.collection('posts').findOne({ '_id': 'ObjectId("'+req.params.id+'")'}, function(err, doc) {
     if(err) throw err;
 
-    console.log("Collection being requested: ", doc);
+    console.log("Single Article being requested: ", doc);
     res.send(200, doc);
     DB.close();
   });

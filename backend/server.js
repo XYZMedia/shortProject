@@ -15,6 +15,7 @@ app.configure(function() {
   app.use(express.static(path.join(__dirname, '../app')));
 
   app.get('/articles', handler.articles);
+  app.get('/getArticle', handler.getArticle);
 
   app.post('/login', handler.login);
 

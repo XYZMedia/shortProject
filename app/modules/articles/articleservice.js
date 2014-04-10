@@ -12,10 +12,13 @@ angular.module('newsyApp.services.articles', [])
             });
         }
 
-      , find: function(articleId) {
-          // $http.get('URL', {
-          //   params.articleId = articleId
-          // })
+      , find: function(articleId, cb) {
+          $http.get('/getArticle', {
+            params: {id : articleId}
+          }).success(function(res){
+            console.log('getArticle request success:' + res);
+            cb(res);
+          })
         }
     }
   }])
