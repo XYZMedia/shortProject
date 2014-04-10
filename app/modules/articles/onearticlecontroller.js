@@ -19,6 +19,7 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
       };
 
 //==========Modal Functionality===========
+
       //function to open the modal
       $scope.editParagraph = function(currentText) {
 
@@ -38,9 +39,12 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
 
     //function to create the modal that gets displayed
     var ModalInstanceCtrl = function ($scope, $modalInstance, currentText, items) {
-
+      
+      $scope.modalHeader = 'Current Text:'
       $scope.currentText = currentText;
       $scope.items = items;
+      $scope.showEdit = false;
+      $scope.newURLs = [0];
 
       $scope.voteUp = function(){
         console.log('up!')
@@ -51,7 +55,17 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
       }
 
       $scope.newEdit = function(){
+        $scope.showEdit = true;
+        $scope.modalHeader = "Proposed Edit:";
+        $scope.items = []
+      }
 
+      $scope.addURL = function(){
+        $scope.newURLs.push($scope.newURLs.length)
+      }
+
+      $scope.submit = function(){
+        $modalInstance.dismiss();
       }
 
       $scope.cancel = function () {

@@ -55,10 +55,15 @@
 <!-- Script for creating a modal -->
   <script type="text/ng-template" id="myModalContent.html">
       <div class="modal-header text-justify">
-        <h5>Current Text:</h5>
-        <p>{{currentText}}</p>
+        <h5>{{modalHeader}}</h5>
+        <p editable-textarea="currentText" e-rows="7" e-cols="65" e-form="currentTextForm" blur="ignore">{{currentText || "empty"}}</p>
+        <div class="newURLs" ng-show="showEdit">
+          <h5>Source(s):</h5>
+          <input ng-repeat="url in newURLs" type="text" class="form-control newURL" ng-model="newURL" placeholder="Please add sources for your edits">
+          <a href="" ng-click="addURL()">Add more sources</a>
+        </div>
       </div>
-      <div class="Xmodal-body text-justify">
+      <div class="Xmodal-body text-justify" ng-hide="showEdit">
         <div ng-repeat="item in items" ng-init="item = getDiff(currentText, item)">
           <div id="left">
             <img class="contributorImg" src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/960px-President_Barack_Obama.jpg">
@@ -78,7 +83,8 @@
         </div>
       </div>
       <div class="Xmodal-footer">
-        <button class="btn btn-info" ng-click="newEdit()">Add a new Edit</button>
+        <button class="btn btn-info" ng-click="currentTextForm.$show();newEdit();" ng-hide="showEdit">Add a new Edit</button>
+        <button class="btn btn-primary" ng-click="submit()" ng-show="showEdit">Submit new Edit</button>
         <button class="btn btn-warning" ng-click="cancel()">Close</button>
       </div>
   </script>

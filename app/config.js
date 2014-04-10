@@ -1,7 +1,7 @@
 'use strict';
 
 // Declare app level module which depends on filters, and services
-angular.module('newsyApp.config', ['ngCookies'])
+angular.module('newsyApp.config', ['ngCookies', 'xeditable'])
 
 app.config(['$routeProvider', '$locationProvider',
     function($routeProvider, $locationProvider) {
@@ -76,8 +76,12 @@ app.config(['$routeProvider', '$locationProvider',
       .otherwise({ redirectTo: '/' });
     }
 ]);
+
+app.run(function(editableOptions) {
+  editableOptions.theme = 'bs3';
+});
 //EUGENECHOI
-app.run(['$rootScope', '$location', '$cookieStore', 'userService', function ($rootScope, $location, $cookieStore, userService) {
+app.run(['$rootScope', '$location', '$cookieStore', 'userService', function ($rootScope, $location, $cookieStore, userService, editableOptions) {
     $rootScope.$on("$routeChangeStart", function (event, next, current) {
       current = $cookieStore.get('userInfo') || { username: '', role: 1 };
       console.log('access', next.access, 'role', current.role)
@@ -94,6 +98,15 @@ app.run(['$rootScope', '$location', '$cookieStore', 'userService', function ($ro
         }
     });
 }]);
+
+
+
+
+
+
+
+
+
 //             $rootScope.error = "Seems like you tried accessing a route you don't have access to...";
 //             event.preventDefault();
 
