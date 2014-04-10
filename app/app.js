@@ -10,6 +10,7 @@ var app = angular.module('newsyApp',
   , 'newsyApp.controllers.allarticles'
   , 'newsyApp.controllers.newpost'
   , 'ui.bootstrap'
-  ,'ngCookies'
-  ,'ngRoute']
-  )
+  , 'xeditable'
+  , 'ngCookies'
+  , 'ngRoute'
+  ])

@@ -14,9 +14,12 @@ app.configure(function() {
 
   app.use(express.static(path.join(__dirname, '../app')));
 
+  app.get('/articles', handler.articles);
+  app.get('/getArticle', handler.getArticle);
+
   app.post('/login', handler.login);
 
-  app.post('/signup', handler.signup)
+  app.post('/signup', handler.signup);
 
   app.post('/newpost', handler.createArticle);
 

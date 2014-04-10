@@ -1,17 +1,24 @@
 'use strict';
- 
+
 angular.module('newsyApp.services.articles', [])
-  .factory('Articles', ['$location',
-    function($location) {
+  .factory('Articles', ['$location', '$http',
+    function($location, $http) {
       return {
         collection: function(cb) {
-          // $http.get('URL')
+          $http.get('/articles')
+            .success(function(res){
+              console.log('get request success:' + res);
+              cb(res);
+            });
         }
 
-      , find: function(articleId) {
-          // $http.get('URL', {
-          //   params.articleId = articleId
-          // })
+      , find: function(articleId, cb) {
+          $http.get('/getArticle', {
+            params: {id : articleId}
+          }).success(function(res){
+            console.log('getArticle request success:' + res);
+            cb(res);
+          })
         }
     }
   }])
