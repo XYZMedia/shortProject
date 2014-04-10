@@ -13,6 +13,7 @@ var routingConfig = require ('../app/routingConfig.js');
 // Mongo Client
 // //////////////////////////////////////////////
 var db = require('mongodb').MongoClient;
+var ObjectId = require('mongodb').ObjectID;
 var DB = null;
 // Connect to the db
 MONGODB_URI = "mongodb://127.0.0.1:27017/post";
@@ -167,8 +168,21 @@ exports.articles = function(req, res) {
   });
 };
 
+// exports.getArticle = function(req, res) {
+//   var query = { '_id' : req.params.id };
+//   DB.collection('posts').findOne(query, function(err, doc) {
+//     if(err) throw err;
+
+//     console.log("Collection being requested: ", doc);
+//     res.send(200, doc);
+//     DB.close();
+//   });
+// };
+
 exports.getArticle = function(req, res) {
-  var query = { '_id' : req.params.id };
+  var id = req.query.id;
+  console.log("OBJ ID: ", id)
+  var query = { '_id': new ObjectId(id) };
   DB.collection('posts').findOne(query, function(err, doc) {
     if(err) throw err;
 
@@ -177,19 +191,6 @@ exports.getArticle = function(req, res) {
     DB.close();
   });
 };
-
-exports.getArticle = function(req, res) {
-  console.log(req.params)
-  DB.collection('posts').findOne({ '_id': 'ObjectId("'+req.params.id+'")'}, function(err, doc) {
-    if(err) throw err;
-
-    console.log("Single Article being requested: ", doc);
-    res.send(200, doc);
-    DB.close();
-    restartMongo();
-  });
-};
-
 
 exports.newestHeadlinesPost = function(req, res) {
 

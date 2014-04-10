@@ -3,9 +3,9 @@
 angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles'])
   .controller('OneArticleController', ['$scope','$routeParams', '$location', '$modal', '$log', '$sce', 'Articles',
     function($scope, $routeParams, $location, $modal, $log, $sce, Articles) {
-
+      
       $scope.findArticle = function(){
-        Articles.find('5345be07db5b609d098776d9', function(res){
+        Articles.find('5344ae2620b8608396de5f66', function(res){
           $scope.article = res;
         });
       };
