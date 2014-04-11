@@ -98,7 +98,7 @@ exports.login = function(req, res){
       }else if(found.password === userInfo.password){ //FIX LATER need to hash
         console.log('password matches!');
 
-        res.cookie('userInfo', JSON.stringify({
+        res.cookie('currentUser', JSON.stringify({
           username: found.username,
           role: found.role
         }));
@@ -243,9 +243,10 @@ exports.signup = function(req, res) {
 
       DB.collection('users').insert(user, function(error, savedUser) {
         console.log('saved', savedUser);
-        res.cookie('userInfo', JSON.stringify({
-          username: savedUser.username,
-          role: savedUser.role
+        var userInfo = savedUser[0];
+        res.cookie('currentUser', JSON.stringify({
+          username: userInfo.username,
+          role: userInfo.role
         }));
         res.send(200, savedUser);
         DB.close();

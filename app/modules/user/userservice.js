@@ -64,6 +64,7 @@ angular.module('newsyApp.services.user', [])
                 console.log('user info does not match! make sure your username and password is correct');
               }else{
                 console.log("success login");
+                console.log($cookieStore.get('currentUser'));
                 $location.path('/');
               }
             });
@@ -72,8 +73,8 @@ angular.module('newsyApp.services.user', [])
         },
 
         logout: function() {
-          $cookieStore.remove('userInfo');
-          $cookieStore.put( 'userInfo', { role: 1 } );
+          $cookieStore.remove('currentUser');
+          $cookieStore.put( 'currentUser', { role: 1 } );
           //send logout request to server
           $location.path('/');
         },
