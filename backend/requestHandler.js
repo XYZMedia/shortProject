@@ -97,12 +97,10 @@ exports.login = function(req, res){
         restartMongo();
       }else if(found.password === userInfo.password){ //FIX LATER need to hash
         console.log('password matches!');
-
         res.cookie('currentUser', JSON.stringify({
           username: found.username,
           role: found.role
         }));
-
         console.log('should have hit redirect');
         res.send(200, found);
         DB.close();
