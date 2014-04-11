@@ -52,6 +52,13 @@ app.config(['$routeProvider', '$locationProvider',
               }
       )
 
+      .when('/article',
+              {
+               templateUrl: 'modules/articles/onearticle.html',
+               access: access.anon
+              }
+      )
+
       .when('/newpost',
               {
                templateUrl: 'modules/articles/newpost.html',

@@ -1,7 +1,7 @@
 <div class="row" data-ng-controller="AllArticlesController" ng-init="findArticles()">
-  <div class="row homepageArticle" ng-click="test($index)" ng-repeat="data in articles">
+  <div class="row homepageArticle" ng-repeat="data in articles">
     <img class="col-md-4 col-sm-6 col-xs-12" ng-src={{data.article.image}}>
-    <div class="col-md-8 col-sm-6 col-xs-12 articleHeader">
+    <div class="col-md-8 col-sm-6 col-xs-12 articleHeader" ng-click="findOneArticle(data._id)">
       <h2>{{data.postTitle}}</h2>
       <h4>{{data.article.title}}</h4>
       <p><em>{{data.postSource}}</em></p>

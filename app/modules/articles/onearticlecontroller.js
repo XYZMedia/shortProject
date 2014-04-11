@@ -5,7 +5,9 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
     function($scope, $routeParams, $location, $modal, $log, $sce, Articles) {
       
       $scope.findArticle = function(){
-        Articles.find('5344ae2620b8608396de5f66', function(res){
+
+        var querystring = $location.search();
+        Articles.find(querystring.articleId, function(res){
           $scope.article = res;
         });
       };
@@ -40,33 +42,33 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
     //function to create the modal that gets displayed
     var ModalInstanceCtrl = function ($scope, $modalInstance, currentText, items) {
       
-      $scope.modalHeader = 'Current Text:'
+      $scope.modalHeader = 'Current Text:';
       $scope.currentText = currentText;
       $scope.items = items;
       $scope.showEdit = false;
       $scope.newURLs = [0];
 
       $scope.voteUp = function(){
-        console.log('up!')
-      }
+        console.log('up!');
+      };
 
       $scope.voteDown = function(){
-        console.log('down!')
-      }
+        console.log('down!');
+      };
 
       $scope.newEdit = function(){
         $scope.showEdit = true;
         $scope.modalHeader = "Proposed Edit:";
-        $scope.items = []
-      }
+        $scope.items = [];
+      };
 
       $scope.addURL = function(){
-        $scope.newURLs.push($scope.newURLs.length)
-      }
+        $scope.newURLs.push($scope.newURLs.length);
+      };
 
       $scope.submit = function(){
         $modalInstance.dismiss();
-      }
+      };
 
       $scope.cancel = function () {
         $modalInstance.dismiss('cancel');
@@ -74,7 +76,7 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
 
       $scope.getDiff = function(currentText, item){
         return $sce.trustAsHtml(diffString(currentText, item))
-      }
+      };
 
 //==========Compare Text Functionality===========
 //==========Contained within Modal===========
@@ -178,4 +180,4 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
         return { o: o, n: n };
       }
     };
-}])
+}]);
