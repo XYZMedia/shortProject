@@ -19,7 +19,7 @@ angular.module('newsyApp.controllers.login', ['newsyApp.services.user'])
       };
 
       $scope.login = function(callback) {
-        console.log($scope.username)
+        console.log($scope.username);
         $scope.err = null;
         userService.login($scope.email, $scope.username, $scope.password)
          // '/', function(err, user) {
@@ -27,4 +27,8 @@ angular.module('newsyApp.controllers.login', ['newsyApp.services.user'])
          //  typeof(callback) === 'function' && callback(err, user);
         // });
       };
+
+      $scope.logout = function(callback){
+        userService.logout();
+      }
     }])

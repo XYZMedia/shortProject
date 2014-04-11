@@ -12,6 +12,8 @@ angular.module('newsyApp.controllers.allarticles', ['newsyApp.services.articles'
       $scope.findArticles = function() {
         Articles.collection(function(res){
           $scope.articles = res;
+          console.log('scope.articles is, ', $scope.articles);
+
         });
       };
 

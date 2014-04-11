@@ -82,15 +82,12 @@ app.run(function(editableOptions) {
 });
 //EUGENECHOI
 app.run(['$rootScope', '$location', '$cookieStore', 'userService', function ($rootScope, $location, $cookieStore, userService, editableOptions) {
-    $rootScope.$on("$routeChangeStart", function (event, next, current) {
-      current = $cookieStore.get('userInfo') || { username: '', role: 1 };
-      console.log('access', next.access, 'role', current.role)
-        if (!userService.isAuthorized(next.access, current.role)) {
-          console.log(next.access)
-          console.log(current.role)
-          console.log('not authorized');
-            if(userService.isLoggedIn(current)){
-              console.log('logged in')
+    $rootScope.$on("$routeChangeStart", function (event, next, currentUser) {
+      var currentUser = $cookieStore.get('currentUser') || {role: 1};
+      console.log('cookie store has', $cookieStore.get('currentUser'));
+      console.log('currentUser is,', currentUser);
+        if (!userService.isAuthorized(next.access, currentUser.role)) {
+            if(userService.isLoggedIn(currentUser)){
               $location.path('/');
             }else{
               $location.path('/login');

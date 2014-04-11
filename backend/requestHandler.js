@@ -98,14 +98,16 @@ exports.login = function(req, res){
         restartMongo();
       }else if(found.password === userInfo.password){ //FIX LATER need to hash
         console.log('password matches!');
-        userInfo.role = routingConfig.userRoles.user;
-        res.cookie('userInfo', JSON.stringify(userInfo));
+        res.cookie('currentUser', JSON.stringify({
+          username: found.username,
+          role: found.role
+        }));
         console.log('should have hit redirect');
         res.send(200, found);
         DB.close();
         restartMongo();
       }
-    })
+    });
 };
 
 
@@ -168,10 +170,12 @@ exports.articles = function(req, res) {
   });
 };
 
-// exports.getArticle = function(req, res) {
-//   var query = { '_id' : req.params.id };
-//   DB.collection('posts').findOne(query, function(err, doc) {
-//     if(err) throw err;
+
+exports.getArticle = function(req, res) {
+  var query = { '_id' : req.query.id };
+  console.log(query)
+  DB.collection('posts').findOne(query, function(err, doc) {
+    if(err) throw err;
 
 //     console.log("Collection being requested: ", doc);
 //     res.send(200, doc);
@@ -219,8 +223,7 @@ exports.signup = function(req, res) {
   //       console.log('found ', userByName);
   //       if(userByName.username.length === 0){ // there is no existing user with the same name
   //         userInfo.role = routingConfig.userRoles.user;
-  //         res.cookie('userInfo', JSON.stringify(userInfo));
-  //         console.log('should have hit redirect');
+  //           //         console.log('should have hit redirect');
   //         isNew = true; // the information does not exist in our db(new user)
   //       }else{
   //         res.send('the username exists'); // the username already exists!
@@ -235,11 +238,16 @@ exports.signup = function(req, res) {
         email   : req.body.email,
         username: req.body.username,
         password: req.body.password,
-        role    : req.body.role
+        role    : routingConfig.userRoles.user
       };
 
       DB.collection('users').insert(user, function(error, savedUser) {
         console.log('saved', savedUser);
+        var userInfo = savedUser[0];
+        res.cookie('currentUser', JSON.stringify({
+          username: userInfo.username,
+          role: userInfo.role
+        }));
         res.send(200, savedUser);
         DB.close();
         restartMongo();
