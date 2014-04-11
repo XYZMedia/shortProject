@@ -1,4 +1,4 @@
-<div data-ng-controller="OneArticleController" ng-init="sampleData()">
+<div data-ng-controller="OneArticleController" ng-init="findArticle()">
 
 <!-- Main Article section -->
   <div class="col-md-10 col-sm-8 col-xs-12">
@@ -7,6 +7,7 @@
       <img class="articleImg" src="http://upload.wikimedia.org/wikipedia/commons/thumb/d/da/SF_From_Marin_Highlands3.jpg/1599px-SF_From_Marin_Highlands3.jpg" />
       <div class="articleHeader">
         <h2>Article 1</h2>
+        <script>console.log($location.search);</script>
         <h4 class="text-justify">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</h4>
         <p>April 5, 2014</p>
         <p><em>Original Source: New York Times</em></p>
@@ -14,8 +15,9 @@
       </div>
     </div>
     <!-- Article content section -->
-    <div ng-repeat="paragraph in sampleData" class="articleContent text-justify">
+    <div ng-repeat="paragraph in article" class="articleContent text-justify">
       <p>{{paragraph}}</p>
+      {{blah}}
       <p ng-click="editParagraph(this.paragraph)" class="editCount">Click to see proposed edits (3 total) or submit a new edit</p>
     </div>
   </div>

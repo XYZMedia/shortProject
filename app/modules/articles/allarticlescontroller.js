@@ -15,8 +15,11 @@ angular.module('newsyApp.controllers.allarticles', ['newsyApp.services.articles'
         });
       };
 
-      $scope.findOneArticle = function (articleId) {
-        //reroute to new article on selection
+      $scope.findOneArticle = function(articleId) {
+        //console.log(articleId);
+        //not sure if $rootscope below is necessary or if there's another way to pass the id
+        $scope.articleId=articleId;
+        $location.path('/article').search({ articleId: $scope.articleId });
       };
 
     }]);

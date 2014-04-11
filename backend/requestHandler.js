@@ -13,9 +13,10 @@ var routingConfig = require ('../app/routingConfig.js');
 // Mongo Client
 // //////////////////////////////////////////////
 var db = require('mongodb').MongoClient;
+var ObjectId = require('mongodb').ObjectID;
 var DB = null;
 // Connect to the db
-MONGODB_URI = "mongodb://127.0.0.1:27017/post";
+MONGODB_URI = "mongodb://127.0.0.1:27017/newsapp";
 
 var restartMongo = function(){
   db.connect(MONGODB_URI, function(err, db) {
@@ -104,28 +105,29 @@ exports.login = function(req, res){
         DB.close();
         restartMongo();
       }
-    })
+    });
 };
 
 
 
 exports.createArticle = function(req, res) {
-  var url = req.body.articleUrl;
+
+  var url = req.body.url;
   var apiKey = 'c6da1b5b8fed3a1501866f95ff8fd91c';
-
-  request('http://api.diffbot.com/v2/article?token=' + apiKey + '&url=' + url, function(error, response, body){
-    console.log('body is ', body);
+   request('http://api.diffbot.com/v2/article?token=' + apiKey + '&url=' + url, function(error, response, body){
+    //console.log('body is ', body);
     var obj = JSON.parse(body);
-    console.log(obj);
+    //console.log(obj);
     var cho = obj.text.split(/[\r\n]/g);
-
+    //console.log(cho);
     var doc = {
       poster    : "current_user",
       postTitle : "",
       postSource: obj.url,
       article   : {
         title     : obj.title,
-        image     : obj.images.url,
+        // note this is an array of images, we can make a selection in the future
+        image     : obj.images[0].url,
         paragraphs: []
       },
       comments   : [{
@@ -143,12 +145,14 @@ exports.createArticle = function(req, res) {
           vote  : 0
         }]
       };
-
       doc.article.paragraphs.push(paragraph);
     }
 
+    //we might need some sort of "wait while processing msg to the user here"
     DB.collection('posts').insert(doc, function(error, inserted) {
-      res.send(200);
+      var objectId = doc._id;
+      //console.log(objectId);
+      res.send(200, objectId);
       DB.close();
       restartMongo();
     });
@@ -167,28 +171,30 @@ exports.articles = function(req, res) {
   });
 };
 
+// exports.getArticle = function(req, res) {
+//   var query = { '_id' : req.query.id };
+//   DB.collection('posts').findOne(query, function(err, doc) {
+//     if(err) throw err;
+
+//     console.log("Collection being requested: ", doc);
+//     res.send(200, doc);
+//     DB.close();
+//   });
+// };
+
 exports.getArticle = function(req, res) {
-  var query = { '_id' : req.params.id };
+  var id = req.query.id;
+  console.log("OBJ ID: ", id)
+  var query = { '_id': new ObjectId(id) };
   DB.collection('posts').findOne(query, function(err, doc) {
     if(err) throw err;
 
     console.log("Collection being requested: ", doc);
     res.send(200, doc);
-    DB.close();
+//    DB.close();
   });
 };
 
-exports.getArticle = function(req, res) {
-  console.log(req.params)
-  DB.collection('posts').findOne({ '_id': 'ObjectId("'+req.params.id+'")'}, function(err, doc) {
-    if(err) throw err;
-
-    console.log("Single Article being requested: ", doc);
-    res.send(200, doc);
-    DB.close();
-    restartMongo();
-  });
-};
 
 
 exports.newestHeadlinesPost = function(req, res) {

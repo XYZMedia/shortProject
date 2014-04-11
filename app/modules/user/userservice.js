@@ -64,7 +64,7 @@ angular.module('newsyApp.services.user', [])
                 console.log("success login");
                 $rootScope.currentUser = res;
                 console.log($rootScope.currentUser);
-                $location.path('/')
+                $location.path('/');
               }
             });
 
@@ -82,8 +82,10 @@ angular.module('newsyApp.services.user', [])
         newArticle: function(url){
           $http.post('/newpost', {url: url})
             .success(function(res){
-              console.log(res);
-            })
+              $rootScope.articleId = JSON.parse(res);
+              //console.log($rootScope.articleId);
+              $location.path('/article').search({ articleId: $rootScope.articleId });
+            });
         }
 
         
