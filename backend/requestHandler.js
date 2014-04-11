@@ -171,11 +171,11 @@ exports.articles = function(req, res) {
 };
 
 
-exports.getArticle = function(req, res) {
-  var query = { '_id' : req.query.id };
-  console.log(query)
-  DB.collection('posts').findOne(query, function(err, doc) {
-    if(err) throw err;
+// exports.getArticle = function(req, res) {
+//   var query = { '_id' : req.query.id };
+//   console.log(query)
+//   DB.collection('posts').findOne(query, function(err, doc) {
+//     if(err) throw err;
 
 //     console.log("Collection being requested: ", doc);
 //     res.send(200, doc);
