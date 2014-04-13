@@ -24,7 +24,7 @@ angular.module('newsyApp.services.articles', [])
       , voteUp: function(articleId, paragraphIndex, editIndex) {
         $http.post('', {
           
-        }
+        })
       }
     }
   }])
