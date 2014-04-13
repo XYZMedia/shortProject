@@ -23,28 +23,25 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
 //==========Modal Functionality===========
 
       //function to open the modal
-      $scope.editParagraph = function(currentText) {
-
+      $scope.editParagraph = function(paragraph) {
         $modal.open({
           templateUrl: 'myModalContent.html',
           controller: ModalInstanceCtrl,
           resolve: {
-            currentText: function () {
-              return currentText;
-            },
-            items: function () {
-              return $scope.sampleData;
+            paragraph: function () {
+              return paragraph;
             }
           }
         });
       };
 
     //function to create the modal that gets displayed
-    var ModalInstanceCtrl = function ($scope, $modalInstance, currentText, items) {
+    var ModalInstanceCtrl = function ($scope, $modalInstance, paragraph) {
+        console.log(paragraph)
       
       $scope.modalHeader = 'Current Text:';
-      $scope.currentText = currentText;
-      $scope.items = items;
+      $scope.currentText = paragraph.currentText;
+      $scope.proposedTexts = paragraph.proposedText;
       $scope.showEdit = false;
       $scope.newURLs = [0];
 
