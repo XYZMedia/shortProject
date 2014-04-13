@@ -4,49 +4,52 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
   .controller('OneArticleController', ['$scope','$routeParams', '$location', '$modal', '$log', '$sce', 'Articles',
     function($scope, $routeParams, $location, $modal, $log, $sce, Articles) {
       
-      $scope.findArticle = function(){
+      $scope.articleId = $location.search().articleId
 
-        var querystring = $location.search();
-        Articles.find(querystring.articleId, function(res){
+      $scope.findArticle = function(){
+        Articles.find($scope.articleId, function(res){
           $scope.article = res;
         });
       };
 
-      $scope.sampleData = function() {
-        $scope.sampleData = [
-          "A ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-          "B ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-          "C ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat, sunt in culpa qui officia deserunt mollit anim id est laborum."
-        ];
-      };
+      // $scope.sampleData = function() {
+      //   $scope.sampleData = [
+      //     "A ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      //     "B ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      //     "C ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat, sunt in culpa qui officia deserunt mollit anim id est laborum."
+      //   ];
+      // };
 
 //==========Modal Functionality===========
 
       //function to open the modal
-      $scope.editParagraph = function(paragraph) {
+      $scope.editParagraph = function(paragraph, paragraphIndex) {
         $modal.open({
           templateUrl: 'myModalContent.html',
           controller: ModalInstanceCtrl,
           resolve: {
             paragraph: function () {
               return paragraph;
+            },
+            paragraphIndex: function() {
+              return paragraphIndex;
             }
           }
         });
       };
 
     //function to create the modal that gets displayed
-    var ModalInstanceCtrl = function ($scope, $modalInstance, paragraph) {
-        console.log(paragraph)
-      
+    var ModalInstanceCtrl = function ($scope, $modalInstance, paragraph, paragraphIndex) {
+
+      $scope.articleId = $location.search().articleId
       $scope.modalHeader = 'Current Text:';
       $scope.currentText = paragraph.currentText;
       $scope.proposedTexts = paragraph.proposedText;
       $scope.showEdit = false;
       $scope.newURLs = [0];
 
-      $scope.voteUp = function(){
-        console.log('up!');
+      $scope.voteUp = function(editIndex){
+        Articles.voteUp($scope.articleId, paragraphIndex, editIndex);
       };
 
       $scope.voteDown = function(){

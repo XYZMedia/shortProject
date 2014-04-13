@@ -17,7 +17,7 @@
     <!-- Article content section -->
     <div ng-repeat="paragraph in article.article.paragraphs" class="articleContent text-justify">
       <p>{{paragraph.currentText}}</p>
-      <p ng-click="editParagraph(this.paragraph)" class="editCount">Click to see proposed edits ({{paragraph.proposedText.length}} total) or submit a new edit</p>
+      <p ng-click="editParagraph(this.paragraph, $index)" class="editCount">Click to see proposed edits ({{paragraph.proposedText.length}} total) or submit a new edit</p>
     </div>
   </div>
 
@@ -68,7 +68,7 @@
         <div ng-repeat="proposedText in proposedTexts" ng-init="proposedText.text = getDiff(currentText, proposedText.text)">
           <div id="left">
             <img class="contributorImg" src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/960px-President_Barack_Obama.jpg">
-            <p id="up"><span ng-click="voteUp()" class="glyphicon glyphicon-circle-arrow-up"</span>{{proposedText.vote}}</p>
+            <p id="up"><span ng-click="voteUp($index)" class="glyphicon glyphicon-circle-arrow-up"</span>{{proposedText.vote}}</p>
             <p id="down"><span ng-click="voteDown()" class="glyphicon glyphicon-circle-arrow-down"</span>40</p>
           </div>
           <div id="right">

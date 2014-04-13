@@ -20,5 +20,11 @@ angular.module('newsyApp.services.articles', [])
             cb(res);
           })
         }
+
+      , voteUp: function(articleId, paragraphIndex, editIndex) {
+        $http.post('', {
+          
+        }
+      }
     }
   }])
