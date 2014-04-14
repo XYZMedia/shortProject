@@ -22,7 +22,13 @@ angular.module('newsyApp.services.articles', [])
         }
 
       , voteUp: function(articleId, paragraphIndex, editIndex) {
-        $http.post('', {
+        var paragraphInfo = {
+          articleId: articleId,
+          paragraphIndex: paragraphIndex,
+          editIndex: editIndex
+        }
+        $http.post('/voteUp', paragraphInfo)
+          .success(function(res))
           
         })
       }

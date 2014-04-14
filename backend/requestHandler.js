@@ -219,21 +219,7 @@ exports.signup = function(req, res) {
       console.log('isnull');
       isNew = true;
     }
-  //   else{
-  //     if(userByEmail)
-  //     DB.collection('users').find({username: userInfo.username}, function(error, userByName){
-  //       console.log('found ', userByName);
-  //       if(userByName.username.length === 0){ // there is no existing user with the same name
-  //         userInfo.role = routingConfig.userRoles.user;
-  //           //         console.log('should have hit redirect');
-  //         isNew = true; // the information does not exist in our db(new user)
-  //       }else{
-  //         res.send('the username exists'); // the username already exists!
-  //       }
-  //     });
-  //   }else{
-  //     res.send(); //the email already exists!
-  //   }
+  
     if(isNew){
       console.log('isnew');
       var user = {
@@ -264,6 +250,14 @@ exports.signup = function(req, res) {
 
 
 };
+
+exports.voteUp = function(req, res) {
+  var paragraphInfo = req.body;
+  var change = false;
+
+  //add conditional change
+
+}
 
 
 
