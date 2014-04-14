@@ -2,19 +2,18 @@
 angular.module('newsyApp')  
   .factory('Auth', function($http, $rootScope, $cookieStore){
 
-    $rootScope.accessLevels = accessLevels;
-    $rootScope.userRoles = userRoles;
+    var currentUser = $cookieStore.get('currentUser');
 
     return {
         authorize: function(accessLevel, role) {
             if(role === undefined)
-                role = $rootScope.user.role;
+                role = currentUser.role;
             return accessLevel &amp; role;
         },
 
         isLoggedIn: function(user) {
             if(user === undefined)
-                user = $rootScope.user;
+                user = currentUser;
             return user.role === userRoles.user || user.role === userRoles.admin;
         },
 
@@ -28,14 +27,14 @@ angular.module('newsyApp')
 
         login: function(user, success, error) {
             $http.post('/login', user).success(function(user){
-                $rootScope.user = user;
+                currentUser = user;
                 success(user);
             }).error(error);
         },
 
         logout: function(success, error) {
             $http.post('/logout').success(function(){
-                $rootScope.user = {
+                currentUser = {
                     username : '',
                     role : userRoles.public
                 };
