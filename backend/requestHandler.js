@@ -176,7 +176,7 @@ exports.createArticle = function(req, res) {
       comments   : [{
         commentor : "",
         comment   : ""
-      }]
+      }],
     };
 
     for (var i = 0; i < cho.length; i++) {
@@ -209,6 +209,7 @@ exports.articles = function(req, res) {
   });
 };
 
+
 exports.getArticle = function(req, res) {
   var id = req.query.id;
   console.log("OBJ ID: ", id)
@@ -222,20 +223,73 @@ exports.getArticle = function(req, res) {
   });
 };
 
+
+exports.newestHeadlinesPost = function(req, res) {
+
+};
+
+exports.signup = function(req, res) {
+
+  var userInfo = req.body;
+  var isNew = false;
+
+
+  DB.collection('users').findOne({email: userInfo.email}, function(error, userByEmail){
+    if(error){
+      throw error;
+    }
+
+    if(userByEmail === null){ // there is no existing user with the email
+      isNew = true;
+    }
+
+    if(isNew){
+      var user = {
+        email   : req.body.email,
+        username: req.body.username,
+        password: req.body.password,
+        role    : routingConfig.userRoles.user
+      };
+
+      DB.collection('users').insert(user, function(error, savedUser) {
+        var userInfo = savedUser[0];
+        res.cookie('currentUser', JSON.stringify({
+          username: userInfo.username,
+          role: userInfo.role
+        }));
+        res.send(200, savedUser);
+        currentUserName = savedUser.username;
+        DB.close();
+        restartMongo();
+      });
+    }else{ //not new
+      res.send(200, isNew); //
+      DB.close();
+      restartMongo();
+    }
+  });
+
+};
+
+
 exports.voteUp = function(req, res) {
+  console.log('voteUp!');
   var articleId = req.body.articleId;
   var paragraphIndex = req.body.paragraphIndex;
   var editIndex = req.body.editIndex;
-  
+
   var query    = {_id: new ObjectId(articleId)};
   DB.collection('posts').findOne(query, function(err, post) {
+    console.log('voteUp, found post, ', post);
     if(err) throw err;
 
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
-    //.paragraphs[paragraphIndex].proposedText[editIndex].vote
     proposedText.vote++;
-    var vote = proposedText.vote
-    
+    var vote = proposedText.vote;
+    console.log('paragraph is, ', post.article.paragraphs[paragraphIndex]);
+    console.log('proposedText is, ', proposedText);
+    console.log('vote after voteUp is, ', vote)
+
     DB.collection('posts').update(query, post, function(err, dontcare){
       if(err) throw err;
     })
@@ -259,37 +313,91 @@ exports.voteUp = function(req, res) {
     //   // refresh the proposed text.
 }
 
-    exports.editParagraph = function(req, res){
-      var articleId = req.body.articleId;
-      var paragraphIndex = req.body.paragraphIndex;
-      var editIndex = req.body.editIndex;
-  
-      var query    = {_id: new ObjectId(articleId)};
-      console.log("BEFORE DB")
-      DB.collection('posts').findOne(query, function(err, post) {
+exports.editParagraph = function(req, res){
+  var articleId = req.body.articleId;
+  var paragraphIndex = req.body.paragraphIndex;
+  var editIndex = req.body.editIndex;
+
+  var query    = {_id: new ObjectId(articleId)};
+  console.log("BEFORE DB");
+
+
+  DB.collection('posts').findOne(query, function(err, post) {
+    if(err) throw err;
+
+    var timeLineId = articleId + 'timeline';
+
+    DB.collection(timeLineId).insert(post, function(err, savedPost){
         if(err) throw err;
-
-        var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
-        //.paragraphs[paragraphIndex].proposedText[editIndex].vote
-        post.article.paragraphs[paragraphIndex] = proposedText.text;
-
-        console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
-
-        DB.collection('posts').update(query, post, function(err, dontcare){
-          if(err) throw err;
-
-          console.log('dont care is', dontcare)
-
-        })
+        console.log('saved Post is', savedPost);
+    });
 
 
+    var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
+    post.article.paragraphs[paragraphIndex] = proposedText.text;
+
+    console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
+
+    DB.collection('posts').update(query, post, function(err, dontcare){
+      if(err) throw err;
+      console.log('dont care is', dontcare);
+    });
     console.log('after update, proposed text is,', post.article.paragraphs[paragraphIndex]);
-    // console.log('proposed text is ,',proposedText);
-    })
-    
+  });
+};
 
 
-    }
+exports.voteDown = function(req, res) {
+  var articleId = req.body.articleId;
+  var paragraphIndex = req.body.paragraphIndex;
+  var editIndex = req.body.editIndex;
+
+  var query    = {_id: new ObjectId(articleId)};
+  DB.collection('posts').findOne(query, function(err, post) {
+    if(err) throw err;
+
+    var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
+    proposedText.vote--;
+    var vote = proposedText.vote;
+
+    DB.collection('posts').update(query, post, function(err, dontcare){
+      if(err) throw err;
+    });
+  });
+};
+
+exports.editParagraph = function(req, res){
+  var articleId = req.body.articleId;
+  var paragraphIndex = req.body.paragraphIndex;
+  var editIndex = req.body.editIndex;
+
+  var query    = {_id: new ObjectId(articleId)};
+  console.log("BEFORE DB");
+
+
+  DB.collection('posts').findOne(query, function(err, post) {
+    if(err) throw err;
+
+    var timeLineId = articleId + 'timeline';
+
+    DB.collection(timeLineId).insert(post, function(err, savedPost){
+        if(err) throw err;
+        console.log('saved Post is', savedPost);
+    });
+
+
+    var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
+    post.article.paragraphs[paragraphIndex] = proposedText.text;
+
+    console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
+
+    DB.collection('posts').update(query, post, function(err, dontcare){
+      if(err) throw err;
+      console.log('dont care is', dontcare);
+    });
+    console.log('after update, proposed text is,', post.article.paragraphs[paragraphIndex]);
+  });
+};
   //add
     // DB.close();
     // restartMongo();
