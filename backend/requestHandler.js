@@ -136,11 +136,7 @@ exports.createArticle = function(req, res) {
     for (var i = 0; i < cho.length; i++) {
       var paragraph = {
         currentText : cho[i],
-        proposedText: [{
-          editor: "",
-          text  : "",
-          vote  : 0
-        }]
+        proposedText: []
       };
       doc.article.paragraphs.push(paragraph);
     }

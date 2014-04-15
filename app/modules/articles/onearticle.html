@@ -58,8 +58,8 @@
         <h5>{{modalHeader}}</h5>
         <p editable-textarea="currentText" e-rows="7" e-cols="65" e-form="currentTextForm" blur="ignore">{{currentText || "empty"}}</p>
         <div class="newURLs" ng-show="showEdit">
-          <h5>Source(s):</h5>
-          <input ng-repeat="url in newURLs" type="text" class="form-control newURL" ng-model="newURL" placeholder="Please add sources for your edits">
+          <h5>Source:</h5>
+          <input type="text" class="form-control newURL" ng-model="newURL" placeholder="Please add sources for your edits">
           <a href="" ng-click="addURL()">Add more sources</a>
         </div>
       </div>
@@ -84,7 +84,7 @@
       </div>
       <div class="Xmodal-footer">
         <button class="btn btn-info" ng-click="currentTextForm.$show();newEdit();" ng-hide="showEdit">Add a new Edit</button>
-        <button class="btn btn-primary" ng-click="submit()" ng-show="showEdit">Submit new Edit</button>
+        <button class="btn btn-primary" ng-click="submit(currentText, newURL)" ng-show="showEdit">Submit new Edit</button>
         <button class="btn btn-warning" ng-click="cancel()">Close</button>
       </div>
   </script>
