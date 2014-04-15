@@ -143,7 +143,7 @@ exports.newEdit = function(req, res) {
   DB.collection('posts').findOne(query, function(err, post) {
     if(err) throw err;
 
-    var obj = {text: newEditText, url: sources}
+    var obj = {text: newEditText, url: sources, vote: 0}
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText.push(obj);
     
     DB.collection('posts').update(query, post, function(err, post){
@@ -181,7 +181,8 @@ exports.createArticle = function(req, res) {
 
     for (var i = 0; i < cho.length; i++) {
       var paragraph = {
-        currentText : cho[i]
+        currentText : cho[i],
+        proposedText: []
       };
       doc.article.paragraphs.push(paragraph);
     }
@@ -305,20 +306,21 @@ exports.editParagraph = function(req, res){
   DB.collection('posts').findOne(query, function(err, post) {
     if(err) throw err;
 
-    var timeLineId = articleId + 'timeline';
+    // var timeLineId = articleId + 'timeline';
 
-    DB.collection(timeLineId).insert(post, function(err, savedPost){
-        if(err) throw err;
-        console.log('saved Post is', savedPost);
-    });
+    // DB.collection(timeLineId).insert(post, function(err, savedPost){
+    //     if(err) throw err;
+    //     console.log('saved Post is', savedPost);
+    // });
 
 
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
-    post.article.paragraphs[paragraphIndex].currentText = proposedText.text;
+
+    post.article.paragraphs[paragraphIndex][currentText] = proposedText[text];
 
     console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
 
-    DB.collection('posts').update(query, post, function(err, dontcare){
+    DB.collection('posts').update(query, $set, post, function(err, dontcare){
       if(err) throw err;
       console.log('dont care is', dontcare);
     });

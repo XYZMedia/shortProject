@@ -16,7 +16,7 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
 
       //function to open the modal
       $scope.editParagraph = function(paragraph, paragraphIndex) {
-        $modal.open({
+        var modalInstance = $modal.open({
           templateUrl: 'myModalContent.html',
           controller: ModalInstanceCtrl,
           resolve: {
@@ -28,6 +28,12 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
             }
           }
         });
+
+        modalInstance.result.then(function(refresh){
+          if(refresh){
+            $scope.findArticle();
+          }
+        })
       };
 
     //function to create the modal that gets displayed
@@ -38,11 +44,16 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
       $scope.currentText = paragraph.currentText;
       $scope.proposedTexts = paragraph.proposedText;
       $scope.showEdit = false;
-      $scope.newURLs = [0];
+      $scope.newURLs = [''];
+      $scope.refresh = false;
 
       $scope.voteUp = function(editIndex){
-        this.proposedText.vote++;
-        Articles.voteUp($scope.articleId, paragraphIndex, editIndex);
+        if(++this.proposedText.vote > 1){
+          Articles.replaceParagraph($scope.articleId, paragraphIndex, editIndex);
+          $scope.refresh = true;
+        } else {
+          Articles.voteUp($scope.articleId, paragraphIndex, editIndex);
+        }
       };
 
       $scope.voteDown = function(){
@@ -52,19 +63,20 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
       $scope.newEdit = function(){
         $scope.showEdit = true;
         $scope.modalHeader = "Proposed Edit:";
-        $scope.items = [];
       };
 
       $scope.addURL = function(){
-        $scope.newURLs.push($scope.newURLs.length);
+        $scope.newURLs.push('');
       };
 
-      $scope.submit = function(){
-        $modalInstance.dismiss();
+      $scope.submit = function(currentText, source){
+        Articles.newEdit($scope.articleId, paragraphIndex, currentText, source);
+        $scope.refresh = true;
+        $modalInstance.close($scope.refresh);
       };
 
       $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
+        $modalInstance.close($scope.refresh);
       };
 
       $scope.getDiff = function(currentText, item){
