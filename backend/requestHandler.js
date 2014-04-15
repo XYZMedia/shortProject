@@ -1,17 +1,18 @@
-var express = require('express');
-var http = require("http");
-var url = require("url");
-var fs = require("fs");
-var path = require("path");
-var querystring = require("querystring");
-var request = require('request');
-var routingConfig = require ('../app/routingConfig.js');
+var express       = require('express'),
+    fs            = require("fs"),
+    http          = require("http"),
+    path          = require("path"),
+    querystring   = require("querystring"),
+    request       = require('request'),
+    routingConfig = require ('../app/routingConfig.js'),
+    url           = require("url");
 
 var currentUserName;
 
 //////////////////////////////////////////////
 // Mongo Client
 // //////////////////////////////////////////////
+
 var db = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 var DB = null;
@@ -35,8 +36,6 @@ restartMongo();
 //////////////////////////////////////////////
 // Bootstrapper
 //////////////////////////////////////////////
-
-
 var now = new Date();
 var jsonDate = now.toJSON();
 
@@ -44,8 +43,6 @@ var jsonDate = now.toJSON();
 //////////////////////////////////////////////
 // End Bootstrapper
 //////////////////////////////////////////////
-
-
 
 var headers = {
   "access-control-allow-origin": "*",
@@ -55,153 +52,12 @@ var headers = {
   //"Content-Type": "text/html"
 };
 
-//EUGENECHOI
-  // exports.signup = function(req, res){
-  //   console.log('inside signup');
-
-  //   var userInfo = req.body;
-  //   //send query to mongo to check if user exists
-  //   var users = DB.collection('users');
-
-  //   users.insert(userInfo, function(err, inserted){
-  //     if(err){
-  //       throw err;
-  //     }
-  //     console.log(inserted);
-  //   });
-
-  // };
-
-exports.login = function(req, res){
-    console.log('inside login');
-    var userInfo = req.body;
-    var isValid = false; //to check if the userinfo is correct
-
-    //send query to mongo to check if user exists
-
-    //db.insert();
-     // DB.collection('users').insert(user, function(error, savedUser) {
-    console.log('req.body is, ', userInfo);
-    DB.collection('users').findOne({username: userInfo.username}, function(error, found){
-      console.log('error is, ', error);
-      console.log('userInfo.username is, ', userInfo.username);
-      console.log('user found is, ', found);
-      if(found === null){
-        res.send(200, found);
-        DB.close();
-        restartMongo();
-      }else if(found.password === userInfo.password){ //FIX LATER need to hash
-        console.log('password matches!');
-        res.cookie('currentUser', JSON.stringify({
-          username: found.username,
-          role: found.role
-        }));
-        currentUserName = found.username;
-        console.log('should have hit redirect');
-        res.send(200, found);
-        DB.close();
-        restartMongo();
-      }
-    });
-};
-
-
-
-exports.createArticle = function(req, res) {
-
-  var url = req.body.url;
-  var apiKey = 'c6da1b5b8fed3a1501866f95ff8fd91c';
-   request('http://api.diffbot.com/v2/article?token=' + apiKey + '&url=' + url, function(error, response, body){
-    //console.log('body is ', body);
-    var obj = JSON.parse(body);
-    //console.log(obj);
-    var cho = obj.text.split(/[\r\n]/g);
-    //console.log(cho);
-    var doc = {
-      poster    : currentUserName,
-      postTitle : "",
-      postSource: obj.url,
-      article   : {
-        title     : obj.title,
-        // note this is an array of images, we can make a selection in the future
-        image     : obj.images[0].url,
-        paragraphs: []
-      },
-      comments   : [{
-        commentor : "",
-        comment   : ""
-      }]
-    };
-
-    for (var i = 0; i < cho.length; i++) {
-      var paragraph = {
-        currentText : cho[i],
-        proposedText: [{
-          editor: "",
-          text  : "",
-          vote  : 0
-        }]
-      };
-      doc.article.paragraphs.push(paragraph);
-    }
-
-    //we might need some sort of "wait while processing msg to the user here"
-    DB.collection('posts').insert(doc, function(error, inserted) {
-      var objectId = doc._id;
-      //console.log(objectId);
-      res.send(200, objectId);
-      DB.close();
-      restartMongo();
-    });
-  });
-};
-
-// This function needs to eventually limit the number of documents being retrieved and sort those documents
-exports.articles = function(req, res) {
-  DB.collection('posts').find({}).toArray(function(err, docs) {
-    if(err) throw err;
-
-    console.log("Collection being requested: ", docs);
-    res.send(200, docs);
-    DB.close();
-    restartMongo();
-  });
-};
-
-
-// exports.getArticle = function(req, res) {
-//   var query = { '_id' : req.query.id };
-//   DB.collection('posts').findOne(query, function(err, doc) {
-//     if(err) throw err;
-
-//     console.log("Collection being requested: ", doc);
-//     res.send(200, doc);
-//     DB.close();
-//   });
-// };
-
-exports.getArticle = function(req, res) {
-  var id = req.query.id;
-  console.log("OBJ ID: ", id)
-  var query = { '_id': new ObjectId(id) };
-  DB.collection('posts').findOne(query, function(err, doc) {
-    if(err) throw err;
-
-    console.log("Collection being requested: ", doc);
-    res.send(200, doc);
-//    DB.close();
-  });
-};
-
-exports.newestHeadlinesPost = function(req, res) {
-
-};
-
+//////////////////////////////////////////////
+// User Authentication
+//////////////////////////////////////////////
 exports.signup = function(req, res) {
-
-  var userInfo = req.body;
-  var isNew = false;
-
+  var userInfo  = req.body,
+      isNew     = false;
 
   DB.collection('users').findOne({email: userInfo.email}, function(error, userByEmail){
     if(error){
@@ -237,8 +93,133 @@ exports.signup = function(req, res) {
       restartMongo();
     }
   });
+};
+
+exports.login = function(req, res){
+    console.log('inside login');
+    var userInfo = req.body;
+    var isValid = false; //to check if the userinfo is correct
+
+    //send query to mongo to check if user exists
+
+    //db.insert();
+     // DB.collection('users').insert(user, function(error, savedUser) {
+    console.log('req.body is, ', userInfo);
+    DB.collection('users').findOne({username: userInfo.username}, function(error, found){
+      console.log('error is, ', error);
+      console.log('userInfo.username is, ', userInfo.username);
+      console.log('user found is, ', found);
+      if(found === null){
+        res.send(200, found);
+        DB.close();
+        restartMongo();
+      }else if(found.password === userInfo.password){ //FIX LATER need to hash
+        console.log('password matches!');
+        res.cookie('currentUser', JSON.stringify({
+          username: found.username,
+          role: found.role
+        }));
+        currentUserName = found.username;
+        console.log('should have hit redirect');
+        res.send(200, found);
+        DB.close();
+        restartMongo();
+      }
+    });
+};
 
 
+//////////////////////////////////////////////
+// Article
+//////////////////////////////////////////////
+exports.newEdit = function(req, res) {
+  var articleId      = req.body.articleId,
+      paragraphIndex = req.body.paragraphIndex,
+      newEditText    = req.body.newEditText,
+      sources        = req.body.sources;
+  
+  var query = {_id: new ObjectId(articleId)};
+
+  DB.collection('posts').findOne(query, function(err, post) {
+    if(err) throw err;
+
+    var obj = {text: newEditText, url: sources}
+    var proposedText = post.article.paragraphs[paragraphIndex].proposedText.push(obj);
+    
+    DB.collection('posts').update(query, post, function(err, post){
+      if(err) throw err;
+    })
+  })
+};
+
+
+exports.createArticle = function(req, res) {
+
+  var url = req.body.url;
+  var apiKey = 'c6da1b5b8fed3a1501866f95ff8fd91c';
+   request('http://api.diffbot.com/v2/article?token=' + apiKey + '&url=' + url, function(error, response, body){
+    //console.log('body is ', body);
+    var obj = JSON.parse(body);
+    //console.log(obj);
+    var cho = obj.text.split(/[\r\n]/g);
+    //console.log(cho);
+    var doc = {
+      poster    : currentUserName,
+      postTitle : "",
+      postSource: obj.url,
+      article   : {
+        title     : obj.title,
+        // note this is an array of images, we can make a selection in the future
+        image     : obj.images[0].url,
+        paragraphs: []
+      },
+      comments   : [{
+        commentor : "",
+        comment   : ""
+      }]
+    };
+
+    for (var i = 0; i < cho.length; i++) {
+      var paragraph = {
+        currentText : cho[i]
+      };
+      doc.article.paragraphs.push(paragraph);
+    }
+
+    //we might need some sort of "wait while processing msg to the user here"
+    DB.collection('posts').insert(doc, function(error, inserted) {
+      var objectId = doc._id;
+      //console.log(objectId);
+      res.send(200, objectId);
+      DB.close();
+      restartMongo();
+    });
+  });
+};
+
+// This function needs to eventually limit the number of documents being retrieved and sort those documents
+exports.articles = function(req, res) {
+  DB.collection('posts').find({}).toArray(function(err, docs) {
+    if(err) throw err;
+
+    console.log("Collection being requested: ", docs);
+    res.send(200, docs);
+    DB.close();
+    restartMongo();
+  });
+};
+
+exports.getArticle = function(req, res) {
+  var id = req.query.id;
+  console.log("OBJ ID: ", id)
+  var query = { '_id': new ObjectId(id) };
+  DB.collection('posts').findOne(query, function(err, doc) {
+    if(err) throw err;
+
+    console.log("Collection being requested: ", doc);
+    res.send(200, doc);
+//    DB.close();
+  });
 };
 
 exports.voteUp = function(req, res) {
@@ -258,7 +239,6 @@ exports.voteUp = function(req, res) {
     DB.collection('posts').update(query, post, function(err, dontcare){
       if(err) throw err;
     })
-    // console.log('proposed text is ,',proposedText);
   })
     
     // DB.collection('posts').update({_id: new ObjectId(articleId)}, operator, function(err, vote) {
@@ -277,9 +257,7 @@ exports.voteUp = function(req, res) {
     //   //save the current post to timline
     //   // swap out the paragraph
     //   // refresh the proposed text.
-      
-
-  }
+}
 
     exports.editParagraph = function(req, res){
       var articleId = req.body.articleId;

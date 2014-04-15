@@ -7,23 +7,20 @@ var passport = require('passport');
 
 
 app.configure(function() {
-
   app.use(express.bodyParser());
-
   app.use(cors());
-
   app.use(express.static(path.join(__dirname, '../app')));
 
   app.get('/articles', handler.articles);
   app.get('/getArticle', handler.getArticle);
-
-  app.post('/login', handler.login);
+  app.post('/newpost', handler.createArticle);
+  app.post('/newEdit', handler.newEdit);
 
   app.post('/signup', handler.signup);
-
-  app.post('/newpost', handler.createArticle);
+  app.post('/login', handler.login);
 
   app.post('/voteUp', handler.editParagraph);
+
 
   //app.post('/edit', handler.editParagraph);
 
@@ -51,19 +48,7 @@ app.configure(function() {
     secret: 'hello'
   }));
 
-
   app.listen(8080);
   console.log('Listening on port 8080');
 });
 
-
-
-
-// app.get('/articles', handler.articles);
-// // app.options('/newestheadlines', handler.newestHeadOptions);
-// app.post('/createArticle', handler.createArticle);
-// app.get('/getArticle', handler.getArticle);
-// // app.options('/article', handler.articleOptions);
-
-// //app.post('/signup', handler.signup);
-// app.post('/getUser', handler.getUser);
