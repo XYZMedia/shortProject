@@ -285,8 +285,6 @@ exports.voteUp = function(req, res) {
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
     proposedText.vote++;
     var vote = proposedText.vote;
-    console.log('paragraph is, ', post.article.paragraphs[paragraphIndex]);
-    console.log('proposedText is, ', proposedText);
     console.log('vote after voteUp is, ', vote)
 
     DB.collection('posts').update(query, post, function(err, dontcare){
