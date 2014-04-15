@@ -23,7 +23,7 @@ app.configure(function() {
 
   app.post('/newpost', handler.createArticle);
 
-  app.post('/voteUp', handler.voteUp);
+  app.post('/voteUp', handler.editParagraph);
 
   app.post('/voteDown', handler.voteDown);
 

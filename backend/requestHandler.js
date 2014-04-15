@@ -130,17 +130,12 @@ exports.createArticle = function(req, res) {
       comments   : [{
         commentor : "",
         comment   : ""
-      }]
+      }],
     };
 
     for (var i = 0; i < cho.length; i++) {
       var paragraph = {
-        currentText : cho[i],
-        proposedText: [{
-          editor: "",
-          text  : "",
-          vote  : 0
-        }]
+        currentText : cho[i]
       };
       doc.article.paragraphs.push(paragraph);
     }
@@ -294,8 +289,17 @@ exports.editParagraph = function(req, res){
   var query    = {_id: new ObjectId(articleId)};
   console.log("BEFORE DB");
 
+
   DB.collection('posts').findOne(query, function(err, post) {
     if(err) throw err;
+
+    var timeLineId = articleId + 'timeline';
+
+    DB.collection(timeLineId).insert(post, function(err, savedPost){
+        if(err) throw err;
+        console.log('saved Post is', savedPost);
+    });
+
 
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
     post.article.paragraphs[paragraphIndex] = proposedText.text;
