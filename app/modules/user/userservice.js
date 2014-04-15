@@ -44,7 +44,6 @@ angular.module('newsyApp.services.user', [])
 
             });
 
-          //send login request to server
         },
 
         login: function(email, username, password) {
@@ -68,8 +67,7 @@ angular.module('newsyApp.services.user', [])
                 $location.path('/');
               }
             });
-
-          //send login request to server
+            
         },
 
         logout: function() {
