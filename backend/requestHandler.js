@@ -40,12 +40,6 @@ restartMongo();
 var now = new Date();
 var jsonDate = now.toJSON();
 
-// db.execute('INSERT INTO users (userId, fname, lname, whenJoined) VALUES (' + userId + ', \'john\', \'smith\', dateof(now()));',
-//   function(err, result){
-//     if (err) console.log('execute failed:' + err);
-//     else console.log('inserted rows');
-//   }
-// );
 
 //////////////////////////////////////////////
 // End Bootstrapper
@@ -252,25 +246,34 @@ exports.voteUp = function(req, res) {
   var paragraphIndex = req.body.paragraphIndex;
   var editIndex = req.body.editIndex;
   
-  var change = false;
-
-  DB.collection('posts').findOne({_id: new ObjectId(articleId) }, function(err, post) {
+  var change   = false;
+  var query    = {_id: new ObjectId(articleId)};
+  console.log("BEFORE DB")
+  DB.collection('posts').findOne(query, function(err, post) {
     if(err) throw err;
-
-    //console.log('post found is,', post)
 
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
     //.paragraphs[paragraphIndex].proposedText[editIndex].vote
-    proposedText.vote++
+    proposedText.vote++;
     var vote = proposedText.vote
-    
-    console.log('proposed text is ,',proposedText);
-    
-    var operator = {'$set' : proposedText}
-    DB.collection('posts').update({_id: new ObjectId(articleId)}, operator, function(err, vote) {
 
-    console.log('vote is ,', vote);
+    console.log("VOTE", post.article.paragraphs[paragraphIndex].proposedText[editIndex]);
+    
+    DB.collection('posts').update(query, post, function(err, dontcare){
+      if(err) throw err;
+
+      console.log('dont care is', dontcare)
+
     })
+
+    console.log('after update, proposed text is,', post.article.paragraphs[paragraphIndex].proposedText[editIndex]);
+    // console.log('proposed text is ,',proposedText);
+    })
+    
+    // DB.collection('posts').update({_id: new ObjectId(articleId)}, operator, function(err, vote) {
+
+    // // console.log('vote is ,', vote);
+    // })
 //save later
     // if(vote > 10){ //chagne later
     //   change = true;
@@ -285,14 +288,14 @@ exports.voteUp = function(req, res) {
     //   // refresh the proposed text.
       
 
-    })
+    }
   //add
     // DB.close();
     // restartMongo();
-DB.collection('posts').findOne({_id: new ObjectId(articleId) }, function(err, post) {
- console.log('updated post', post)
- })
-}
+// DB.collection('posts').findOne({_id: new ObjectId(articleId) }, function(err, post) {
+//  console.log('updated post', post)
+//  })
+// }
 
 
 
