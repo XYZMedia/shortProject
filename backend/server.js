@@ -23,7 +23,9 @@ app.configure(function() {
 
   app.post('/newpost', handler.createArticle);
 
-  app.post('/voteUp', handler.voteUp)
+  app.post('/voteUp', handler.editParagraph);
+
+  //app.post('/edit', handler.editParagraph);
 
   // app.get('/login', function(req, res){
   //   console.log('inside auth');

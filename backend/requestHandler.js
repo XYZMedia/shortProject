@@ -246,9 +246,7 @@ exports.voteUp = function(req, res) {
   var paragraphIndex = req.body.paragraphIndex;
   var editIndex = req.body.editIndex;
   
-  var change   = false;
   var query    = {_id: new ObjectId(articleId)};
-  console.log("BEFORE DB")
   DB.collection('posts').findOne(query, function(err, post) {
     if(err) throw err;
 
@@ -256,19 +254,12 @@ exports.voteUp = function(req, res) {
     //.paragraphs[paragraphIndex].proposedText[editIndex].vote
     proposedText.vote++;
     var vote = proposedText.vote
-
-    console.log("VOTE", post.article.paragraphs[paragraphIndex].proposedText[editIndex]);
     
     DB.collection('posts').update(query, post, function(err, dontcare){
       if(err) throw err;
-
-      console.log('dont care is', dontcare)
-
     })
-
-    console.log('after update, proposed text is,', post.article.paragraphs[paragraphIndex].proposedText[editIndex]);
     // console.log('proposed text is ,',proposedText);
-    })
+  })
     
     // DB.collection('posts').update({_id: new ObjectId(articleId)}, operator, function(err, vote) {
 
@@ -287,6 +278,38 @@ exports.voteUp = function(req, res) {
     //   // swap out the paragraph
     //   // refresh the proposed text.
       
+
+  }
+
+    exports.editParagraph = function(req, res){
+      var articleId = req.body.articleId;
+      var paragraphIndex = req.body.paragraphIndex;
+      var editIndex = req.body.editIndex;
+  
+      var query    = {_id: new ObjectId(articleId)};
+      console.log("BEFORE DB")
+      DB.collection('posts').findOne(query, function(err, post) {
+        if(err) throw err;
+
+        var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
+        //.paragraphs[paragraphIndex].proposedText[editIndex].vote
+        post.article.paragraphs[paragraphIndex] = proposedText.text;
+
+        console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
+
+        DB.collection('posts').update(query, post, function(err, dontcare){
+          if(err) throw err;
+
+          console.log('dont care is', dontcare)
+
+        })
+
+
+    console.log('after update, proposed text is,', post.article.paragraphs[paragraphIndex]);
+    // console.log('proposed text is ,',proposedText);
+    })
+    
+
 
     }
   //add
