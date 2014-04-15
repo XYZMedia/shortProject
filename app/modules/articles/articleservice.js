@@ -48,8 +48,8 @@ angular.module('newsyApp.services.articles', [])
           newEditText: newEditText,
           sources: [source]
         }
-        // $http.post('/newEdit', paragraphInfo)
-        //    .success(function(res){})
+        $http.post('/newEdit', paragraphInfo)
+           .success(function(res){})
       }
     }
   }])

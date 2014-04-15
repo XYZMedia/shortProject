@@ -13,17 +13,17 @@ angular.module('newsyApp.controllers.newpost', ['newsyApp.services.articles', 'n
 
       });
 
-      $scope.addHTTP = function(){
-        if($scope.url === undefined || $scope.url.charAt(0) !== 'h'){
-          $scope.url = 'http://';
-        }
-      };
+      // $scope.addHTTP = function(){
+      //   if($scope.url === undefined || $scope.url.charAt(0) !== 'h'){
+      //     $scope.url = 'http://';
+      //   }
+      // };
 
-      $scope.removeHTTP = function(){
-        if($scope.url === 'http://'){
-          $scope.url = '';
-        }
-      };
+      // $scope.removeHTTP = function(){
+      //   if($scope.url === 'http://'){
+      //     $scope.url = '';
+      //   }
+      // };
 
       $scope.submit = function() {
         userService.newArticle($scope.url);

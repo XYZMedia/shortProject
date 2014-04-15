@@ -48,7 +48,7 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
       $scope.refresh = false;
 
       $scope.voteUp = function(editIndex){
-        if(++this.proposedText.vote > 9){
+        if(++this.proposedText.vote > 1){
           Articles.replaceParagraph($scope.articleId, paragraphIndex, editIndex);
           $scope.refresh = true;
         } else {

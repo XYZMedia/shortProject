@@ -14,8 +14,9 @@
     </div>
 
     <!-- Article content section -->
-    <div ng-repeat="paragraph in article.article.paragraphs" class="articleContent text-justify">
+    <div ng-repeat="paragraph in article.article.paragraphs | filter:paragraph" class="articleContent text-justify">
       <p>{{paragraph.currentText}}</p>
+      {{paragraph}}
       <p ng-click="editParagraph(this.paragraph, $index)" class="editCount">Click to see proposed edits ({{paragraph.proposedText.length}} total) or submit a new edit</p>
     </div>
   </div>
@@ -75,8 +76,7 @@
               <h6>Edit proposed by: <a href="">{{proposedText.editor}}</a></h6>
               <p ng-bind-html="proposedText.text"></p>
               <h6>Sources</h6>
-              <a href="">http://www.cnn.com/2014/04/09/world/asia/malaysia-airlines-plane/index.html?hpt=hp_t1</a>
-              <a href="">http://politicalticker.blogs.cnn.com/2014/04/08/hillary-clinton-on-2016-im-thinking-about-it/?hpt=hp_t2</a>
+              <a href="{{source}}" ng-repeat="source in proposedText.url">{{source}}</a>
             </div>
           </div>
           <hr>
