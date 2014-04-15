@@ -1,4 +1,5 @@
-var express       = require('express'),
+var apiKeys       = require('./apiKeys'),
+    express       = require('express'),
     fs            = require("fs"),
     http          = require("http"),
     path          = require("path"),
@@ -137,40 +138,14 @@ exports.getArticles = function(request, response) {
     if(error) throw error;
 
     console.log("Collection being requested: ", articles);
-    response.send(200, articles);
-    
-    DB.close();
-    restartMongo();
+    response.send(200, articles); 
+    // DB.close();
   });
 };
 
-
-
-exports.newEdit = function(req, res) {
-  var articleId      = req.body.articleId,
-      paragraphIndex = req.body.paragraphIndex,
-      newEditText    = req.body.newEditText,
-      sources        = req.body.sources;
-  
-  var query = {_id: new ObjectId(articleId)};
-
-  DB.collection('posts').findOne(query, function(err, post) {
-    if(err) throw err;
-
-    var obj = {text: newEditText, url: sources, vote: 0}
-    var proposedText = post.article.paragraphs[paragraphIndex].proposedText.push(obj);
-    
-    DB.collection('posts').update(query, post, function(err, post){
-      if(err) throw err;
-    })
-  })
-};
-
-
 exports.createArticle = function(req, res) {
-
   var url = req.body.url;
-  var apiKey = 'c6da1b5b8fed3a1501866f95ff8fd91c';
+  var apiKey = apiKeys.diffbot;
    request('http://api.diffbot.com/v2/article?token=' + apiKey + '&url=' + url, function(error, response, body){
     //console.log('body is ', body);
     var obj = JSON.parse(body);
@@ -211,6 +186,28 @@ exports.createArticle = function(req, res) {
     });
   });
 };
+
+
+exports.newEdit = function(req, res) {
+  var articleId      = req.body.articleId,
+      paragraphIndex = req.body.paragraphIndex,
+      newEditText    = req.body.newEditText,
+      sources        = req.body.sources;
+  
+  var query = {_id: new ObjectId(articleId)};
+
+  DB.collection('posts').findOne(query, function(err, post) {
+    if(err) throw err;
+
+    var obj = {text: newEditText, url: sources, vote: 0}
+    var proposedText = post.article.paragraphs[paragraphIndex].proposedText.push(obj);
+    
+    DB.collection('posts').update(query, post, function(err, post){
+      if(err) throw err;
+    })
+  })
+};
+
 
 
 
