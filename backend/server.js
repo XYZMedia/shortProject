@@ -19,7 +19,7 @@ app.configure(function() {
   app.post('/signup', handler.signup);
   app.post('/login', handler.login);
 
-  app.post('/voteUp', handler.editParagraph);
+  app.post('/voteUp', handler.voteUp);
 
   app.post('/voteDown', handler.voteDown);
 

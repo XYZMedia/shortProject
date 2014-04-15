@@ -282,7 +282,6 @@ exports.voteUp = function(req, res) {
   DB.collection('posts').findOne(query, function(err, post) {
     console.log('voteUp, found post, ', post);
     if(err) throw err;
-
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
     proposedText.vote++;
     var vote = proposedText.vote;
@@ -292,26 +291,9 @@ exports.voteUp = function(req, res) {
 
     DB.collection('posts').update(query, post, function(err, dontcare){
       if(err) throw err;
-    })
-  })
-    
-    // DB.collection('posts').update({_id: new ObjectId(articleId)}, operator, function(err, vote) {
-
-    // // console.log('vote is ,', vote);
-    // })
-//save later
-    // if(vote > 10){ //chagne later
-    //   change = true;
-    // }
-
-    // if(change){
-    //   DB.collection(articleId).insert(post, function(err, timeline){
-    //     timeline.insert()
-    //   })
-    //   //save the current post to timline
-    //   // swap out the paragraph
-    //   // refresh the proposed text.
-}
+    });
+  });
+};
 
 exports.editParagraph = function(req, res){
   var articleId = req.body.articleId;
