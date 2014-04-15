@@ -130,8 +130,22 @@ exports.login = function(req, res){
 
 
 //////////////////////////////////////////////
-// Article
+// Resurce: Articles 
 //////////////////////////////////////////////
+exports.getArticles = function(request, response) {
+  DB.collection('posts').find({}).toArray(function(error, articles) {
+    if(error) throw error;
+
+    console.log("Collection being requested: ", articles);
+    response.send(200, articles);
+    
+    DB.close();
+    restartMongo();
+  });
+};
+
+
+
 exports.newEdit = function(req, res) {
   var articleId      = req.body.articleId,
       paragraphIndex = req.body.paragraphIndex,
@@ -198,17 +212,7 @@ exports.createArticle = function(req, res) {
   });
 };
 
-// This function needs to eventually limit the number of documents being retrieved and sort those documents
-exports.articles = function(req, res) {
-  DB.collection('posts').find({}).toArray(function(err, docs) {
-    if(err) throw err;
 
-    console.log("Collection being requested: ", docs);
-    res.send(200, docs);
-    DB.close();
-    restartMongo();
-  });
-};
 
 
 exports.getArticle = function(req, res) {
