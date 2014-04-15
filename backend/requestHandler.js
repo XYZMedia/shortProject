@@ -60,15 +60,13 @@ exports.signup = function(req, res) {
       isNew     = false;
 
   DB.collection('users').findOne({email: userInfo.email}, function(error, userByEmail){
-    if(error){
-      throw error;
-    }
+    if (error) throw error;
 
-    if(userByEmail === null){ // there is no existing user with the email
+    if (userByEmail === null) { // there is no existing user with the email
       isNew = true;
     }
   
-    if(isNew){
+    if (isNew) {
       var user = {
         email   : req.body.email,
         username: req.body.username,
@@ -78,6 +76,7 @@ exports.signup = function(req, res) {
 
       DB.collection('users').insert(user, function(error, savedUser) {
         var userInfo = savedUser[0];
+
         res.cookie('currentUser', JSON.stringify({
           username: userInfo.username,
           role: userInfo.role
@@ -87,7 +86,7 @@ exports.signup = function(req, res) {
         DB.close();
         restartMongo();
       });
-    }else{ //not new
+    } else { //not new
       res.send(200, isNew); //
       DB.close();
       restartMongo();
@@ -96,36 +95,36 @@ exports.signup = function(req, res) {
 };
 
 exports.login = function(req, res){
-    console.log('inside login');
-    var userInfo = req.body;
-    var isValid = false; //to check if the userinfo is correct
+  console.log('inside login');
+  var userInfo = req.body;
+  var isValid = false; //to check if the userinfo is correct
 
-    //send query to mongo to check if user exists
+  //send query to mongo to check if user exists
 
-    //db.insert();
-     // DB.collection('users').insert(user, function(error, savedUser) {
-    console.log('req.body is, ', userInfo);
-    DB.collection('users').findOne({username: userInfo.username}, function(error, found){
-      console.log('error is, ', error);
-      console.log('userInfo.username is, ', userInfo.username);
-      console.log('user found is, ', found);
-      if(found === null){
-        res.send(200, found);
-        DB.close();
-        restartMongo();
-      }else if(found.password === userInfo.password){ //FIX LATER need to hash
-        console.log('password matches!');
-        res.cookie('currentUser', JSON.stringify({
-          username: found.username,
-          role: found.role
-        }));
-        currentUserName = found.username;
-        console.log('should have hit redirect');
-        res.send(200, found);
-        DB.close();
-        restartMongo();
-      }
-    });
+  //db.insert();
+   // DB.collection('users').insert(user, function(error, savedUser) {
+  console.log('req.body is, ', userInfo);
+  DB.collection('users').findOne({username: userInfo.username}, function(error, found){
+    console.log('error is, ', error);
+    console.log('userInfo.username is, ', userInfo.username);
+    console.log('user found is, ', found);
+    if(found === null){
+      res.send(200, found);
+      DB.close();
+      restartMongo();
+    }else if(found.password === userInfo.password){ //FIX LATER need to hash
+      console.log('password matches!');
+      res.cookie('currentUser', JSON.stringify({
+        username: found.username,
+        role: found.role
+      }));
+      currentUserName = found.username;
+      console.log('should have hit redirect');
+      res.send(200, found);
+      DB.close();
+      restartMongo();
+    }
+  });
 };
 
 
@@ -151,7 +150,6 @@ exports.newEdit = function(req, res) {
     })
   })
 };
-
 
 exports.createArticle = function(req, res) {
 
@@ -257,75 +255,34 @@ exports.voteUp = function(req, res) {
     //   //save the current post to timline
     //   // swap out the paragraph
     //   // refresh the proposed text.
-}
+};
 
-    exports.editParagraph = function(req, res){
-      var articleId = req.body.articleId;
-      var paragraphIndex = req.body.paragraphIndex;
-      var editIndex = req.body.editIndex;
+exports.editParagraph = function(req, res) {
+  var articleId      = req.body.articleId,
+      paragraphIndex = req.body.paragraphIndex,
+      editIndex      = req.body.editIndex;
   
-      var query    = {_id: new ObjectId(articleId)};
-      console.log("BEFORE DB")
-      DB.collection('posts').findOne(query, function(err, post) {
-        if(err) throw err;
+  var query = {_id: new ObjectId(articleId)};
+ 
+  DB.collection('posts').findOne(query, function(error, post) {
+    if(error) throw error;
 
-        var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
-        //.paragraphs[paragraphIndex].proposedText[editIndex].vote
-        post.article.paragraphs[paragraphIndex] = proposedText.text;
+    var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
+    
+    post.article.paragraphs[paragraphIndex] = proposedText.text;
 
-        console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
+    console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
 
-        DB.collection('posts').update(query, post, function(err, dontcare){
-          if(err) throw err;
+    DB.collection('posts').update(query, post, function(err, dontcare){
+      if(err) throw err;
 
-          console.log('dont care is', dontcare)
+      console.log('dont care is', dontcare)
 
-        })
+    })
 
 
     console.log('after update, proposed text is,', post.article.paragraphs[paragraphIndex]);
     // console.log('proposed text is ,',proposedText);
-    })
-    
-
-
-    }
-  //add
-    // DB.close();
-    // restartMongo();
-// DB.collection('posts').findOne({_id: new ObjectId(articleId) }, function(err, post) {
-//  console.log('updated post', post)
-//  })
-// }
-
-
-
-
-// exports.getUser = function(req, res) {
-//   var query = { 'username' : req.params.username, 'password': req.params.password };
-//   DB.collection('users').findOne(query, function(err, user) {
-//     if(err) throw err;
-
-//     console.log("Collection being requested: ", user);
-//     res.send(200, user);
-//     DB.close();
-//   });
-// };
-// exports.articleUpdate = function(req, res) {
-
-//   // Set value of _id to id of current object
-//   var query    = { '_id' : 'FILL_IN' };
-
-//   // Set value of article.p1 to input field
-//   var operator = { '$set' : { 'article.p1' : "FILL_IN" } };
-
-//   db.collection('posts').update(query, operator, function(err, updated) {
-//     if(err) throw err;
-
-//     console.dir("Successfully updated: " + updated);
-//     //  we need to redirect or reload the page
-//     response.send(200, updated)
-//     return db.close();
-//   });
-// };
+  })
+};
 
