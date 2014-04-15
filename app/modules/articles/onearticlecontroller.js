@@ -12,14 +12,6 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
         });
       };
 
-      // $scope.sampleData = function() {
-      //   $scope.sampleData = [
-      //     "A ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      //     "B ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      //     "C ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat, sunt in culpa qui officia deserunt mollit anim id est laborum."
-      //   ];
-      // };
-
 //==========Modal Functionality===========
 
       //function to open the modal
@@ -49,9 +41,7 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
       $scope.newURLs = [0];
 
       $scope.voteUp = function(editIndex){
-        console.log('article Id is ,', $scope.articleId)
-        console.log('paragraphIndex  is ,', paragraphIndex)
-        console.log('editIndex is ,', editIndex)
+        this.proposedText.vote++;
         Articles.voteUp($scope.articleId, paragraphIndex, editIndex);
       };
 

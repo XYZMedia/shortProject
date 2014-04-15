@@ -1,15 +1,20 @@
 'use strict';
 
 angular.module('newsyApp.controllers.header', ['newsyApp.services.user'])
-  .controller('HeaderController', ['$scope', '$location', 'userService', 
-    function($scope, $location, userService) {
+  .controller('HeaderController', ['$scope', '$location', 'userService', '$cookieStore', 
+    function($scope, $location, userService, $cookieStore) {
 
-      // $scope.$on('angularFireAuth:login', function() {
-      //   angularFire(new Firebase(FBURL+'/users/'+$scope.auth.id), $scope, 'user');
-      // });
+      $scope.currentUser = $cookieStore.get('currentUser')
+
+      $scope.getUser = function(){
+        if($scope.currentUser.role > 1){
+          $scope.authorized = true;
+        }
+      }
 
       $scope.logout = function() {
-        userService.logout('/login');
+        userService.logout();
+        $scope.authorized = false;
       };
 
       $scope.navbarEntries = [

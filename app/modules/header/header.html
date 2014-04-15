@@ -1,4 +1,4 @@
-<nav class="navbar navbar-inverse navbar-fixed-top ng-scope" role="navigation" ng-controller="HeaderController">
+<nav class="navbar navbar-inverse navbar-fixed-top ng-scope" role="navigation" ng-controller="HeaderController" ng-init="getUser()">
   <div class="container-fluid">
 
     <div class="navbar-header">
@@ -16,20 +16,16 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
-        <li ng-hide="auth">
-          <a data-toggle="collapse" data-target=".navbar-collapse" href="#/newpost">Post</a></li>
-        <li ng-hide="auth">
+        <li ng-hide="authorized">
           <a data-toggle="collapse" data-target=".navbar-collapse" href="#/signup">Signup</a></li>
-        <li ng-hide="auth">
+        <li ng-hide="authorized">
           <a data-toggle="collapse" data-target=".navbar-collapse" href="#/login">Login</a></li>
-        <li class="dropdown" ng-show="auth">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{user.name}}<b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            <li><a href="" ng-click="newPost()">Add a post</a></li>
-            <li><a href="" ng-click="userProfile()">Profile</a></li>
-            <li><a href="" ng-click="logout()">Signout</a></li>
-          </ul>
-        </li>
+        <li ng-show="authorized">
+          <a href="#/newpost" ng-click="newPost()">Add a new post</a></li>
+        <li ng-show="authorized">
+          <a href="" ng-click="userProfile()">Profile</a></li>
+        <li ng-show="authorized">
+          <a href="" ng-click="logout()">Signout</a></li>
       </ul>
     </div>
 

@@ -9,7 +9,6 @@ angular.module('newsyApp.controllers.login', ['newsyApp.services.user'])
       }
 
   //EUGENECHOI
-
       $scope.signup = function(callback) {
         userService.signup($scope.email, $scope.username, $scope.password);
       };
@@ -17,13 +16,6 @@ angular.module('newsyApp.controllers.login', ['newsyApp.services.user'])
       $scope.login = function(callback) {
         $scope.err = null;
         userService.login($scope.email, $scope.username, $scope.password)
-         // '/', function(err, user) {
-         //  $scope.err = err||null;
-         //  typeof(callback) === 'function' && callback(err, user);
-        // });
       };
 
-      $scope.logout = function(callback){
-        userService.logout();
-      }
     }])
