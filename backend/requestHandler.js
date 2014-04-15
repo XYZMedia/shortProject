@@ -169,6 +169,7 @@ exports.articles = function(req, res) {
 };
 
 
+
 // exports.getArticle = function(req, res) {
 //   var query = { '_id' : req.query.id };
 //   DB.collection('posts').findOne(query, function(err, doc) {
@@ -211,7 +212,7 @@ exports.signup = function(req, res) {
     if(userByEmail === null){ // there is no existing user with the email
       isNew = true;
     }
-  
+
     if(isNew){
       var user = {
         email   : req.body.email,
@@ -238,80 +239,76 @@ exports.signup = function(req, res) {
     }
   });
 
-
 };
 
+
 exports.voteUp = function(req, res) {
+  console.log('voteUp!');
   var articleId = req.body.articleId;
   var paragraphIndex = req.body.paragraphIndex;
   var editIndex = req.body.editIndex;
-  
+
+  var query    = {_id: new ObjectId(articleId)};
+  DB.collection('posts').findOne(query, function(err, post) {
+    console.log('voteUp, found post, ', post);
+    if(err) throw err;
+
+    var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
+    proposedText.vote++;
+    var vote = proposedText.vote;
+    console.log('paragraph is, ', post.article.paragraphs[paragraphIndex]);
+    console.log('proposedText is, ', proposedText);
+    console.log('vote after voteUp is, ', vote)
+
+    DB.collection('posts').update(query, post, function(err, dontcare){
+      if(err) throw err;
+    });
+  });
+};
+
+
+exports.voteDown = function(req, res) {
+  var articleId = req.body.articleId;
+  var paragraphIndex = req.body.paragraphIndex;
+  var editIndex = req.body.editIndex;
+
   var query    = {_id: new ObjectId(articleId)};
   DB.collection('posts').findOne(query, function(err, post) {
     if(err) throw err;
 
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
-    //.paragraphs[paragraphIndex].proposedText[editIndex].vote
-    proposedText.vote++;
-    var vote = proposedText.vote
-    
+    proposedText.vote--;
+    var vote = proposedText.vote;
+
     DB.collection('posts').update(query, post, function(err, dontcare){
       if(err) throw err;
-    })
-    // console.log('proposed text is ,',proposedText);
-  })
-    
-    // DB.collection('posts').update({_id: new ObjectId(articleId)}, operator, function(err, vote) {
+    });
+  });
+};
 
-    // // console.log('vote is ,', vote);
-    // })
-//save later
-    // if(vote > 10){ //chagne later
-    //   change = true;
-    // }
+exports.editParagraph = function(req, res){
+  var articleId = req.body.articleId;
+  var paragraphIndex = req.body.paragraphIndex;
+  var editIndex = req.body.editIndex;
 
-    // if(change){
-    //   DB.collection(articleId).insert(post, function(err, timeline){
-    //     timeline.insert()
-    //   })
-    //   //save the current post to timline
-    //   // swap out the paragraph
-    //   // refresh the proposed text.
-      
+  var query    = {_id: new ObjectId(articleId)};
+  console.log("BEFORE DB");
 
-  }
+  DB.collection('posts').findOne(query, function(err, post) {
+    if(err) throw err;
 
-    exports.editParagraph = function(req, res){
-      var articleId = req.body.articleId;
-      var paragraphIndex = req.body.paragraphIndex;
-      var editIndex = req.body.editIndex;
-  
-      var query    = {_id: new ObjectId(articleId)};
-      console.log("BEFORE DB")
-      DB.collection('posts').findOne(query, function(err, post) {
-        if(err) throw err;
+    var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
+    post.article.paragraphs[paragraphIndex] = proposedText.text;
 
-        var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
-        //.paragraphs[paragraphIndex].proposedText[editIndex].vote
-        post.article.paragraphs[paragraphIndex] = proposedText.text;
+    console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
 
-        console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
-
-        DB.collection('posts').update(query, post, function(err, dontcare){
-          if(err) throw err;
-
-          console.log('dont care is', dontcare)
-
-        })
-
-
+    DB.collection('posts').update(query, post, function(err, dontcare){
+      if(err) throw err;
+      console.log('dont care is', dontcare);
+    });
     console.log('after update, proposed text is,', post.article.paragraphs[paragraphIndex]);
-    // console.log('proposed text is ,',proposedText);
-    })
-    
-
-
-    }
+  });
+};
   //add
     // DB.close();
     // restartMongo();
