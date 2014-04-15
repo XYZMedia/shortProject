@@ -28,9 +28,9 @@ angular.module('newsyApp.services.articles', [])
           editIndex: editIndex
         }
         $http.post('/voteUp', paragraphInfo)
-          .success(function(res))
+           .success(function(res){})
           
-        })
+        
       }
     }
   }])

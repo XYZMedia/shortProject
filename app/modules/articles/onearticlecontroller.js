@@ -49,6 +49,9 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
       $scope.newURLs = [0];
 
       $scope.voteUp = function(editIndex){
+        console.log('article Id is ,', $scope.articleId)
+        console.log('paragraphIndex  is ,', paragraphIndex)
+        console.log('editIndex is ,', editIndex)
         Articles.voteUp($scope.articleId, paragraphIndex, editIndex);
       };
 

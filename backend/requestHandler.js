@@ -7,7 +7,7 @@ var querystring = require("querystring");
 var request = require('request');
 var routingConfig = require ('../app/routingConfig.js');
 
-
+var currentUserName;
 
 //////////////////////////////////////////////
 // Mongo Client
@@ -102,6 +102,7 @@ exports.login = function(req, res){
           username: found.username,
           role: found.role
         }));
+        currentUserName = found.username;
         console.log('should have hit redirect');
         res.send(200, found);
         DB.close();
@@ -123,7 +124,7 @@ exports.createArticle = function(req, res) {
     var cho = obj.text.split(/[\r\n]/g);
     //console.log(cho);
     var doc = {
-      poster    : "current_user",
+      poster    : currentUserName,
       postTitle : "",
       postSource: obj.url,
       article   : {
@@ -207,21 +208,17 @@ exports.signup = function(req, res) {
   var userInfo = req.body;
   var isNew = false;
 
-  console.log('userinfo.email is', userInfo.email);
 
   DB.collection('users').findOne({email: userInfo.email}, function(error, userByEmail){
-    console.log('found ', userByEmail);
     if(error){
       throw error;
     }
 
     if(userByEmail === null){ // there is no existing user with the email
-      console.log('isnull');
       isNew = true;
     }
   
     if(isNew){
-      console.log('isnew');
       var user = {
         email   : req.body.email,
         username: req.body.username,
@@ -230,18 +227,17 @@ exports.signup = function(req, res) {
       };
 
       DB.collection('users').insert(user, function(error, savedUser) {
-        console.log('saved', savedUser);
         var userInfo = savedUser[0];
         res.cookie('currentUser', JSON.stringify({
           username: userInfo.username,
           role: userInfo.role
         }));
         res.send(200, savedUser);
+        currentUserName = savedUser.username;
         DB.close();
         restartMongo();
       });
     }else{ //not new
-      console.log('signup fail');
       res.send(200, isNew); //
       DB.close();
       restartMongo();
@@ -252,11 +248,50 @@ exports.signup = function(req, res) {
 };
 
 exports.voteUp = function(req, res) {
-  var paragraphInfo = req.body;
+  var articleId = req.body.articleId;
+  var paragraphIndex = req.body.paragraphIndex;
+  var editIndex = req.body.editIndex;
+  
   var change = false;
 
-  //add conditional change
+  DB.collection('posts').findOne({_id: new ObjectId(articleId) }, function(err, post) {
+    if(err) throw err;
 
+    //console.log('post found is,', post)
+
+    var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
+    //.paragraphs[paragraphIndex].proposedText[editIndex].vote
+    proposedText.vote++
+    var vote = proposedText.vote
+    
+    console.log('proposed text is ,',proposedText);
+    
+    var operator = {'$set' : proposedText}
+    DB.collection('posts').update({_id: new ObjectId(articleId)}, operator, function(err, vote) {
+
+    console.log('vote is ,', vote);
+    })
+//save later
+    // if(vote > 10){ //chagne later
+    //   change = true;
+    // }
+
+    // if(change){
+    //   DB.collection(articleId).insert(post, function(err, timeline){
+    //     timeline.insert()
+    //   })
+    //   //save the current post to timline
+    //   // swap out the paragraph
+    //   // refresh the proposed text.
+      
+
+    })
+  //add
+    // DB.close();
+    // restartMongo();
+DB.collection('posts').findOne({_id: new ObjectId(articleId) }, function(err, post) {
+ console.log('updated post', post)
+ })
 }
 
 
