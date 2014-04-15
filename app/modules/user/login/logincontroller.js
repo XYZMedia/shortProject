@@ -8,10 +8,6 @@ angular.module('newsyApp.controllers.login', ['newsyApp.services.user'])
         $location.path('/');
       }
 
-      // $scope.$on('angularFireAuth:login', function () {
-      //   $location.path('/');
-      // })
-
   //EUGENECHOI
 
       $scope.signup = function(callback) {
@@ -19,7 +15,6 @@ angular.module('newsyApp.controllers.login', ['newsyApp.services.user'])
       };
 
       $scope.login = function(callback) {
-        console.log($scope.username);
         $scope.err = null;
         userService.login($scope.email, $scope.username, $scope.password)
          // '/', function(err, user) {
