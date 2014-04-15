@@ -14,9 +14,8 @@
     </div>
 
     <!-- Article content section -->
-    <div ng-repeat="paragraph in article.article.paragraphs | filter:paragraph" class="articleContent text-justify">
+    <div ng-repeat="paragraph in article.article.paragraphs" class="articleContent text-justify">
       <p>{{paragraph.currentText}}</p>
-      {{paragraph}}
       <p ng-click="editParagraph(this.paragraph, $index)" class="editCount">Click to see proposed edits ({{paragraph.proposedText.length}} total) or submit a new edit</p>
     </div>
   </div>
@@ -73,7 +72,7 @@
           </div>
           <div id="right">
             <div>
-              <h6>Edit proposed by: <a href="">{{proposedText.editor}}</a></h6>
+              <h6>Edit proposed by: <a href="">Addison</a></h6>
               <p ng-bind-html="proposedText.text"></p>
               <h6>Sources</h6>
               <a href="{{source}}" ng-repeat="source in proposedText.url">{{source}}</a>

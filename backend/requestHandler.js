@@ -315,11 +315,11 @@ exports.editParagraph = function(req, res){
 
 
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
-    post.article.paragraphs[paragraphIndex][currentText] = proposedText[text];
+    post.article.paragraphs[paragraphIndex].currentText = proposedText.text;
 
     console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
 
-    DB.collection('posts').update(query, $set, post, function(err, dontcare){
+    DB.collection('posts').update(query, post, function(err, dontcare){
       if(err) throw err;
       console.log('dont care is', dontcare);
     });
@@ -347,38 +347,38 @@ exports.voteDown = function(req, res) {
   });
 };
 
-exports.editParagraph = function(req, res){
-  var articleId = req.body.articleId;
-  var paragraphIndex = req.body.paragraphIndex;
-  var editIndex = req.body.editIndex;
+// exports.editParagraph = function(req, res){
+//   var articleId = req.body.articleId;
+//   var paragraphIndex = req.body.paragraphIndex;
+//   var editIndex = req.body.editIndex;
 
-  var query    = {_id: new ObjectId(articleId)};
-  console.log("BEFORE DB");
-
-
-  DB.collection('posts').findOne(query, function(err, post) {
-    if(err) throw err;
-
-    var timeLineId = articleId + 'timeline';
-
-    DB.collection(timeLineId).insert(post, function(err, savedPost){
-        if(err) throw err;
-        console.log('saved Post is', savedPost);
-    });
+//   var query    = {_id: new ObjectId(articleId)};
+//   console.log("BEFORE DB");
 
 
-    var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
-    post.article.paragraphs[paragraphIndex] = proposedText.text;
+//   DB.collection('posts').findOne(query, function(err, post) {
+//     if(err) throw err;
 
-    console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
+//     // var timeLineId = articleId + 'timeline';
 
-    DB.collection('posts').update(query, post, function(err, dontcare){
-      if(err) throw err;
-      console.log('dont care is', dontcare);
-    });
-    console.log('after update, proposed text is,', post.article.paragraphs[paragraphIndex]);
-  });
-};
+//     // DB.collection(timeLineId).insert(post, function(err, savedPost){
+//     //     if(err) throw err;
+//     //     console.log('saved Post is', savedPost);
+//     // });
+
+
+//     var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
+//     post.article.paragraphs[paragraphIndex] = proposedText.text;
+
+//     console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
+
+//     DB.collection('posts').update(query, post, function(err, dontcare){
+//       if(err) throw err;
+//       console.log('dont care is', dontcare);
+//     });
+//     console.log('after update, proposed text is,', post.article.paragraphs[paragraphIndex]);
+//   });
+// };
   //add
     // DB.close();
     // restartMongo();
