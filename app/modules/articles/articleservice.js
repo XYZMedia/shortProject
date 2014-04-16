@@ -41,13 +41,15 @@ angular.module('newsyApp.services.articles', [])
            .success(function(res){})
       }
 
-      , newEdit: function(articleId, paragraphIndex, newEditText, source) {
+      , newEdit: function(articleId, paragraphIndex, newEditText, source, user) {
         var paragraphInfo = {
           articleId: articleId,
           paragraphIndex: paragraphIndex,
           newEditText: newEditText,
-          sources: [source]
+          sources: [source],
+          user: user
         }
+        console.log(paragraphInfo)
         $http.post('/newEdit', paragraphInfo)
            .success(function(res){});
       }

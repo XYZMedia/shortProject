@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles'])
-  .controller('OneArticleController', ['$scope','$routeParams', '$location', '$modal', '$log', '$sce', 'Articles',
-    function($scope, $routeParams, $location, $modal, $log, $sce, Articles) {
+  .controller('OneArticleController', ['$scope','$routeParams', '$location', '$modal', '$log', '$sce', '$cookieStore', 'Articles',
+    function($scope, $routeParams, $location, $modal, $log, $sce, $cookieStore, Articles) {
       
       $scope.articleId = $location.search().articleId;
 
@@ -95,7 +95,7 @@ $scope.hashtags = "#obama1";
       };
 
       $scope.submit = function(currentText, source){
-        Articles.newEdit($scope.articleId, paragraphIndex, currentText, source);
+        Articles.newEdit($scope.articleId, paragraphIndex, currentText, source, $cookieStore.get('currentUser').username);
         $scope.refresh = true;
         $modalInstance.close($scope.refresh);
       };

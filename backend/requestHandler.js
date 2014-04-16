@@ -162,12 +162,13 @@ exports.createArticle = function(req, res) {
 
         // note this is an array of images, we can make a selection in the future
         image     : diffbotArticle.images[0].url,
-        paragraphs: []
+        paragraphs: [],
+        contributors :[]
       },
       comments   : [{
         commentor : "",
         comment   : ""
-      }],
+      }]
     };
 
     for (var i = 0; i < diffbotParagraphs.length; i++) {
@@ -195,16 +196,16 @@ exports.newEdit = function(req, res) {
   var articleId      = req.body.articleId,
       paragraphIndex = req.body.paragraphIndex,
       newEditText    = req.body.newEditText,
-      sources        = req.body.sources;
+      sources        = req.body.sources,
+      username       = req.body.user;
   
   var query = {_id: new ObjectId(articleId)};
 
   DB.collection('posts').findOne(query, function(err, post) {
     if(err) throw err;
 
-    var obj = {text: newEditText, url: sources, vote: 0}
+    var obj = {username: username, text: newEditText, url: sources, vote: 0}
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText.push(obj);
-    
     DB.collection('posts').update(query, post, function(err, post){
       if(err) throw err;
     })
@@ -301,15 +302,14 @@ exports.editParagraph = function(req, res){
   var articleId = req.body.articleId;
   var paragraphIndex = req.body.paragraphIndex;
   var editIndex = req.body.editIndex;
+  var username = req.body.user;
 
   var query    = {_id: new ObjectId(articleId)};
   console.log("BEFORE DB");
 
-
   DB.collection('posts').findOne(query, function(err, post) {
     if(err) throw new Error('error on finding post for edit paragraph');
     console.log('articleId');
-
 
     var currentPost = {};
 
@@ -319,30 +319,75 @@ exports.editParagraph = function(req, res){
       }
     };
 
-    console.log('current post is ', currentPost)
+    //console.log('current post is ', currentPost)
 
     var newarticleId = articleId.split('').splice(0,7).join('');
     console.log('newarticleId is ,', newarticleId);
 
     DB.collection(newarticleId).insert(currentPost, function(err, savedPost){
         if(err) throw new Error('error on new time line');
-        console.log('saved post is, ', savedPost[0].article.paragraphs)
+        //console.log('saved post is, ', savedPost[0].article.paragraphs)
     });
+    
+    var contributor = {
+      username: username,
+      contribution: 1
+    };
+
+    var contributors = post.article.contributors;
+    var topContributors = post.article.topContributors;
+    var contributorIndex = contributors.indexOf(contributor);
+        console.log('contributors is', contributors)
+
+
+    if( contributorIndex === -1 ){ // new contributor
+
+      contributors.push(contributor);
+    }else{
+      contributors[contributorIndex].contribution++;
+      for (var i = contributorIndex - 1 ; i > -1 ; i--) {
+        if( contributors[contributorIndex].contribution > contributors[i].contribution ){
+          contributors[contributorIndex] = contributors[i];
+          contributors[i] = contributor;
+        }else{
+          break;
+        }
+      };
+    }
+    console.log('contributors is', contributors)
+
+    if( contributors.length > 0 ){
+      topContributors = contributors.slice(0,2);
+    }else{
+      topContributors = [];
+    }
+    post.article.contributors = contributors;
+    post.article.topContributors = topContributors;
+
+
+
+    //first add contributor obj to article obj. find it, check if the user exists
+    //   yes, increment the contribution count by one
+    //    no, add it
+
 
 
 
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
+    console.log('post.article.paragraphs[paragraphIndex] is', post.article.paragraphs[paragraphIndex] );
 
     post.article.paragraphs[paragraphIndex].currentText = proposedText.text;
     post.article.paragraphs[paragraphIndex].proposedText = [];
 
-    console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
+    //console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
 
     DB.collection('posts').update(query, post, function(err, dontcare){
       if(err) throw err;
       console.log('dont care is', dontcare);
     });
     console.log('after update, proposed text is,', post.article.paragraphs[paragraphIndex]);
+    console.log('after update, contributors is,', post.article.contributors);
+    console.log('after update, top contributors,', post.article.topContributors)
   });
 };
 
@@ -409,7 +454,6 @@ exports.getTweets = function(req, res) {
 
     var hashtags = req.body.data['hashtags'];
 
-    console.log(hashtags);
     var CONSUMER_KEY = '7jZMP5zSiMHlOIxIIesgU45PD';
     var CONSUMER_SECRET = 'sBao8QTARsMjy8QpNQcoHTAgsv3cnXPXJYhFfjzGPzW6onSU8P';
     var keySecret = CONSUMER_KEY + ":" + CONSUMER_SECRET;
