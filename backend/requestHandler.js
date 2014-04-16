@@ -304,19 +304,33 @@ exports.editParagraph = function(req, res){
 
 
   DB.collection('posts').findOne(query, function(err, post) {
-    if(err) throw err;
+    if(err) throw new Error('error on finding post for edit paragraph');
+    console.log('articleId');
 
-    // var timeLineId = articleId + 'timeline';
 
-    // DB.collection(timeLineId).insert(post, function(err, savedPost){
-    //     if(err) throw err;
-    //     console.log('saved Post is', savedPost);
-    // });
+    var currentPost = {};
+
+    for (var key in post){
+      if(key !== '_id'){
+        currentPost[key] = post[key];
+      }
+    };
+
+    console.log('current post is ', currentPost)
+
+    var newarticleId = articleId.split('').splice(0,7).join('');
+    console.log('newarticleId is ,', newarticleId);
+
+    DB.collection(newarticleId).insert(currentPost, function(err, savedPost){
+        if(err) throw new Error('error on new time line');
+        console.log('saved post is, ', savedPost[0].article.paragraphs)
+    });
+
 
 
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
 
-    post.article.paragraphs[paragraphIndex][currentText] = proposedText[text];
+    post.article.paragraphs[paragraphIndex].currentText = proposedText.text;
 
     console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
 
