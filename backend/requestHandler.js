@@ -33,7 +33,6 @@ var restartMongo = function(){
 
 restartMongo();
 
-
 //////////////////////////////////////////////
 // Bootstrapper
 //////////////////////////////////////////////
@@ -61,15 +60,13 @@ exports.signup = function(req, res) {
       isNew     = false;
 
   DB.collection('users').findOne({email: userInfo.email}, function(error, userByEmail){
-    if(error){
-      throw error;
-    }
+    if (error) throw error;
 
-    if(userByEmail === null){ // there is no existing user with the email
+    if (userByEmail === null) { // there is no existing user with the email
       isNew = true;
     }
   
-    if(isNew){
+    if (isNew) {
       var user = {
         email   : req.body.email,
         username: req.body.username,
@@ -79,6 +76,7 @@ exports.signup = function(req, res) {
 
       DB.collection('users').insert(user, function(error, savedUser) {
         var userInfo = savedUser[0];
+
         res.cookie('currentUser', JSON.stringify({
           username: userInfo.username,
           role: userInfo.role
@@ -88,7 +86,7 @@ exports.signup = function(req, res) {
         DB.close();
         restartMongo();
       });
-    }else{ //not new
+    } else { //not new
       res.send(200, isNew); //
       DB.close();
       restartMongo();
@@ -97,36 +95,36 @@ exports.signup = function(req, res) {
 };
 
 exports.login = function(req, res){
-    console.log('inside login');
-    var userInfo = req.body;
-    var isValid = false; //to check if the userinfo is correct
+  console.log('inside login');
+  var userInfo = req.body;
+  var isValid = false; //to check if the userinfo is correct
 
-    //send query to mongo to check if user exists
+  //send query to mongo to check if user exists
 
-    //db.insert();
-     // DB.collection('users').insert(user, function(error, savedUser) {
-    console.log('req.body is, ', userInfo);
-    DB.collection('users').findOne({username: userInfo.username}, function(error, found){
-      console.log('error is, ', error);
-      console.log('userInfo.username is, ', userInfo.username);
-      console.log('user found is, ', found);
-      if(found === null){
-        res.send(200, found);
-        DB.close();
-        restartMongo();
-      }else if(found.password === userInfo.password){ //FIX LATER need to hash
-        console.log('password matches!');
-        res.cookie('currentUser', JSON.stringify({
-          username: found.username,
-          role: found.role
-        }));
-        currentUserName = found.username;
-        console.log('should have hit redirect');
-        res.send(200, found);
-        DB.close();
-        restartMongo();
-      }
-    });
+  //db.insert();
+   // DB.collection('users').insert(user, function(error, savedUser) {
+  console.log('req.body is, ', userInfo);
+  DB.collection('users').findOne({username: userInfo.username}, function(error, found){
+    console.log('error is, ', error);
+    console.log('userInfo.username is, ', userInfo.username);
+    console.log('user found is, ', found);
+    if(found === null){
+      res.send(200, found);
+      DB.close();
+      restartMongo();
+    }else if(found.password === userInfo.password){ //FIX LATER need to hash
+      console.log('password matches!');
+      res.cookie('currentUser', JSON.stringify({
+        username: found.username,
+        role: found.role
+      }));
+      currentUserName = found.username;
+      console.log('should have hit redirect');
+      res.send(200, found);
+      DB.close();
+      restartMongo();
+    }
+  });
 };
 
 
