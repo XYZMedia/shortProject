@@ -20,6 +20,19 @@ var DB = null;
 // Connect to the db
 MONGODB_URI = "mongodb://127.0.0.1:27017/newsapp";
 
+var restartMongo = function(){
+  db.connect(MONGODB_URI, function(err, db) {
+    if(!err) {
+      console.log("We are connected to MongoDB");
+      DB = db;
+    } else {
+      console.log("Error connecting to DB.");
+    }
+  });
+};
+
+restartMongo();
+
 //////////////////////////////////////////////
 // Bootstrapper
 //////////////////////////////////////////////
@@ -40,7 +53,7 @@ var headers = {
 };
 
 //////////////////////////////////////////////
-// Resource: Users
+// User Authentication
 //////////////////////////////////////////////
 exports.signup = function(req, res) {
   var userInfo  = req.body,
@@ -70,45 +83,54 @@ exports.signup = function(req, res) {
         }));
         res.send(200, savedUser);
         currentUserName = savedUser.username;
+        DB.close();
+        restartMongo();
       });
     } else { //not new
       res.send(200, isNew); //
+      DB.close();
+      restartMongo();
     }
   });
 };
 
 exports.login = function(req, res){
-  console.log('inside login');
-  var userInfo = req.body;
-  var isValid = false; //to check if the userinfo is correct
+    console.log('inside login');
+    var userInfo = req.body;
+    var isValid = false; //to check if the userinfo is correct
 
-  //send query to mongo to check if user exists
+    //send query to mongo to check if user exists
 
-  //db.insert();
-   // DB.collection('users').insert(user, function(error, savedUser) {
-  console.log('req.body is, ', userInfo);
-  DB.collection('users').findOne({username: userInfo.username}, function(error, found){
-    console.log('error is, ', error);
-    console.log('userInfo.username is, ', userInfo.username);
-    console.log('user found is, ', found);
-    if(found === null){
-      res.send(200, found);
-    }else if(found.password === userInfo.password){ //FIX LATER need to hash
-      console.log('password matches!');
-      res.cookie('currentUser', JSON.stringify({
-        username: found.username,
-        role: found.role
-      }));
-      currentUserName = found.username;
-      console.log('should have hit redirect');
-      res.send(200, found);
-    }
-  });
+    //db.insert();
+     // DB.collection('users').insert(user, function(error, savedUser) {
+    //console.log('req.body is, ', userInfo);
+    DB.collection('users').findOne({username: userInfo.username}, function(error, found){
+      console.log('error is, ', error);
+      console.log('userInfo.username is, ', userInfo.username);
+      console.log('user found is, ', found);
+      if(found === null){
+        res.send(200, found);
+        DB.close();
+        restartMongo();
+      }else if(found.password === userInfo.password){ //FIX LATER need to hash
+        console.log('password matches!');
+        res.cookie('currentUser', JSON.stringify({
+          username: found.username,
+          role: found.role
+        }));
+        currentUserName = found.username;
+
+        console.log('should have hit redirect');
+        res.send(200, found);
+        DB.close();
+        restartMongo();
+      }
+    });
 };
 
 
 //////////////////////////////////////////////
-// Resource: Articles 
+// Resurce: Articles 
 //////////////////////////////////////////////
 exports.getArticles = function(request, response) {
   DB.collection('posts').find({}).toArray(function(error, articles) {
@@ -240,9 +262,13 @@ exports.signup = function(req, res) {
         }));
         res.send(200, savedUser);
         currentUserName = savedUser.username;
+        DB.close();
+        restartMongo();
       });
     }else{ //not new
       res.send(200, isNew); //
+      DB.close();
+      restartMongo();
     }
   });
 
@@ -325,6 +351,38 @@ exports.voteDown = function(req, res) {
 };
 
 
+
+// exports.getUser = function(req, res) {
+//   var query = { 'username' : req.params.username, 'password': req.params.password };
+//   DB.collection('users').findOne(query, function(err, user) {
+//     if(err) throw err;
+
+//     console.log("Collection being requested: ", user);
+//     res.send(200, user);
+//     DB.close();
+//   });
+// };
+// exports.articleUpdate = function(req, res) {
+
+//   // Set value of _id to id of current object
+//   var query    = { '_id' : 'FILL_IN' };
+
+//   // Set value of article.p1 to input field
+//   var operator = { '$set' : { 'article.p1' : "FILL_IN" } };
+
+//   db.collection('posts').update(query, operator, function(err, updated) {
+//     if(err) throw err;
+
+//     console.dir("Successfully updated: " + updated);
+//     //  we need to redirect or reload the page
+//     response.send(200, updated)
+//     return db.close();
+//   });
+// };
+
+
+
+
 exports.getTweets = function(req, res) {
     console.log("yo momma");
 
@@ -358,4 +416,3 @@ exports.getTweets = function(req, res) {
       });
     });
 };
-
