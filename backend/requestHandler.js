@@ -1,4 +1,5 @@
-var express       = require('express'),
+var apiKeys       = require('./apiKeys'),
+    express       = require('express'),
     fs            = require("fs"),
     http          = require("http"),
     path          = require("path"),
@@ -32,7 +33,6 @@ var restartMongo = function(){
 
 restartMongo();
 
-
 //////////////////////////////////////////////
 // Bootstrapper
 //////////////////////////////////////////////
@@ -60,15 +60,13 @@ exports.signup = function(req, res) {
       isNew     = false;
 
   DB.collection('users').findOne({email: userInfo.email}, function(error, userByEmail){
-    if(error){
-      throw error;
-    }
+    if (error) throw error;
 
-    if(userByEmail === null){ // there is no existing user with the email
+    if (userByEmail === null) { // there is no existing user with the email
       isNew = true;
     }
   
-    if(isNew){
+    if (isNew) {
       var user = {
         email   : req.body.email,
         username: req.body.username,
@@ -78,6 +76,7 @@ exports.signup = function(req, res) {
 
       DB.collection('users').insert(user, function(error, savedUser) {
         var userInfo = savedUser[0];
+
         res.cookie('currentUser', JSON.stringify({
           username: userInfo.username,
           role: userInfo.role
@@ -87,7 +86,7 @@ exports.signup = function(req, res) {
         DB.close();
         restartMongo();
       });
-    }else{ //not new
+    } else { //not new
       res.send(200, isNew); //
       DB.close();
       restartMongo();
@@ -131,8 +130,66 @@ exports.login = function(req, res){
 
 
 //////////////////////////////////////////////
-// Article
+// Resurce: Articles 
 //////////////////////////////////////////////
+exports.getArticles = function(request, response) {
+  DB.collection('posts').find({}).toArray(function(error, articles) {
+    if(error) throw error;
+
+    console.log("Collection being requested: ", articles);
+    response.send(200, articles); 
+    // DB.close();
+  });
+};
+
+exports.createArticle = function(req, res) {
+  var url           = req.body.url,
+      apiKey        = apiKeys.diffbot,
+      scrapeDiffbot = 'http://api.diffbot.com/v2/article?token=' + apiKey + 
+                      '&url=' + url;
+  
+  request(scrapeDiffbot, function(error, response, body){
+    var diffbotArticle    = JSON.parse(body),
+        diffbotParagraphs = diffbotArticle.text.split(/[\r\n]/g);
+  
+    var doc = {
+      poster    : currentUserName,
+      postTitle : "",
+      postSource: diffbotArticle.url,
+      article   : {
+        title     : diffbotArticle.title,
+
+        // note this is an array of images, we can make a selection in the future
+        image     : diffbotArticle.images[0].url,
+        paragraphs: []
+      },
+      comments   : [{
+        commentor : "",
+        comment   : ""
+      }],
+    };
+
+    for (var i = 0; i < diffbotParagraphs.length; i++) {
+      var paragraph = {
+        currentText : diffbotParagraphs[i],
+        proposedText: []
+      };
+
+      doc.article.paragraphs.push(paragraph);
+    }
+
+    //we might need some sort of "wait while processing msg to the user here"
+    DB.collection('posts').insert(doc, function(error, insertedDocument) {
+      if (error) throw new Error("This document wasn't created.");
+
+      var objectId = doc._id;
+
+      res.send(200, objectId);
+    });
+  });
+};
+
+
 exports.newEdit = function(req, res) {
   var articleId      = req.body.articleId,
       paragraphIndex = req.body.paragraphIndex,
@@ -151,64 +208,6 @@ exports.newEdit = function(req, res) {
       if(err) throw err;
     })
   })
-};
-
-
-exports.createArticle = function(req, res) {
-
-  var url = req.body.url;
-  var apiKey = 'c6da1b5b8fed3a1501866f95ff8fd91c';
-   request('http://api.diffbot.com/v2/article?token=' + apiKey + '&url=' + url, function(error, response, body){
-    //console.log('body is ', body);
-    var obj = JSON.parse(body);
-    //console.log(obj);
-    var cho = obj.text.split(/[\r\n]/g);
-    //console.log(cho);
-    var doc = {
-      poster    : currentUserName,
-      postTitle : "",
-      postSource: obj.url,
-      article   : {
-        title     : obj.title,
-        // note this is an array of images, we can make a selection in the future
-        image     : obj.images[0].url,
-        paragraphs: []
-      },
-      comments   : [{
-        commentor : "",
-        comment   : ""
-      }],
-    };
-
-    for (var i = 0; i < cho.length; i++) {
-      var paragraph = {
-        currentText : cho[i],
-        proposedText: []
-      };
-      doc.article.paragraphs.push(paragraph);
-    }
-
-    //we might need some sort of "wait while processing msg to the user here"
-    DB.collection('posts').insert(doc, function(error, inserted) {
-      var objectId = doc._id;
-      //console.log(objectId);
-      res.send(200, objectId);
-      DB.close();
-      restartMongo();
-    });
-  });
-};
-
-// This function needs to eventually limit the number of documents being retrieved and sort those documents
-exports.articles = function(req, res) {
-  DB.collection('posts').find({}).toArray(function(err, docs) {
-    if(err) throw err;
-
-    console.log("Collection being requested: ", docs);
-    res.send(200, docs);
-    DB.close();
-    restartMongo();
-  });
 };
 
 
@@ -320,7 +319,6 @@ exports.editParagraph = function(req, res){
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
 
     post.article.paragraphs[paragraphIndex][currentText] = proposedText[text];
-
 
     console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
 
