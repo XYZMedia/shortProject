@@ -29,6 +29,8 @@ app.configure(function() {
   app.post('/edit', handler.editParagraph);
   app.post('/newEdit', handler.newEdit);
 
+  app.post('/getTweets', handler.getTweets);
+
 
   app.use(express.cookieParser());
   app.use(express.cookieSession({

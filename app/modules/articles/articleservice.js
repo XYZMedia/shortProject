@@ -51,5 +51,18 @@ angular.module('newsyApp.services.articles', [])
         $http.post('/newEdit', paragraphInfo)
            .success(function(res){})
       }
+
+      , getTweets: function(hashtags, cb) {
+          console.log("sup");
+          $http.post('/getTweets', {
+            data: {hashtags : hashtags}
+          }).success(function(res){
+            console.log('getTweets request success:' + res);
+            cb(res);
+          }).error(function(res){
+            console.log('getTweets error:' + res);
+            cb(res);
+          })
+        }
     }
   }])

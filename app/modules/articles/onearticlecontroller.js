@@ -12,11 +12,13 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
         });
       };
 
+
 //==========Modal Functionality===========
 
       //function to open the modal
       $scope.editParagraph = function(paragraph, paragraphIndex) {
         var modalInstance = $modal.open({
+
           templateUrl: 'myModalContent.html',
           controller: ModalInstanceCtrl,
           resolve: {
@@ -35,11 +37,20 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
           }
         })
       };
+$scope.hashtags = "#obama";
+      $scope.getTweets = function(){
+      Articles.getTweets($scope.hashtags, function(res){
+        console.log(res);
+        //not sure how to angularize this res object..
+        $scope.tweets = res;
+      });
+    };
 
     //function to create the modal that gets displayed
     var ModalInstanceCtrl = function ($scope, $modalInstance, paragraph, paragraphIndex) {
 
-      $scope.articleId = $location.search().articleId
+
+      $scope.articleId = $location.search().articleId;
       $scope.modalHeader = 'Current Text:';
       $scope.currentText = paragraph.currentText;
       $scope.proposedTexts = paragraph.proposedText;
@@ -54,10 +65,11 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
         } else {
           Articles.voteUp($scope.articleId, paragraphIndex, editIndex);
         }
+
       };
 
       $scope.voteDown = function(){
-        console.log('down!');
+        //console.log('down!');
       };
 
       $scope.newEdit = function(){
