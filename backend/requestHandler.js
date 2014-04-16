@@ -136,14 +136,15 @@ exports.newEdit = function(req, res) {
   var articleId      = req.body.articleId,
       paragraphIndex = req.body.paragraphIndex,
       newEditText    = req.body.newEditText,
-      sources        = req.body.sources;
+      sources        = req.body.sources,
+      username       = req.body.user;
   
   var query = {_id: new ObjectId(articleId)};
 
   DB.collection('posts').findOne(query, function(err, post) {
     if(err) throw err;
 
-    var obj = {text: newEditText, url: sources, vote: 0}
+    var obj = {username: username, text: newEditText, url: sources, vote: 0}
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText.push(obj);
     
     DB.collection('posts').update(query, post, function(err, post){
