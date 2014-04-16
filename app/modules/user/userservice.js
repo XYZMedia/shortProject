@@ -21,9 +21,10 @@ angular.module('newsyApp.services.user', [])
           return currentUser.role >= role.user;
         },
 
-        signup: function(email, username, password) {
+        signup: function(email, image, username, password) {
           var userInfo = {
             email: email,
+            image: image,
             username: username,
             password: password,
             role: role.public

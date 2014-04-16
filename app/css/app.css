@@ -94,6 +94,10 @@
   cursor:pointer;
 }
 
+.twitterSection {
+  font-size: 12px;
+}
+
 /*=======Modal styling=======*/
 .modal-header {
   box-shadow: 0 2px 2px #aaaaaa;

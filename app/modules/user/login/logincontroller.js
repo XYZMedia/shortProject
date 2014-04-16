@@ -8,12 +8,11 @@ angular.module('newsyApp.controllers.login', ['newsyApp.services.user'])
         $location.path('/');
       }
 
-  //EUGENECHOI
-      $scope.signup = function(callback) {
-        userService.signup($scope.email, $scope.username, $scope.password);
+      $scope.signup = function() {
+        userService.signup($scope.email, $scope.image, $scope.username, $scope.password);
       };
 
-      $scope.login = function(callback) {
+      $scope.login = function() {
         $scope.err = null;
         userService.login($scope.email, $scope.username, $scope.password)
       };

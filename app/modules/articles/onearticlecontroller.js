@@ -12,6 +12,10 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
         });
       };
 
+//==========Twitter Functionality===========
+      $scope.showHashtags = false;
+
+
 //==========Modal Functionality===========
 
       //function to open the modal
@@ -44,7 +48,6 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
       $scope.currentText = paragraph.currentText;
       $scope.proposedTexts = paragraph.proposedText;
       $scope.showEdit = false;
-      $scope.newURLs = [''];
       $scope.refresh = false;
 
       $scope.voteUp = function(editIndex){
@@ -63,10 +66,6 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
       $scope.newEdit = function(){
         $scope.showEdit = true;
         $scope.modalHeader = "Proposed Edit:";
-      };
-
-      $scope.addURL = function(){
-        $scope.newURLs.push('');
       };
 
       $scope.submit = function(currentText, source){
