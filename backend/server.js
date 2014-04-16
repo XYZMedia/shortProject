@@ -15,8 +15,8 @@ app.configure(function() {
   app.post('/newpost', handler.createArticle);
 
   app.get('/getArticle', handler.getArticle);
-  
   app.post('/newEdit', handler.newEdit);
+
 
   app.post('/signup', handler.signup);
   app.post('/login', handler.login);
