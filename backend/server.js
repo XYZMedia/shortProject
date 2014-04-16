@@ -29,6 +29,7 @@ app.configure(function() {
   app.post('/edit', handler.editParagraph);
   app.post('/newEdit', handler.newEdit);
 
+  app.post('/hashtags', handler.hashtags);
   app.post('/getTweets', handler.getTweets);
 
 

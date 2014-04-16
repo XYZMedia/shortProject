@@ -4,18 +4,32 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
   .controller('OneArticleController', ['$scope','$routeParams', '$location', '$modal', '$log', '$sce', 'Articles',
     function($scope, $routeParams, $location, $modal, $log, $sce, Articles) {
       
-      $scope.articleId = $location.search().articleId
+      $scope.articleId = $location.search().articleId;
+
 
       $scope.findArticle = function(){
-        Articles.find($scope.articleId, function(res){
-          $scope.article = res;
+        Articles.find($scope.articleId, function(article){
+          $scope.article = article;
+          Articles.getTweets(article.hashtags, function(resTweets) {
+
+            $scope.tweets = resTweets;
+            console.log($scope.tweets);
+          });
         });
       };
 
 
+
+
+
 //==========Twitter Functionality===========
       $scope.showHashtags = false;
+      
+      $scope.submitHashtags = function() {
+        Articles.replaceHashtags($scope.articleId, $scope.hashtags);
 
+      
+      };
 
 //==========Modal Functionality===========
 
@@ -41,7 +55,7 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
           }
         })
       };
-$scope.hashtags = "#obama";
+$scope.hashtags = "#obama1";
       $scope.getTweets = function(){
       Articles.getTweets($scope.hashtags, function(res){
         console.log(res);

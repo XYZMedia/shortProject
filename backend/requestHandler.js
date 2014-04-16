@@ -156,6 +156,7 @@ exports.createArticle = function(req, res) {
       poster    : currentUserName,
       postTitle : "",
       postSource: diffbotArticle.url,
+      hashtags: "",
       article   : {
         title     : diffbotArticle.title,
 
@@ -396,10 +397,15 @@ exports.voteDown = function(req, res) {
 // };
 
 
+exports.hashtags = function(req, res) {
+  var hashtagInsert = req.body.hashtags;
+  var query    = {_id: new ObjectId(req.body.articleId)};
 
+  DB.collection('posts').update(query, { $set: { hashtags: hashtagInsert } }, function(error, doc){ });
+  console.log("success in exports.hashtags");
+};
 
 exports.getTweets = function(req, res) {
-    console.log("yo momma");
 
     var hashtags = req.body.data['hashtags'];
 
@@ -425,7 +431,7 @@ exports.getTweets = function(req, res) {
       var twitterSearchUrl = 'https://api.twitter.com/1.1/search/tweets.json?q=' + hashtags + '&count=12';
       
       request.get({url:twitterSearchUrl, headers:headersWithToken, qs:{} }, function (e, r, body) {
-        console.log(body);
+        //console.log(body);
         body = JSON.parse(body);
         res.send(200, body);
       });

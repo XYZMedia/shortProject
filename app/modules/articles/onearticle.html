@@ -50,7 +50,7 @@
       <h6 class="twitterTitle">CNN</h6>
       <h6 class="twitterTitle">"Official in #MH370 search: Signals picked up are consistent with a flight data recorder. http://cnn.it/1g0BIyQ"</h6>
       <button class="btn btn-xs btn-info col-md-11 col-sm-11 col-xs-12" ng-click="showHashtags=!showHashtags" ng-hide="showHashtags">Add more hashtags</button>
-      <button class="btn btn-xs btn-info col-md-11 col-sm-11 col-xs-12" ng-click="showHashtags=!showHashtags" ng-show="showHashtags">Submit hashtags</button>
+      <button class="btn btn-xs btn-info col-md-11 col-sm-11 col-xs-12" ng-click="showHashtags=!showHashtags;submitHashtags()" ng-show="showHashtags">Submit hashtags</button>
       <input type="text" ng-model="hashtags" ng-show="showHashtags"></input>
       <p ng-hide="showHashtags">{{hashtags}}</p>
   </div>

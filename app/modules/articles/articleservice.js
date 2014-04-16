@@ -49,15 +49,24 @@ angular.module('newsyApp.services.articles', [])
           sources: [source]
         }
         $http.post('/newEdit', paragraphInfo)
-           .success(function(res){})
+           .success(function(res){});
+      }
+
+      , replaceHashtags: function(articleId, hashtags) {
+
+        var tagObject = {
+          articleId : articleId,
+          hashtags  : hashtags
+        };
+        $http.post('/hashtags', tagObject)
+          .success();
+
       }
 
       , getTweets: function(hashtags, cb) {
-          console.log("sup");
           $http.post('/getTweets', {
             data: {hashtags : hashtags}
           }).success(function(res){
-            console.log('getTweets request success:' + res);
             cb(res);
           }).error(function(res){
             console.log('getTweets error:' + res);
