@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('newsyApp.services.user', [])
-  .factory('userService', ['$location', '$rootScope', '$http', '$cookieStore',
+  .factory('userService', ['$location', '$rootScope', '$http', '$cookieStore', '$window',
 //EUGENECHOI
-    function($location, $rootScope, $http, $cookieStore) {
+    function($location, $rootScope, $http, $cookieStore, $window) {
       var access = routingConfig.accessLevels;
       var role = routingConfig.userRoles;
       var currentUser = $cookieStore.get('currentUser') || { username: '', role: role.public };

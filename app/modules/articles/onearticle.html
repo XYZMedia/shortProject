@@ -16,7 +16,7 @@
     <!-- Article content section -->
     <div ng-repeat="paragraph in article.article.paragraphs" class="articleContent text-justify">
       <p>{{paragraph.currentText}}</p>
-      <p ng-click="editParagraph(this.paragraph, $index)" class="editCount" ng-show="paragraph.currentText">Click to see proposed edits ({{paragraph.proposedText.length}} total) or submit a new edit</p>
+      <p ng-click="editParagraph(this.paragraph, $index)" class="editCount" ng-show="paragraph.currentText">See proposed edits ({{paragraph.proposedText.length}} total) or submit a new one</p>
     </div>
   </div>
 

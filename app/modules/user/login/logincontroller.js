@@ -3,11 +3,7 @@
 angular.module('newsyApp.controllers.login', ['newsyApp.services.user'])
   .controller('LoginController', ['$scope', 'userService', '$location',
     function($scope, userService, $location) {
-
-      if(!!$scope.auth){
-        $location.path('/');
-      }
-
+ 
       $scope.signup = function() {
         userService.signup($scope.email, $scope.image, $scope.username, $scope.password);
       };
