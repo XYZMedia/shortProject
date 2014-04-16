@@ -231,50 +231,6 @@ exports.newestHeadlinesPost = function(req, res) {
 
 };
 
-exports.signup = function(req, res) {
-
-  var userInfo = req.body;
-  var isNew = false;
-
-
-  DB.collection('users').findOne({email: userInfo.email}, function(error, userByEmail){
-    if(error){
-      throw error;
-    }
-
-    if(userByEmail === null){ // there is no existing user with the email
-      isNew = true;
-    }
-
-    if(isNew){
-      var user = {
-        email   : req.body.email,
-        username: req.body.username,
-        password: req.body.password,
-        role    : routingConfig.userRoles.user
-      };
-
-      DB.collection('users').insert(user, function(error, savedUser) {
-
-        var userInfo = savedUser[0];
-        res.cookie('currentUser', JSON.stringify({
-          username: userInfo.username,
-          role: userInfo.role
-        }));
-        res.send(200, savedUser);
-        currentUserName = savedUser.username;
-        DB.close();
-        restartMongo();
-      });
-    }else{ //not new
-      res.send(200, isNew); //
-      DB.close();
-      restartMongo();
-    }
-  });
-
-};
-
 
 exports.voteUp = function(req, res) {
   console.log('voteUp!');
@@ -302,10 +258,8 @@ exports.editParagraph = function(req, res){
   var paragraphIndex = req.body.paragraphIndex;
   var editIndex = req.body.editIndex;
   var username = req.body.user;
-  console.log('username is', username)
 
   var query    = {_id: new ObjectId(articleId)};
-  console.log("BEFORE DB");
 
   DB.collection('posts').findOne(query, function(err, post) {
     if(err) throw new Error('error on finding post for edit paragraph');
@@ -319,16 +273,16 @@ exports.editParagraph = function(req, res){
       }
     };
 
-    //console.log('current post is ', currentPost)
-
-    var newarticleId = articleId.split('').splice(0,7).join('');
+    var newarticleId = 't' + articleId;
     console.log('newarticleId is ,', newarticleId);
 
     DB.collection(newarticleId).insert(currentPost, function(err, savedPost){
         if(err) throw new Error('error on new time line');
-        //console.log('saved post is, ', savedPost[0].article.paragraphs)
+      // DB.collection(newarticleId).find({}, function(err, found){
+      //  if(err) throw new Error('error on new time line');
+      //  console.log('after insert, timeline collection is', found);
+      // });
     });
-    
     var contributor = {
       username: username,
       contribution: 1
@@ -400,6 +354,8 @@ exports.editParagraph = function(req, res){
       if(err) throw err;
       console.log('dont care is', dontcare);
     });
+
+
     console.log('after update, proposed text is,', post.article.paragraphs[paragraphIndex]);
     console.log('after update, contributors is,', post.article.contributors);
     console.log('after update, top contributors,', post.article.topContributors)
