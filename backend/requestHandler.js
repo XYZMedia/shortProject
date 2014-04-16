@@ -69,6 +69,7 @@ exports.signup = function(req, res) {
     if (isNew) {
       var user = {
         email   : req.body.email,
+        image   : req.body.image,
         username: req.body.username,
         password: req.body.password,
         role    : routingConfig.userRoles.user
@@ -258,6 +259,7 @@ exports.editParagraph = function(req, res){
   var paragraphIndex = req.body.paragraphIndex;
   var editIndex = req.body.editIndex;
   var username = req.body.user;
+  console.log('initial username is, ', username);
 
   var query    = {_id: new ObjectId(articleId)};
 
@@ -283,83 +285,88 @@ exports.editParagraph = function(req, res){
       //  console.log('after insert, timeline collection is', found);
       // });
     });
-    var contributor = {
-      username: username,
-      contribution: 1
-    };
-    console.log('contributor is ', contributor)
-
-    var contributors = post.article.contributors;
-    var topContributors = post.article.topContributors;
-    var contributorIndex;
-        console.log('contributors is', contributors)
-    var newContributor = true;
-
-    for (var i = 0; i < contributors.length; i++) {
-      if( contributors[i].username === contributor.username ){
-        newContributor = false;
-        contributorIndex = i;
-        break;
-      }
-    };
 
 
+    var contributor;
 
-    if( newContributor ){ // new contributor
-      contributors.push(contributor);
-      console.log('new contributor');
-    }else{
-      console.log('not new contributor')
-      contributors[contributorIndex].contribution++;
-      console.log(contributors[contributorIndex].contribution)
-      for (var i = contributorIndex - 1 ; i > -1 ; i--) {
-        if( contributors[contributorIndex].contribution > contributors[i].contribution ){
-          contributors[contributorIndex] = contributors[i];
-          contributors[i] = contributor;
-        }else{
+    DB.collection('users').findOne({username: username}, function(err, foundUser){
+      console.log('foundUser is, ', foundUser);
+      contributor = foundUser;
+      contributor.contribution = 1;
+
+      console.log('contributor is ', contributor)
+
+      var contributors = post.article.contributors;
+      var topContributors = post.article.topContributors;
+      var contributorIndex;
+          console.log('contributors is', contributors)
+      var newContributor = true;
+
+      for (var i = 0; i < contributors.length; i++) {
+        if( contributors[i].username === contributor.username ){
+          newContributor = false;
+          contributorIndex = i;
           break;
         }
       };
-    }
-    console.log('contributors is', contributors)
-
-    if( contributors.length > 0 ){
-      topContributors = contributors.slice(0,2);
-    }else{
-      topContributors = [];
-    }
-    post.article.contributors = contributors;
-    post.article.topContributors = topContributors;
-
-    newContributor = true;
 
 
 
-    //first add contributor obj to article obj. find it, check if the user exists
-    //   yes, increment the contribution count by one
-    //    no, add it
+      if( newContributor ){ // new contributor
+        contributors.push(contributor);
+        console.log('new contributor');
+      }else{
+        console.log('not new contributor, ', contributor)
+        contributors[contributorIndex].contribution++;
+        console.log(contributors[contributorIndex].contribution)
+        for (var i = contributorIndex - 1 ; i > -1 ; i--) {
+          if( contributors[contributorIndex].contribution > contributors[i].contribution ){
+            contributors[contributorIndex] = contributors[i];
+            contributors[i] = contributor;
+          }else{
+            break;
+          }
+        };
+      }
+      console.log('contributors is', contributors)
+
+      if( contributors.length > 0 ){
+        topContributors = contributors.slice(0,2);
+      }else{
+        topContributors = [];
+      }
+      post.article.contributors = contributors;
+      post.article.topContributors = topContributors;
+
+      newContributor = true;
+
+
+
+      //first add contributor obj to article obj. find it, check if the user exists
+      //   yes, increment the contribution count by one
+      //    no, add it
 
 
 
 
-    var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
-    console.log('post.article.paragraphs[paragraphIndex] is', post.article.paragraphs[paragraphIndex] );
+      var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
+      console.log('post.article.paragraphs[paragraphIndex] is', post.article.paragraphs[paragraphIndex] );
 
-    post.article.paragraphs[paragraphIndex].currentText = proposedText.text;
-    post.article.paragraphs[paragraphIndex].proposedText = [];
+      post.article.paragraphs[paragraphIndex].currentText = proposedText.text;
+      post.article.paragraphs[paragraphIndex].proposedText = [];
 
-    //console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
+      //console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
 
-    DB.collection('posts').update(query, post, function(err, dontcare){
-      if(err) throw err;
-      console.log('dont care is', dontcare);
+      DB.collection('posts').update(query, post, function(err, dontcare){
+        if(err) throw err;
+        console.log('dont care is', dontcare);
+      });
+
+
+      console.log('after update, proposed text is,', post.article.paragraphs[paragraphIndex]);
+      console.log('after update, contributors is,', post.article.contributors);
+      console.log('after update, top contributors,', post.article.topContributors)
     });
-
-
-    console.log('after update, proposed text is,', post.article.paragraphs[paragraphIndex]);
-    console.log('after update, contributors is,', post.article.contributors);
-    console.log('after update, top contributors,', post.article.topContributors)
-
   });
 };
 
