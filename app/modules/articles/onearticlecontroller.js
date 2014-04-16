@@ -77,7 +77,8 @@ $scope.hashtags = "#obama1";
 
       $scope.voteUp = function(editIndex){
         if(++this.proposedText.vote > 1){
-          Articles.replaceParagraph($scope.articleId, paragraphIndex, editIndex);
+          Articles.replaceParagraph($scope.articleId, paragraphIndex, editIndex, $cookieStore.get('currentUser').username);
+
           $scope.refresh = true;
         } else {
           Articles.voteUp($scope.articleId, paragraphIndex, editIndex);

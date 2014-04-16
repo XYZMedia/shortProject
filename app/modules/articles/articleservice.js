@@ -31,12 +31,14 @@ angular.module('newsyApp.services.articles', [])
            .success(function(res){})
       }
 
-      , replaceParagraph: function(articleId, paragraphIndex, editIndex) {
+      , replaceParagraph: function(articleId, paragraphIndex, editIndex, user) {
         var paragraphInfo = {
           articleId: articleId,
           paragraphIndex: paragraphIndex,
-          editIndex: editIndex
+          editIndex: editIndex,
+          user: user
         }
+        console.log('paragraphInfo is, ', paragraphInfo);
         $http.post('/edit', paragraphInfo)
            .success(function(res){})
       }

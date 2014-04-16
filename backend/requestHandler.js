@@ -303,6 +303,7 @@ exports.editParagraph = function(req, res){
   var paragraphIndex = req.body.paragraphIndex;
   var editIndex = req.body.editIndex;
   var username = req.body.user;
+  console.log('username is', username)
 
   var query    = {_id: new ObjectId(articleId)};
   console.log("BEFORE DB");
@@ -333,18 +334,31 @@ exports.editParagraph = function(req, res){
       username: username,
       contribution: 1
     };
+    console.log('contributor is ', contributor)
 
     var contributors = post.article.contributors;
     var topContributors = post.article.topContributors;
-    var contributorIndex = contributors.indexOf(contributor);
+    var contributorIndex;
         console.log('contributors is', contributors)
+    var newContributor = true;
+
+    for (var i = 0; i < contributors.length; i++) {
+      if( contributors[i].username === contributor.username ){
+        newContributor = false;
+        contributorIndex = i;
+        break;
+      }
+    };
 
 
-    if( contributorIndex === -1 ){ // new contributor
 
+    if( newContributor ){ // new contributor
       contributors.push(contributor);
+      console.log('new contributor');
     }else{
+      console.log('not new contributor')
       contributors[contributorIndex].contribution++;
+      console.log(contributors[contributorIndex].contribution)
       for (var i = contributorIndex - 1 ; i > -1 ; i--) {
         if( contributors[contributorIndex].contribution > contributors[i].contribution ){
           contributors[contributorIndex] = contributors[i];
@@ -363,6 +377,8 @@ exports.editParagraph = function(req, res){
     }
     post.article.contributors = contributors;
     post.article.topContributors = topContributors;
+
+    newContributor = true;
 
 
 
@@ -388,6 +404,7 @@ exports.editParagraph = function(req, res){
     console.log('after update, proposed text is,', post.article.paragraphs[paragraphIndex]);
     console.log('after update, contributors is,', post.article.contributors);
     console.log('after update, top contributors,', post.article.topContributors)
+
   });
 };
 
