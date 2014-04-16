@@ -23,6 +23,8 @@ app.configure(function() {
 
   app.post('/newpost', handler.createArticle);
 
+  app.post('/getTweets', handler.getTweets);
+
   // app.get('/login', function(req, res){
   //   console.log('inside auth');
   //   res.send('loginresponse');

@@ -87,7 +87,7 @@ exports.login = function(req, res){
 
     //db.insert();
      // DB.collection('users').insert(user, function(error, savedUser) {
-    console.log('req.body is, ', userInfo);
+    //console.log('req.body is, ', userInfo);
     DB.collection('users').findOne({username: userInfo.username}, function(error, found){
       console.log('error is, ', error);
       console.log('userInfo.username is, ', userInfo.username);
@@ -98,8 +98,10 @@ exports.login = function(req, res){
         restartMongo();
       }else if(found.password === userInfo.password){ //FIX LATER need to hash
         console.log('password matches!');
-        userInfo.role = routingConfig.userRoles.user;
-        res.cookie('userInfo', JSON.stringify(userInfo));
+        res.cookie('currentUser', JSON.stringify({
+          username: found.username,
+          role: found.role
+        }));
         console.log('should have hit redirect');
         res.send(200, found);
         DB.close();
@@ -121,6 +123,8 @@ exports.createArticle = function(req, res) {
     var cho = obj.text.split(/[\r\n]/g);
     //console.log(cho);
     var doc = {
+      //datestamp : new Date(),
+      //source: url,
       poster    : "current_user",
       postTitle : "",
       postSource: obj.url,
@@ -171,6 +175,7 @@ exports.articles = function(req, res) {
   });
 };
 
+
 // exports.getArticle = function(req, res) {
 //   var query = { '_id' : req.query.id };
 //   DB.collection('posts').findOne(query, function(err, doc) {
@@ -184,18 +189,16 @@ exports.articles = function(req, res) {
 
 exports.getArticle = function(req, res) {
   var id = req.query.id;
-  console.log("OBJ ID: ", id)
+  //console.log("OBJ ID: ", id)
   var query = { '_id': new ObjectId(id) };
   DB.collection('posts').findOne(query, function(err, doc) {
     if(err) throw err;
 
-    console.log("Collection being requested: ", doc);
+    //console.log("Collection being requested: ", doc);
     res.send(200, doc);
 //    DB.close();
   });
 };
-
-
 
 exports.newestHeadlinesPost = function(req, res) {
 
@@ -224,8 +227,7 @@ exports.signup = function(req, res) {
   //       console.log('found ', userByName);
   //       if(userByName.username.length === 0){ // there is no existing user with the same name
   //         userInfo.role = routingConfig.userRoles.user;
-  //         res.cookie('userInfo', JSON.stringify(userInfo));
-  //         console.log('should have hit redirect');
+  //           //         console.log('should have hit redirect');
   //         isNew = true; // the information does not exist in our db(new user)
   //       }else{
   //         res.send('the username exists'); // the username already exists!
@@ -240,11 +242,16 @@ exports.signup = function(req, res) {
         email   : req.body.email,
         username: req.body.username,
         password: req.body.password,
-        role    : req.body.role
+        role    : routingConfig.userRoles.user
       };
 
       DB.collection('users').insert(user, function(error, savedUser) {
         console.log('saved', savedUser);
+        var userInfo = savedUser[0];
+        res.cookie('currentUser', JSON.stringify({
+          username: userInfo.username,
+          role: userInfo.role
+        }));
         res.send(200, savedUser);
         DB.close();
         restartMongo();
@@ -291,3 +298,39 @@ exports.signup = function(req, res) {
 //   });
 // };
 
+
+
+
+exports.getTweets = function(req, res) {
+    console.log("yo momma");
+
+    var hashtags = req.body.data['hashtags'];
+
+    console.log(hashtags);
+    var CONSUMER_KEY = '7jZMP5zSiMHlOIxIIesgU45PD';
+    var CONSUMER_SECRET = 'sBao8QTARsMjy8QpNQcoHTAgsv3cnXPXJYhFfjzGPzW6onSU8P';
+    var keySecret = CONSUMER_KEY + ":" + CONSUMER_SECRET;
+    var keySecret64 = new Buffer(keySecret, 'utf8').toString('base64');
+
+    var qs = require('querystring');
+    var headersWithKey = { 'User-Agent': 'request', 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8', 'Authorization': 'Basic ' + keySecret64 };
+    var url = 'https://api.twitter.com/oauth2/token';
+
+    request.post({url:url, headers:headersWithKey,
+      qs:{ 'grant_type': 'client_credentials' }
+    }, function (e, r, body) {
+      var twitterBearerToken = body;
+      twitterBearerToken = JSON.parse(twitterBearerToken);
+      var headersWithToken = { 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8', 'Authorization': twitterBearerToken['token_type'] + ' ' + twitterBearerToken['access_token']
+      };
+      
+      hashtags = hashtags.replace("#", "%23");
+      var twitterSearchUrl = 'https://api.twitter.com/1.1/search/tweets.json?q=' + hashtags + '&count=12';
+      
+      request.get({url:twitterSearchUrl, headers:headersWithToken, qs:{} }, function (e, r, body) {
+        console.log(body);
+        body = JSON.parse(body);
+        res.send(200, body);
+      });
+    });
+};
