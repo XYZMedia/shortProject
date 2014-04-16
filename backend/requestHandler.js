@@ -40,7 +40,7 @@ var headers = {
 };
 
 //////////////////////////////////////////////
-// User Authentication
+// Resource: Users
 //////////////////////////////////////////////
 exports.signup = function(req, res) {
   var userInfo  = req.body,
@@ -108,7 +108,7 @@ exports.login = function(req, res){
 
 
 //////////////////////////////////////////////
-// Resurce: Articles 
+// Resource: Articles 
 //////////////////////////////////////////////
 exports.getArticles = function(request, response) {
   DB.collection('posts').find({}).toArray(function(error, articles) {
@@ -324,35 +324,3 @@ exports.voteDown = function(req, res) {
     });
   });
 };
-
-
-
-// exports.getUser = function(req, res) {
-//   var query = { 'username' : req.params.username, 'password': req.params.password };
-//   DB.collection('users').findOne(query, function(err, user) {
-//     if(err) throw err;
-
-//     console.log("Collection being requested: ", user);
-//     res.send(200, user);
-//     DB.close();
-//   });
-// };
-// exports.articleUpdate = function(req, res) {
-
-//   // Set value of _id to id of current object
-//   var query    = { '_id' : 'FILL_IN' };
-
-//   // Set value of article.p1 to input field
-//   var operator = { '$set' : { 'article.p1' : "FILL_IN" } };
-
-//   db.collection('posts').update(query, operator, function(err, updated) {
-//     if(err) throw err;
-
-//     console.dir("Successfully updated: " + updated);
-//     //  we need to redirect or reload the page
-//     response.send(200, updated)
-//     return db.close();
-//   });
-// };
-
-
