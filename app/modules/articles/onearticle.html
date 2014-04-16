@@ -16,7 +16,7 @@
     <!-- Article content section -->
     <div ng-repeat="paragraph in article.article.paragraphs" class="articleContent text-justify">
       <p>{{paragraph.currentText}}</p>
-      <p ng-click="editParagraph(this.paragraph, $index)" class="editCount">Click to see proposed edits ({{paragraph.proposedText.length}} total) or submit a new edit</p>
+      <p ng-click="editParagraph(this.paragraph, $index)" class="editCount" ng-show="paragraph.currentText">See proposed edits ({{paragraph.proposedText.length}} total) or submit a new one</p>
     </div>
   </div>
 
@@ -41,14 +41,18 @@
   </div>
 
   <!-- Twitter section -->
-  <div class="col-md-2 col-sm-4 col-xs-12 contributorSection">
+  <div class="col-md-2 col-sm-4 col-xs-12 twitterSection">
     <h5>Related Tweets</h5>
-      <h6 class="contributorTitle">CNN</h6>
-      <h6 class="contributorTitle">"Official in #MH370 search: Signals picked up are consistent with a flight data recorder. http://cnn.it/1g0BIyQ"</h6>
-      <h6 class="contributorTitle">CNN</h6>
-      <h6 class="contributorTitle">"Official in #MH370 search: Signals picked up are consistent with a flight data recorder. http://cnn.it/1g0BIyQ"</h6>
-      <h6 class="contributorTitle">CNN</h6>
-      <h6 class="contributorTitle">"Official in #MH370 search: Signals picked up are consistent with a flight data recorder. http://cnn.it/1g0BIyQ"</h6>
+      <h6 class="twitterTitle">CNN</h6>
+      <h6 class="twitterTitle">"Official in #MH370 search: Signals picked up are consistent with a flight data recorder. http://cnn.it/1g0BIyQ"</h6>
+      <h6 class="twitterTitle">CNN</h6>
+      <h6 class="twitterTitle">"Official in #MH370 search: Signals picked up are consistent with a flight data recorder. http://cnn.it/1g0BIyQ"</h6>
+      <h6 class="twitterTitle">CNN</h6>
+      <h6 class="twitterTitle">"Official in #MH370 search: Signals picked up are consistent with a flight data recorder. http://cnn.it/1g0BIyQ"</h6>
+      <button class="btn btn-xs btn-info col-md-11 col-sm-11 col-xs-12" ng-click="showHashtags=!showHashtags" ng-hide="showHashtags">Add more hashtags</button>
+      <button class="btn btn-xs btn-info col-md-11 col-sm-11 col-xs-12" ng-click="showHashtags=!showHashtags" ng-show="showHashtags">Submit hashtags</button>
+      <input type="text" ng-model="hashtags" ng-show="showHashtags"></input>
+      <p ng-hide="showHashtags">{{hashtags}}</p>
   </div>
 
 
@@ -60,7 +64,6 @@
         <div class="newURLs" ng-show="showEdit">
           <h5>Source:</h5>
           <input type="text" class="form-control newURL" ng-model="newURL" placeholder="Please add sources for your edits">
-          <a href="" ng-click="addURL()">Add more sources</a>
         </div>
       </div>
       <div class="Xmodal-body text-justify" ng-hide="showEdit">
@@ -76,7 +79,7 @@
               <h6>Edit proposed by: <a href="">{{proposedText.editor}}</a></h6>
               <p ng-bind-html="proposedText.text"></p>
               <h6>Sources</h6>
-              <a href="{{source}}" ng-repeat="source in proposedText.url">{{source}}</a>
+              <a href="{{source}}">{{source}}</a>
             </div>
           </div>
           <hr>

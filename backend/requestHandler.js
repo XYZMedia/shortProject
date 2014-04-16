@@ -333,6 +333,7 @@ exports.editParagraph = function(req, res){
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
 
     post.article.paragraphs[paragraphIndex].currentText = proposedText.text;
+    post.article.paragraphs[paragraphIndex].proposedText = [];
 
     console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
 
