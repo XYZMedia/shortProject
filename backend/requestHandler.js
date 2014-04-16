@@ -20,19 +20,6 @@ var DB = null;
 // Connect to the db
 MONGODB_URI = "mongodb://127.0.0.1:27017/newsapp";
 
-var restartMongo = function(){
-  db.connect(MONGODB_URI, function(err, db) {
-    if(!err) {
-      console.log("We are connected to MongoDB");
-      DB = db;
-    } else {
-      console.log("Error connecting to DB.");
-    }
-  });
-};
-
-restartMongo();
-
 //////////////////////////////////////////////
 // Bootstrapper
 //////////////////////////////////////////////
@@ -83,13 +70,9 @@ exports.signup = function(req, res) {
         }));
         res.send(200, savedUser);
         currentUserName = savedUser.username;
-        DB.close();
-        restartMongo();
       });
     } else { //not new
       res.send(200, isNew); //
-      DB.close();
-      restartMongo();
     }
   });
 };
@@ -110,8 +93,6 @@ exports.login = function(req, res){
     console.log('user found is, ', found);
     if(found === null){
       res.send(200, found);
-      DB.close();
-      restartMongo();
     }else if(found.password === userInfo.password){ //FIX LATER need to hash
       console.log('password matches!');
       res.cookie('currentUser', JSON.stringify({
@@ -121,8 +102,6 @@ exports.login = function(req, res){
       currentUserName = found.username;
       console.log('should have hit redirect');
       res.send(200, found);
-      DB.close();
-      restartMongo();
     }
   });
 };
@@ -262,13 +241,9 @@ exports.signup = function(req, res) {
         }));
         res.send(200, savedUser);
         currentUserName = savedUser.username;
-        DB.close();
-        restartMongo();
       });
     }else{ //not new
       res.send(200, isNew); //
-      DB.close();
-      restartMongo();
     }
   });
 
