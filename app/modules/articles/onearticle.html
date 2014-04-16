@@ -72,7 +72,8 @@
           </div>
           <div id="right">
             <div>
-              <h6>Edit proposed by: <a href="">Addison</a></h6>
+
+              <h6>Edit proposed by: <a href="">{{proposedText.editor}}</a></h6>
               <p ng-bind-html="proposedText.text"></p>
               <h6>Sources</h6>
               <a href="{{source}}" ng-repeat="source in proposedText.url">{{source}}</a>
@@ -119,4 +120,8 @@
       </div>
     </div>
   </div>
-</div>
+
+  <div class="col-md-10 col-sm-8 col-xs-12 twitterSection" ng-init="getTweets()">
+    <h5>Tweets (MOVE THIS TO WHEREVER YOU WANT)</h5>
+    <div class="tweets">
+    {{ scope.tweets }}

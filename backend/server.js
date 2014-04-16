@@ -29,6 +29,8 @@ app.configure(function() {
 
   app.post('/newEdit', handler.newEdit);
 
+  app.post('/getTweets', handler.getTweets);
+
   // app.get('/login', function(req, res){
   //   console.log('inside auth');
   //   res.send('loginresponse');

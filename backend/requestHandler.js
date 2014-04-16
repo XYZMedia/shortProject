@@ -104,7 +104,7 @@ exports.login = function(req, res){
 
     //db.insert();
      // DB.collection('users').insert(user, function(error, savedUser) {
-    console.log('req.body is, ', userInfo);
+    //console.log('req.body is, ', userInfo);
     DB.collection('users').findOne({username: userInfo.username}, function(error, found){
       console.log('error is, ', error);
       console.log('userInfo.username is, ', userInfo.username);
@@ -120,6 +120,7 @@ exports.login = function(req, res){
           role: found.role
         }));
         currentUserName = found.username;
+
         console.log('should have hit redirect');
         res.send(200, found);
         DB.close();
@@ -211,14 +212,15 @@ exports.articles = function(req, res) {
 };
 
 
+
 exports.getArticle = function(req, res) {
   var id = req.query.id;
-  console.log("OBJ ID: ", id)
+  //console.log("OBJ ID: ", id)
   var query = { '_id': new ObjectId(id) };
   DB.collection('posts').findOne(query, function(err, doc) {
     if(err) throw err;
 
-    console.log("Collection being requested: ", doc);
+    //console.log("Collection being requested: ", doc);
     res.send(200, doc);
 //    DB.close();
   });
@@ -253,6 +255,7 @@ exports.signup = function(req, res) {
       };
 
       DB.collection('users').insert(user, function(error, savedUser) {
+
         var userInfo = savedUser[0];
         res.cookie('currentUser', JSON.stringify({
           username: userInfo.username,
@@ -379,3 +382,39 @@ exports.voteDown = function(req, res) {
 //   });
 // };
 
+
+
+
+exports.getTweets = function(req, res) {
+    console.log("yo momma");
+
+    var hashtags = req.body.data['hashtags'];
+
+    console.log(hashtags);
+    var CONSUMER_KEY = '7jZMP5zSiMHlOIxIIesgU45PD';
+    var CONSUMER_SECRET = 'sBao8QTARsMjy8QpNQcoHTAgsv3cnXPXJYhFfjzGPzW6onSU8P';
+    var keySecret = CONSUMER_KEY + ":" + CONSUMER_SECRET;
+    var keySecret64 = new Buffer(keySecret, 'utf8').toString('base64');
+
+    var qs = require('querystring');
+    var headersWithKey = { 'User-Agent': 'request', 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8', 'Authorization': 'Basic ' + keySecret64 };
+    var url = 'https://api.twitter.com/oauth2/token';
+
+    request.post({url:url, headers:headersWithKey,
+      qs:{ 'grant_type': 'client_credentials' }
+    }, function (e, r, body) {
+      var twitterBearerToken = body;
+      twitterBearerToken = JSON.parse(twitterBearerToken);
+      var headersWithToken = { 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8', 'Authorization': twitterBearerToken['token_type'] + ' ' + twitterBearerToken['access_token']
+      };
+      
+      hashtags = hashtags.replace("#", "%23");
+      var twitterSearchUrl = 'https://api.twitter.com/1.1/search/tweets.json?q=' + hashtags + '&count=12';
+      
+      request.get({url:twitterSearchUrl, headers:headersWithToken, qs:{} }, function (e, r, body) {
+        console.log(body);
+        body = JSON.parse(body);
+        res.send(200, body);
+      });
+    });
+};
