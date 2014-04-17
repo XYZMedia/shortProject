@@ -84,13 +84,9 @@ exports.signup = function(req, res) {
         }));
         res.send(200, savedUser);
         currentUserName = savedUser.username;
-        DB.close();
-        restartMongo();
       });
     } else { //not new
       res.send(200, isNew); //
-      DB.close();
-      restartMongo();
     }
   });
 };
@@ -111,8 +107,6 @@ exports.login = function(req, res){
       console.log('user found is, ', found);
       if(found === null){
         res.send(200, found);
-        DB.close();
-        restartMongo();
       }else if(found.password === userInfo.password){ //FIX LATER need to hash
         console.log('password matches!');
         res.cookie('currentUser', JSON.stringify({
@@ -123,8 +117,6 @@ exports.login = function(req, res){
 
         console.log('should have hit redirect');
         res.send(200, found);
-        DB.close();
-        restartMongo();
       }
     });
 };
@@ -139,7 +131,6 @@ exports.getArticles = function(request, response) {
 
     console.log("Collection being requested: ", articles);
     response.send(200, articles); 
-    // DB.close();
   });
 };
 
@@ -152,7 +143,7 @@ exports.createArticle = function(req, res) {
   request(scrapeDiffbot, function(error, response, body){
     var diffbotArticle    = JSON.parse(body),
         diffbotParagraphs = diffbotArticle.text.split(/[\r\n]/g);
-  
+  console.log(diffbotArticle)
     var doc = {
       poster    : currentUserName,
       postTitle : "",
@@ -169,7 +160,8 @@ exports.createArticle = function(req, res) {
       comments   : [{
         commentor : "",
         comment   : ""
-      }]
+      }],
+      timeline: []
     };
 
     for (var i = 0; i < diffbotParagraphs.length; i++) {
@@ -225,7 +217,6 @@ exports.getArticle = function(req, res) {
     // console.log('timeline found is ', doc.timeline.length);
     //console.log("Collection being requested: ", doc);
     res.send(200, doc);
-//    DB.close();
   });
 };
 
@@ -279,11 +270,6 @@ exports.editParagraph = function(req, res){
 
 
     console.log(post.timeline);
-
-    if(post.timeline === undefined){
-      post.timeline = [];
-    }
-
 
     post.timeline.push(currentPost)
     console.log(post.timeline)
@@ -382,7 +368,6 @@ exports.voteDown = function(req, res) {
 
 //     console.log("Collection being requested: ", user);
 //     res.send(200, user);
-//     DB.close();
 //   });
 // };
 // exports.articleUpdate = function(req, res) {
