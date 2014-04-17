@@ -184,6 +184,7 @@ exports.createArticle = function(req, res) {
     //we might need some sort of "wait while processing msg to the user here"
     DB.collection('posts').insert(doc, function(error, insertedDocument) {
       if (error) throw new Error("This document wasn't created.");
+      console.log('inserted')
 
       var objectId = doc._id;
 
@@ -217,15 +218,13 @@ exports.newEdit = function(req, res) {
 
 exports.getArticle = function(req, res) {
   var id = req.query.id;
-  //console.log("OBJ ID: ", id)
+  console.log("OBJ ID: ", id)
   var query = { '_id': new ObjectId(id) };
   DB.collection('posts').findOne(query, function(err, doc) {
     if(err) throw err;
     
     console.log('timeline found is ', doc.timeline.length);
-    //console.log("Collection being requested: ", doc);
     res.send(200, doc);
-//    DB.close();
   });
 };
 
