@@ -221,7 +221,14 @@ exports.getArticle = function(req, res) {
   var query = { '_id': new ObjectId(id) };
   DB.collection('posts').findOne(query, function(err, doc) {
     if(err) throw err;
-
+    var doc = doc;
+    var timelineId = 't' + id; 
+   // console.log('doc is ', doc)
+    console.log('timeline id is', timelineId);
+    DB.collection(timelineId).find({}).toArray(function(err, timeline){
+      console.log('timeline found is ', timeline.length)
+      doc.timeline = timeline;
+    })
     //console.log("Collection being requested: ", doc);
     res.send(200, doc);
 //    DB.close();
