@@ -76,8 +76,7 @@ angular.module('newsyApp.services.user', [])
             });
         }
       };
-    };
-  ]);
+    }]);
 
 
 

@@ -20,7 +20,7 @@ var MongoClient = require('mongodb').MongoClient,
     mongoclient = new MongoClient(new Server('localhost', 27017)),
     db          = mongoclient.db('newsapp');
 
-mongoclient.open(function(err, mongoclient) {
+mongoclient.open(function(error, mongoclient) {
     if(error) throw error;
 });
 

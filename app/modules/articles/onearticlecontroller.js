@@ -88,7 +88,6 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
           }
         })
       };
-<<<<<<< HEAD
 $scope.hashtags = "#obama1";
       $scope.getTweets = function(){
       Articles.getTweets($scope.hashtags, function(res){
@@ -96,8 +95,6 @@ $scope.hashtags = "#obama1";
         $scope.tweets = res;
       });
     };
-=======
->>>>>>> addisonBranch
 
     //function to create the modal that gets displayed
     var ModalInstanceCtrl = function ($scope, $modalInstance, paragraph, paragraphIndex) {
