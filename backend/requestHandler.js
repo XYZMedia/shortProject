@@ -220,14 +220,8 @@ exports.getArticle = function(req, res) {
   var query = { '_id': new ObjectId(id) };
   DB.collection('posts').findOne(query, function(err, doc) {
     if(err) throw err;
-    var doc = doc;
-    var timelineId = 't' + id; 
-   // console.log('doc is ', doc)
-    console.log('timeline id is', timelineId);
-    DB.collection(timelineId).find({}).toArray(function(err, timeline){
-      console.log('timeline found is ', timeline.length)
-      doc.timeline = timeline;
-    })
+
+    console.log('timeline found is ', doc.timeline.length);
     //console.log("Collection being requested: ", doc);
     res.send(200, doc);
 //    DB.close();
@@ -277,36 +271,36 @@ exports.editParagraph = function(req, res){
     var currentPost = {};
 
     for (var key in post){
-      if(key !== '_id'){
+      if(key !== '_id' && key !== 'timeline'){
         currentPost[key] = post[key];
       }
     };
 
-    var newarticleId = 't' + articleId;
-    console.log('newarticleId is ,', newarticleId);
 
-    DB.collection(newarticleId).insert(currentPost, function(err, savedPost){
-        if(err) throw new Error('error on new time line');
-      // DB.collection(newarticleId).find({}, function(err, found){
-      //  if(err) throw new Error('error on new time line');
-      //  console.log('after insert, timeline collection is', found);
-      // });
-    });
+    console.log(post.timeline);
+
+    if(post.timeline === undefined){
+      post.timeline = [];
+    }
+
+
+    post.timeline.push(currentPost)
+    console.log(post.timeline)
+
+
+console.log('asdsf', post.timeline)
 
 
     var contributor;
 
     DB.collection('users').findOne({username: username}, function(err, foundUser){
-      console.log('foundUser is, ', foundUser);
       contributor = foundUser;
       contributor.contribution = 1;
 
-      console.log('contributor is ', contributor)
 
       var contributors = post.article.contributors;
       var topContributors = post.article.topContributors;
       var contributorIndex;
-          console.log('contributors is', contributors)
       var newContributor = true;
 
       for (var i = 0; i < contributors.length; i++) {
@@ -323,9 +317,7 @@ exports.editParagraph = function(req, res){
         contributors.push(contributor);
         console.log('new contributor');
       }else{
-        console.log('not new contributor, ', contributor)
         contributors[contributorIndex].contribution++;
-        console.log(contributors[contributorIndex].contribution)
         for (var i = contributorIndex - 1 ; i > -1 ; i--) {
           if( contributors[contributorIndex].contribution > contributors[i].contribution ){
             contributors[contributorIndex] = contributors[i];
@@ -335,7 +327,6 @@ exports.editParagraph = function(req, res){
           }
         };
       }
-      console.log('contributors is', contributors)
 
       if( contributors.length > 0 ){
         topContributors = contributors.slice(0,2);
@@ -347,32 +338,16 @@ exports.editParagraph = function(req, res){
 
       newContributor = true;
 
-
-
-      //first add contributor obj to article obj. find it, check if the user exists
-      //   yes, increment the contribution count by one
-      //    no, add it
-
-
-
-
       var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
-      console.log('post.article.paragraphs[paragraphIndex] is', post.article.paragraphs[paragraphIndex] );
 
       post.article.paragraphs[paragraphIndex].currentText = proposedText.text;
       post.article.paragraphs[paragraphIndex].proposedText = [];
 
-      //console.log('proposed text afer edit ', post.article.paragraphs[paragraphIndex]);
-
       DB.collection('posts').update(query, post, function(err, dontcare){
         if(err) throw err;
+        console.log('3')
         console.log('dont care is', dontcare);
       });
-
-
-      console.log('after update, proposed text is,', post.article.paragraphs[paragraphIndex]);
-      console.log('after update, contributors is,', post.article.contributors);
-      console.log('after update, top contributors,', post.article.topContributors)
     });
   });
 };
