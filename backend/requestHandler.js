@@ -14,24 +14,18 @@ var currentUserName;
 // Mongo Client
 // //////////////////////////////////////////////
 
-var db = require('mongodb').MongoClient;
-var ObjectId = require('mongodb').ObjectID;
-var DB = null;
-// Connect to the db
-MONGODB_URI = "mongodb://127.0.0.1:27017/newsapp";
+var MongoClient = require('mongodb').MongoClient,
+    Server      = require('mongodb').Server,
+    ObjectId    = require('mongodb').ObjectID,
+    mongoclient = new MongoClient(new Server('localhost', 27017)),
+    db          = mongoclient.db('newsapp');
 
-var restartMongo = function(){
-  db.connect(MONGODB_URI, function(err, db) {
-    if(!err) {
-      console.log("We are connected to MongoDB");
-      DB = db;
-    } else {
-      console.log("Error connecting to DB.");
-    }
-  });
-};
+mongoclient.open(function(err, mongoclient) {
+    if(error) throw error;
 
-restartMongo();
+    console.log("mongoclient ready.");
+});
+
 
 //////////////////////////////////////////////
 // Bootstrapper
@@ -59,7 +53,7 @@ exports.signup = function(req, res) {
   var userInfo  = req.body,
       isNew     = false;
 
-  DB.collection('users').findOne({email: userInfo.email}, function(error, userByEmail){
+  db.collection('users').findOne({email: userInfo.email}, function(error, userByEmail){
     if (error) throw error;
 
     if (userByEmail === null) { // there is no existing user with the email
@@ -75,7 +69,7 @@ exports.signup = function(req, res) {
         role    : routingConfig.userRoles.user
       };
 
-      DB.collection('users').insert(user, function(error, savedUser) {
+      db.collection('users').insert(user, function(error, savedUser) {
         var userInfo = savedUser[0];
 
         res.cookie('currentUser', JSON.stringify({
@@ -99,9 +93,9 @@ exports.login = function(req, res){
     //send query to mongo to check if user exists
 
     //db.insert();
-     // DB.collection('users').insert(user, function(error, savedUser) {
+     // db.collection('users').insert(user, function(error, savedUser) {
     //console.log('req.body is, ', userInfo);
-    DB.collection('users').findOne({username: userInfo.username}, function(error, found){
+    db.collection('users').findOne({username: userInfo.username}, function(error, found){
       console.log('error is, ', error);
       console.log('userInfo.username is, ', userInfo.username);
       console.log('user found is, ', found);
@@ -126,7 +120,7 @@ exports.login = function(req, res){
 // Resurce: Articles 
 //////////////////////////////////////////////
 exports.getArticles = function(request, response) {
-  DB.collection('posts').find({}).toArray(function(error, articles) {
+  db.collection('posts').find({}).toArray(function(error, articles) {
     if(error) throw error;
 
     console.log("Collection being requested: ", articles);
@@ -174,7 +168,7 @@ exports.createArticle = function(req, res) {
     }
 
     //we might need some sort of "wait while processing msg to the user here"
-    DB.collection('posts').insert(doc, function(error, insertedDocument) {
+    db.collection('posts').insert(doc, function(error, insertedDocument) {
       if (error) throw new Error("This document wasn't created.");
 
       var objectId = doc._id;
@@ -194,12 +188,12 @@ exports.newEdit = function(req, res) {
   
   var query = {_id: new ObjectId(articleId)};
 
-  DB.collection('posts').findOne(query, function(err, post) {
+  db.collection('posts').findOne(query, function(err, post) {
     if(err) throw err;
 
     var obj = {username: username, text: newEditText, url: sources, vote: 0}
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText.push(obj);
-    DB.collection('posts').update(query, post, function(err, post){
+    db.collection('posts').update(query, post, function(err, post){
       if(err) throw err;
     })
   })
@@ -211,7 +205,7 @@ exports.getArticle = function(req, res) {
   var id = req.query.id;
   //console.log("OBJ ID: ", id)
   var query = { '_id': new ObjectId(id) };
-  DB.collection('posts').findOne(query, function(err, doc) {
+  db.collection('posts').findOne(query, function(err, doc) {
     if(err) throw err;
     
     // console.log('timeline found is ', doc.timeline.length);
@@ -233,7 +227,7 @@ exports.voteUp = function(req, res) {
   var editIndex = req.body.editIndex;
 
   var query    = {_id: new ObjectId(articleId)};
-  DB.collection('posts').findOne(query, function(err, post) {
+  db.collection('posts').findOne(query, function(err, post) {
     console.log('voteUp, found post, ', post);
     if(err) throw err;
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
@@ -241,7 +235,7 @@ exports.voteUp = function(req, res) {
     var vote = proposedText.vote;
     console.log('vote after voteUp is, ', vote)
 
-    DB.collection('posts').update(query, post, function(err, dontcare){
+    db.collection('posts').update(query, post, function(err, dontcare){
       if(err) throw err;
     });
   });
@@ -256,7 +250,7 @@ exports.editParagraph = function(req, res){
 
   var query    = {_id: new ObjectId(articleId)};
 
-  DB.collection('posts').findOne(query, function(err, post) {
+  db.collection('posts').findOne(query, function(err, post) {
     if(err) throw new Error('error on finding post for edit paragraph');
     console.log('articleId');
 
@@ -280,7 +274,7 @@ console.log('asdsf', post.timeline)
 
     var contributor;
 
-    DB.collection('users').findOne({username: username}, function(err, foundUser){
+    db.collection('users').findOne({username: username}, function(err, foundUser){
       contributor = foundUser;
       contributor.contribution = 1;
 
@@ -330,7 +324,7 @@ console.log('asdsf', post.timeline)
       post.article.paragraphs[paragraphIndex].currentText = proposedText.text;
       post.article.paragraphs[paragraphIndex].proposedText = [];
 
-      DB.collection('posts').update(query, post, function(err, dontcare){
+      db.collection('posts').update(query, post, function(err, dontcare){
         if(err) throw err;
         console.log('3')
         console.log('dont care is', dontcare);
@@ -346,14 +340,14 @@ exports.voteDown = function(req, res) {
   var editIndex = req.body.editIndex;
 
   var query    = {_id: new ObjectId(articleId)};
-  DB.collection('posts').findOne(query, function(err, post) {
+  db.collection('posts').findOne(query, function(err, post) {
     if(err) throw err;
 
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
     proposedText.vote--;
     var vote = proposedText.vote;
 
-    DB.collection('posts').update(query, post, function(err, dontcare){
+    db.collection('posts').update(query, post, function(err, dontcare){
       if(err) throw err;
     });
   });
@@ -363,7 +357,7 @@ exports.voteDown = function(req, res) {
 
 // exports.getUser = function(req, res) {
 //   var query = { 'username' : req.params.username, 'password': req.params.password };
-//   DB.collection('users').findOne(query, function(err, user) {
+//   db.collection('users').findOne(query, function(err, user) {
 //     if(err) throw err;
 
 //     console.log("Collection being requested: ", user);
@@ -393,7 +387,7 @@ exports.hashtags = function(req, res) {
   var hashtagInsert = req.body.hashtags;
   var query    = {_id: new ObjectId(req.body.articleId)};
 
-  DB.collection('posts').update(query, { $set: { hashtags: hashtagInsert } }, function(error, doc){ });
+  db.collection('posts').update(query, { $set: { hashtags: hashtagInsert } }, function(error, doc){ });
   console.log("success in exports.hashtags");
 };
 
