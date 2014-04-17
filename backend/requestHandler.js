@@ -228,10 +228,8 @@ exports.getArticle = function(req, res) {
     DB.collection(timelineId).find({}).toArray(function(err, timeline){
       console.log('timeline found is ', timeline.length)
       doc.timeline = timeline;
+      res.send(200, doc);
     })
-    //console.log("Collection being requested: ", doc);
-    res.send(200, doc);
-//    DB.close();
   });
 };
 
