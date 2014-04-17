@@ -94,28 +94,17 @@ exports.signup = function(req, res) {
 exports.login = function(req, res){
     console.log('inside login');
     var userInfo = req.body;
-    var isValid = false; //to check if the userinfo is correct
+    var isValid = false; 
 
-    //send query to mongo to check if user exists
-
-    //db.insert();
-     // DB.collection('users').insert(user, function(error, savedUser) {
-    //console.log('req.body is, ', userInfo);
     DB.collection('users').findOne({username: userInfo.username}, function(error, found){
-      console.log('error is, ', error);
-      console.log('userInfo.username is, ', userInfo.username);
-      console.log('user found is, ', found);
       if(found === null){
         res.send(200, found);
       }else if(found.password === userInfo.password){ //FIX LATER need to hash
-        console.log('password matches!');
         res.cookie('currentUser', JSON.stringify({
           username: found.username,
           role: found.role
         }));
         currentUserName = found.username;
-
-        console.log('should have hit redirect');
         res.send(200, found);
       }
     });
@@ -143,7 +132,6 @@ exports.createArticle = function(req, res) {
   request(scrapeDiffbot, function(error, response, body){
     var diffbotArticle    = JSON.parse(body),
         diffbotParagraphs = diffbotArticle.text.split(/[\r\n]/g);
-  console.log(diffbotArticle)
     var doc = {
       poster    : currentUserName,
       postTitle : "",
@@ -205,18 +193,12 @@ exports.newEdit = function(req, res) {
   })
 };
 
-
-
 exports.getArticle = function(req, res) {
   var id = req.query.id;
-  //console.log("OBJ ID: ", id)
   var query = { '_id': new ObjectId(id) };
   DB.collection('posts').findOne(query, function(err, doc) {
     if(err) throw err;
-    
-    console.log('timeline found is ', doc.timeline.length);
-    //console.log("Collection being requested: ", doc);
-    res.send(200, doc);
+        res.send(200, doc);
   });
 };
 
@@ -225,21 +207,17 @@ exports.newestHeadlinesPost = function(req, res) {
 
 };
 
-
 exports.voteUp = function(req, res) {
-  console.log('voteUp!');
   var articleId = req.body.articleId;
   var paragraphIndex = req.body.paragraphIndex;
   var editIndex = req.body.editIndex;
 
   var query    = {_id: new ObjectId(articleId)};
   DB.collection('posts').findOne(query, function(err, post) {
-    console.log('voteUp, found post, ', post);
     if(err) throw err;
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
     proposedText.vote++;
     var vote = proposedText.vote;
-    console.log('vote after voteUp is, ', vote)
 
     DB.collection('posts').update(query, post, function(err, dontcare){
       if(err) throw err;
@@ -252,13 +230,11 @@ exports.editParagraph = function(req, res){
   var paragraphIndex = req.body.paragraphIndex;
   var editIndex = req.body.editIndex;
   var username = req.body.user;
-  console.log('initial username is, ', username);
 
   var query    = {_id: new ObjectId(articleId)};
 
   DB.collection('posts').findOne(query, function(err, post) {
     if(err) throw new Error('error on finding post for edit paragraph');
-    console.log('articleId');
 
     var currentPost = {};
 
@@ -268,15 +244,7 @@ exports.editParagraph = function(req, res){
       }
     };
 
-
-    console.log(post.timeline);
-
     post.timeline.push(currentPost)
-    console.log(post.timeline)
-
-
-console.log('asdsf', post.timeline)
-
 
     var contributor;
 
@@ -302,7 +270,6 @@ console.log('asdsf', post.timeline)
 
       if( newContributor ){ // new contributor
         contributors.push(contributor);
-        console.log('new contributor');
       }else{
         contributors[contributorIndex].contribution++;
         for (var i = contributorIndex - 1 ; i > -1 ; i--) {
@@ -332,8 +299,6 @@ console.log('asdsf', post.timeline)
 
       DB.collection('posts').update(query, post, function(err, dontcare){
         if(err) throw err;
-        console.log('3')
-        console.log('dont care is', dontcare);
       });
     });
   });
@@ -359,42 +324,11 @@ exports.voteDown = function(req, res) {
   });
 };
 
-
-
-// exports.getUser = function(req, res) {
-//   var query = { 'username' : req.params.username, 'password': req.params.password };
-//   DB.collection('users').findOne(query, function(err, user) {
-//     if(err) throw err;
-
-//     console.log("Collection being requested: ", user);
-//     res.send(200, user);
-//   });
-// };
-// exports.articleUpdate = function(req, res) {
-
-//   // Set value of _id to id of current object
-//   var query    = { '_id' : 'FILL_IN' };
-
-//   // Set value of article.p1 to input field
-//   var operator = { '$set' : { 'article.p1' : "FILL_IN" } };
-
-//   db.collection('posts').update(query, operator, function(err, updated) {
-//     if(err) throw err;
-
-//     console.dir("Successfully updated: " + updated);
-//     //  we need to redirect or reload the page
-//     response.send(200, updated)
-//     return db.close();
-//   });
-// };
-
-
 exports.hashtags = function(req, res) {
   var hashtagInsert = req.body.hashtags;
   var query    = {_id: new ObjectId(req.body.articleId)};
 
   DB.collection('posts').update(query, { $set: { hashtags: hashtagInsert } }, function(error, doc){ });
-  console.log("success in exports.hashtags");
 };
 
 exports.getTweets = function(req, res) {
@@ -422,7 +356,6 @@ exports.getTweets = function(req, res) {
       var twitterSearchUrl = 'https://api.twitter.com/1.1/search/tweets.json?q=' + hashtags + '&count=12';
       
       request.get({url:twitterSearchUrl, headers:headersWithToken, qs:{} }, function (e, r, body) {
-        //console.log(body);
         body = JSON.parse(body);
         res.send(200, body);
       });

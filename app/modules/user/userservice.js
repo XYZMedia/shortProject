@@ -73,32 +73,11 @@ angular.module('newsyApp.services.user', [])
             .success(function(res){
               $rootScope.articleId = JSON.parse(res);
               $location.path('/article').search({ articleId: $rootScope.articleId });
-
             });
         }
-
-
-
       };
-
-       user.whenLoggedIn = $http.get('user.json')
-          .then(function(response){
-          // Check to see if there is an error.
-          if (response.data.error !== undefined) {
-            // should be more thorough with this check to determine the
-            // correct action (examine the error)
-            user.loggedIn = false;
-          }else{
-            user.loggedIn = true;
-            user.details = response.data;
-            return user;
-          }
-
-        }).then;
-
-      return user;
-
-    }]);
+    };
+  ]);
 
 
 

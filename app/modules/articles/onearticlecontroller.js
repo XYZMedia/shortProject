@@ -13,7 +13,6 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
           Articles.getTweets(article.hashtags, function(resTweets) {
 
             $scope.tweets = resTweets;
-            console.log($scope.tweets);
           });
         });
       };
@@ -58,7 +57,6 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
 $scope.hashtags = "#obama1";
       $scope.getTweets = function(){
       Articles.getTweets($scope.hashtags, function(res){
-        console.log(res);
         //not sure how to angularize this res object..
         $scope.tweets = res;
       });
@@ -87,7 +85,6 @@ $scope.hashtags = "#obama1";
       };
 
       $scope.voteDown = function(){
-        //console.log('down!');
       };
 
       $scope.newEdit = function(){

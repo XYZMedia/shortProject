@@ -91,8 +91,6 @@ app.run(function(editableOptions) {
 app.run(['$rootScope', '$location', '$cookieStore', 'userService', function ($rootScope, $location, $cookieStore, userService, editableOptions) {
     $rootScope.$on("$routeChangeStart", function (event, next, currentUser) {
       var currentUser = $cookieStore.get('currentUser') || {role: 1};
-      console.log('cookie store has', $cookieStore.get('currentUser'));
-      console.log('currentUser is,', currentUser);
         if (!userService.isAuthorized(next.access, currentUser.role)) {
             if(userService.isLoggedIn(currentUser)){
               $location.path('/');
