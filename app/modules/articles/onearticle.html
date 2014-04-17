@@ -10,12 +10,26 @@
         <p>April 5, 2014</p>
         <p><em>Original Source: {{article.postSource}}</em></p>
         <p><em>Original Poster: {{article.poster}}</em></p>
+        <div class="progressBar">
+          <div class="col-md-7">
+            <progressbar class="progress-striped" max="100" value="(currentEditIndex * 100 / editMax)" type="info"><span style="color:black; white-space:nowrap;"> Showing edit {{currentEditIndex}} of {{editMax}} total edits</span></progressbar>
+          </div>
+          <div class="col-md-5" ng-hide="timelineActive" ng-click="enableTimeline()">
+            <progressbar class="progress" value='100' type="info"><span style="color:black"> Show previous edits</span></progressbar>
+          </div>
+          <div class="col-md-5" ng-show="timelineActive" ng-click="pauseTimeline()">
+            <progressbar class="progress" value='100' type="info"><span style="color:black">Pause timeline</span></progressbar>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- Article content section -->
     <div ng-repeat="paragraph in article.article.paragraphs" class="articleContent text-justify">
-      <p>{{paragraph.currentText}}</p>
+      <div class="animate-switch-container" ng-switch on="stringOrHTML(paragraph.currentText)">
+        <p ng-switch-default class="animate-switch" ng-bind="paragraph.currentText"></p>
+        <p ng-switch-when="HTML" class="animate-switch" ng-bind-html="paragraph.currentText"></p>
+      </div>
       <p ng-click="editParagraph(this.paragraph, $index)" class="editCount" ng-show="paragraph.currentText">See proposed edits ({{paragraph.proposedText.length}} total) or submit a new one</p>
     </div>
   </div>
@@ -23,32 +37,20 @@
   <!-- Contributors section -->
   <div class="col-md-2 col-sm-4 col-xs-12 contributorSection">
     <h5>Top Contributors</h5>
-    <div class="contributorDiv">
-      <img class="contributorImg" src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/960px-President_Barack_Obama.jpg">
-      <h6 class="contributorTitle">POTUS</h6>
-      <h6 class="contributorStats"># of edits: 20</h6>
-    </div>
-    <div class="contributorDiv">
-      <img class="contributorImg" src="http://upload.wikimedia.org/wikipedia/commons/d/d4/George-W-Bush.jpeg">
-      <h6 class="contributorTitle">BushLeague</h6>
-      <h6 class="contributorStats"># of edits: 10</h6>
-    </div>
-    <div class="contributorDiv">
-      <img class="contributorImg" src="https://pbs.twimg.com/profile_images/536177589/Hey_Ladies_-_Bill_Clinton.jpg">
-      <h6 class="contributorTitle">BillInsideYa</h6>
-      <h6 class="contributorStats"># of edits: 1</h6>
+    <div class="contributorDiv" ng-repeat="contributor in article.article.topContributors">
+      <!-- <img class="contributorImg" src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/960px-President_Barack_Obama.jpg"> -->
+      <h6 class="contributorTitle">{{contributor.username}}</h6>
+      <h6 class="contributorStats"># of edits: {{contributor.contribution}}</h6>
     </div>
   </div>
 
   <!-- Twitter section -->
   <div class="col-md-2 col-sm-4 col-xs-12 twitterSection">
     <h5>Related Tweets</h5>
-      <h6 class="twitterTitle">CNN</h6>
-      <h6 class="twitterTitle">"Official in #MH370 search: Signals picked up are consistent with a flight data recorder. http://cnn.it/1g0BIyQ"</h6>
-      <h6 class="twitterTitle">CNN</h6>
-      <h6 class="twitterTitle">"Official in #MH370 search: Signals picked up are consistent with a flight data recorder. http://cnn.it/1g0BIyQ"</h6>
-      <h6 class="twitterTitle">CNN</h6>
-      <h6 class="twitterTitle">"Official in #MH370 search: Signals picked up are consistent with a flight data recorder. http://cnn.it/1g0BIyQ"</h6>
+      <div ng-repeat="tweet in tweets.statuses | limitTo:3">
+        <a href="{{tweet.user.url}}" class="twitterTitle">{{tweet.user.name}}</a>
+        <h6 class="twitterTitle">{{tweet.text}}</h6>
+      </div>
       <button class="btn btn-xs btn-info col-md-11 col-sm-11 col-xs-12" ng-click="showHashtags=!showHashtags" ng-hide="showHashtags">Add more hashtags</button>
       <button class="btn btn-xs btn-info col-md-11 col-sm-11 col-xs-12" ng-click="showHashtags=!showHashtags;submitHashtags()" ng-show="showHashtags">Submit hashtags</button>
       <input type="text" ng-model="hashtags" ng-show="showHashtags"></input>
@@ -71,7 +73,7 @@
           <div id="left">
             <img class="contributorImg" src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/960px-President_Barack_Obama.jpg">
             <p id="up"><span ng-click="voteUp($index)" class="glyphicon glyphicon-circle-arrow-up"</span>{{proposedText.vote}}</p>
-            <p id="down"><span ng-click="voteDown()" class="glyphicon glyphicon-circle-arrow-down"</span>40</p>
+            <p id="down"><span ng-click="voteDown()" class="glyphicon glyphicon-circle-arrow-down"</span>0</p>
           </div>
           <div id="right">
             <div>
@@ -122,8 +124,3 @@
       </div>
     </div>
   </div>
-
-  <div class="col-md-10 col-sm-8 col-xs-12 twitterSection" ng-init="getTweets()">
-    <h5>Tweets (MOVE THIS TO WHEREVER YOU WANT)</h5>
-    <div class="tweets">
-    {{ scope.tweets }}

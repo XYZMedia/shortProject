@@ -198,7 +198,7 @@ exports.getArticle = function(req, res) {
   var query = { '_id': new ObjectId(id) };
   DB.collection('posts').findOne(query, function(err, doc) {
     if(err) throw err;
-      res.send(200, doc);
+    res.send(200, doc);
   });
 };
 
