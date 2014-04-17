@@ -1,4 +1,4 @@
-var apiKeys       = require('./apiKeys'),
+var apiKeys       = require('./../config.js'),
     express       = require('express'),
     fs            = require("fs"),
     http          = require("http"),
@@ -198,7 +198,7 @@ exports.getArticle = function(req, res) {
   var query = { '_id': new ObjectId(id) };
   DB.collection('posts').findOne(query, function(err, doc) {
     if(err) throw err;
-        res.send(200, doc);
+      res.send(200, doc);
   });
 };
 
@@ -333,12 +333,12 @@ exports.hashtags = function(req, res) {
 
 exports.getTweets = function(req, res) {
 
-    var hashtags = req.body.data['hashtags'];
+    var hashtags        = req.body.data['hashtags'];
 
-    var CONSUMER_KEY = '7jZMP5zSiMHlOIxIIesgU45PD';
-    var CONSUMER_SECRET = 'sBao8QTARsMjy8QpNQcoHTAgsv3cnXPXJYhFfjzGPzW6onSU8P';
-    var keySecret = CONSUMER_KEY + ":" + CONSUMER_SECRET;
-    var keySecret64 = new Buffer(keySecret, 'utf8').toString('base64');
+    var CONSUMER_KEY    = apiKeys.twitterConsumerKey;
+    var CONSUMER_SECRET = apiKeys.twitterConsumerSecret;
+    var keySecret       = CONSUMER_KEY + ":" + CONSUMER_SECRET;
+    var keySecret64     = new Buffer(keySecret, 'utf8').toString('base64');
 
     var qs = require('querystring');
     var headersWithKey = { 'User-Agent': 'request', 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8', 'Authorization': 'Basic ' + keySecret64 };
