@@ -222,7 +222,7 @@ exports.getArticle = function(req, res) {
   DB.collection('posts').findOne(query, function(err, doc) {
     if(err) throw err;
     
-    console.log('timeline found is ', doc.timeline.length);
+    // console.log('timeline found is ', doc.timeline.length);
     //console.log("Collection being requested: ", doc);
     res.send(200, doc);
 //    DB.close();
