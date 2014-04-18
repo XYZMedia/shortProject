@@ -76,13 +76,5 @@ angular.module('newsyApp.services.user', [])
             });
         }
       };
+      return user;
     }]);
-
-
-
-
-
-
-    // NOTE: I am assigning the "then" function of the login promise to
-    // "whenLoggedIn" - your controller code is then very easy to read.
-  //     return {
