@@ -26,9 +26,9 @@
 
     <!-- Article content section -->
     <div ng-repeat="paragraph in article.article.paragraphs" class="articleContent text-justify">
-      <div class="animate-switch-container" ng-switch on="stringOrHTML(paragraph.currentText)">
-        <p ng-switch-default class="animate-switch" ng-bind="paragraph.currentText"></p>
-        <p ng-switch-when="HTML" class="animate-switch" ng-bind-html="paragraph.currentText"></p>
+      <div ng-switch on="stringOrHTML(paragraph.currentText)">
+        <p ng-switch-default ng-bind="paragraph.currentText"></p>
+        <p ng-switch-when="HTML" ng-bind-html="paragraph.currentText"></p>
       </div>
       <p ng-click="editParagraph(this.paragraph, $index)" class="editCount" ng-show="paragraph.currentText">See proposed edits ({{paragraph.proposedText.length}} total) or submit a new one</p>
     </div>
@@ -38,7 +38,7 @@
   <div class="col-md-2 col-sm-4 col-xs-12 contributorSection">
     <h5>Top Contributors</h5>
     <div class="contributorDiv" ng-repeat="contributor in article.article.topContributors">
-      <!-- <img class="contributorImg" src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/960px-President_Barack_Obama.jpg"> -->
+      <img class="contributorImg" src="{{contributor.image}}">
       <h6 class="contributorTitle">{{contributor.username}}</h6>
       <h6 class="contributorStats"># of edits: {{contributor.contribution}}</h6>
     </div>
