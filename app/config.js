@@ -87,7 +87,7 @@ app.config(['$routeProvider', '$locationProvider',
 app.run(function(editableOptions) {
   editableOptions.theme = 'bs3';
 });
-//EUGENECHOI
+
 app.run(['$rootScope', '$location', '$cookieStore', 'userService', function ($rootScope, $location, $cookieStore, userService, editableOptions) {
     $rootScope.$on("$routeChangeStart", function (event, next, currentUser) {
       var currentUser = $cookieStore.get('currentUser') || {role: 1};
@@ -102,52 +102,3 @@ app.run(['$rootScope', '$location', '$cookieStore', 'userService', function ($ro
         }
     });
 }]);
-
-
-
-
-
-
-
-
-
-//             $rootScope.error = "Seems like you tried accessing a route you don't have access to...";
-//             event.preventDefault();
-
-//             if(fromState.url === '^') {
-//                 if(Auth.isLoggedIn()) {
-//                     $state.go('user.home');
-//                 } else {
-//                     $rootScope.error = null;
-//                     $state.go('anon.login');
-//                 }
-//             }
-//         }
-//     });
-
-// }]);
-
-
-
-
-
-
-    // $routeProvider.when('/private',
-    //     {
-    //         templateUrl:    'partials/private',
-    //         controller:     PrivateCtrl,
-    //         access:         access.user
-    //     });
-    // $routeProvider.when('/admin',
-    //     {
-    //         templateUrl:    'partials/admin',
-    //         controller:     AdminCtrl,
-    //         access:         access.admin
-    //     });
-
-  // establish user authentication
-  // .run(['angularFireAuth', 'FBURL', '$rootScope',
-  //   function(angularFireAuth, FBURL, $rootScope) {
-  //     angularFireAuth.initialize(new Firebase(FBURL), {scope: $rootScope, name: 'auth', path: '/signin'});
-  //     $rootScope.FBURL = FBURL;
-  //   }])
