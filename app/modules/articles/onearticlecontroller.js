@@ -36,22 +36,23 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
         var currentTextEdited = $scope.article.article.paragraphs;
 
         var updateText = function(){
+          $scope.currentEditIndex--
+
           var timelineEdit = $scope.timeline[$scope.currentEditIndex].article.paragraphs;
 
           for(var i = 0; i < currentTextPristine.length; i++){
             currentTextEdited[i].currentText = $sce.trustAsHtml(diffString(timelineEdit[i].currentText, currentTextPristine[i].currentText))
           }
+
+          if($scope.currentEditIndex > 0){
+            setTimeout(function(){
+              updateText()
+              $scope.$apply()
+            }, 1000)
+          }
         }
 
-        $scope.timelineId = setInterval(function(){
-          $scope.currentEditIndex--
-          updateText()
-          $scope.$apply()
-        }, 1000)
-      }
-
-      $scope.pauseTimeline = function(){
-        clearInterval($scope.timelineId)
+        updateText();
       }
 
 //==========Twitter Functionality===========

@@ -87,7 +87,7 @@ app.config(['$routeProvider', '$locationProvider',
 app.run(function(editableOptions) {
   editableOptions.theme = 'bs3';
 });
-//EUGENECHOI
+
 app.run(['$rootScope', '$location', '$cookieStore', 'userService', function ($rootScope, $location, $cookieStore, userService, editableOptions) {
     $rootScope.$on("$routeChangeStart", function (event, next, currentUser) {
       var currentUser = $cookieStore.get('currentUser') || {role: 1};
