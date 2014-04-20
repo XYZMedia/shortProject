@@ -9,7 +9,6 @@
         <h2>{{article.article.title}}</h2>
         <p>April 5, 2014</p>
         <p><em>Original Source: {{article.postSource}}</em></p>
-        <p><em>Original Poster: {{article.poster}}</em></p>
         <div class="progressBar">
           <div class="col-md-7">
             <progressbar class="progress-striped" max="100" value="(currentEditIndex * 100 / editMax)" type="info"><span style="color:black; white-space:nowrap;"> Showing edit {{currentEditIndex}} of {{editMax}} total edits</span></progressbar>
@@ -71,7 +70,6 @@
       <div class="Xmodal-body text-justify" ng-hide="showEdit">
         <div ng-repeat="proposedText in proposedTexts" ng-init="proposedText.text = getDiff(currentText, proposedText.text)">
           <div id="left">
-            <img class="contributorImg" src="http://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/President_Barack_Obama.jpg/960px-President_Barack_Obama.jpg">
             <p id="up"><span ng-click="voteUp($index)" class="glyphicon glyphicon-circle-arrow-up"</span>{{proposedText.vote}}</p>
             <p id="down"><span ng-click="voteDown()" class="glyphicon glyphicon-circle-arrow-down"</span>0</p>
           </div>
