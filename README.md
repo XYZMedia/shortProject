@@ -12,3 +12,6 @@ Diffbot: http://diffbot.com/pricing/
 Twitter: https://dev.twitter.com/
 
 3) Add your Api keys to **config.js**
+
+
+![Alt text](/screenshots/article.jpg "Optional title")
