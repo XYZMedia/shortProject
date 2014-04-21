@@ -1,9 +1,10 @@
-var express = require('express');
-var path = require('path');
-var handler = require ('./requestHandler.js');
-var app = express();
-var cors = require('cors');
-var passport = require('passport');
+var apiKeys  = require('./../config.js'),
+    express  = require('express'),
+    path     = require('path'),
+    handler  = require ('./requestHandler.js'),
+    app      = express(),
+    cors     = require('cors'),
+    passport = require('passport');
 
 
 app.configure(function() {
@@ -17,7 +18,6 @@ app.configure(function() {
   app.get('/getArticle', handler.getArticle);
   app.post('/newEdit', handler.newEdit);
 
-
   app.post('/signup', handler.signup);
   app.post('/login', handler.login);
 
@@ -30,11 +30,8 @@ app.configure(function() {
   app.post('/hashtags', handler.hashtags);
   app.post('/getTweets', handler.getTweets);
 
-
   app.use(express.cookieParser());
-  app.use(express.cookieSession({
-    secret: 'hello'
-  }));
+  app.use(express.cookieSession(apiKeys.secret));
 
   app.listen(8080);
   console.log('Listening on port 8080');
