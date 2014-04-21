@@ -66,15 +66,6 @@ angular.module('newsyApp.services.user', [])
           $cookieStore.put( 'currentUser', { role: 1 } );
           //send logout request to server
           $location.path('/');
-        },
-
-        newArticle: function(url){
-          $http.post('/newpost', {url: url})
-            .success(function(res){
-              $rootScope.articleId = JSON.parse(res);
-              $location.path('/article').search({ articleId: $rootScope.articleId });
-
-            });
         }
 
 

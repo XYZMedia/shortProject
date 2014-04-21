@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('newsyApp.controllers.header', ['newsyApp.services.user'])
+angular.module('newsyApp.controllers.header', [])
   .controller('HeaderController', ['$scope', '$location', 'userService', '$cookieStore', 
     function($scope, $location, userService, $cookieStore) {
 
@@ -9,8 +9,8 @@ angular.module('newsyApp.controllers.header', ['newsyApp.services.user'])
       $scope.getUser = function(){
         if($scope.currentUser.role > 1){
           $scope.authorized = true;
-        }
-      }
+        };
+      };
 
       $scope.logout = function() {
         userService.logout();
@@ -38,7 +38,7 @@ angular.module('newsyApp.controllers.header', ['newsyApp.services.user'])
           function(data) {
             data.isActive = ($location.path().indexOf(data.link) == 0);
           }
-        )
-      })
+        );
+      });
 
     }])
