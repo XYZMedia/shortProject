@@ -1,40 +1,39 @@
-'use strict';
+(function () {
+  'use strict';
 
 angular.module('newsyApp.services.user', [])
   .factory('userService', ['$location', '$rootScope', '$http', '$cookieStore',
-//EUGENECHOI
-    function($location, $rootScope, $http, $cookieStore) {
-      var access = routingConfig.accessLevels;
-      var role = routingConfig.userRoles;
-      var currentUser = $cookieStore.get('currentUser') || { username: '', role: role.public };
+    function ($location, $rootScope, $http, $cookieStore) {
+      var access      = routingConfig.accessLevels,
+          role        = routingConfig.userRoles,
+          currentUser = $cookieStore.get('currentUser') || { username: '', role: role.public };
 
-      var user = {
-
-        isAuthorized: function(accessLevel, userRole){
-          if(userRole === 'undefined'){
+      return {
+        isAuthorized: function (accessLevel, userRole) {
+          if (userRole === 'undefined') {
             userRole = currentUser.role;
           }
           return (accessLevel <= userRole);
         },
 
-        isLoggedIn: function(currentUser){
+        isLoggedIn: function (currentUser) {
           return currentUser.role >= role.user;
         },
 
-        signup: function(email, image, username, password) {
+        signup: function (email, image, username, password) {
           var userInfo = {
             email: email,
             image: image,
             username: username,
             password: password,
             role: role.public
-          }
+          };
 
           $http.post('/signup', userInfo)
-            .success(function(res){ // res contains userInfo with updated role
-              if(res === 'false'){  //signup failed
+            .success(function (res) { // res contains userInfo with updated role
+              if (res === 'false') {  //signup failed
                 $location.path('/signup'); // ASK
-              }else{
+              } else {
                 $location.path('/');
               }
 
@@ -42,7 +41,7 @@ angular.module('newsyApp.services.user', [])
 
         },
 
-        login: function(email, username, password) {
+        login: function (email, username, password) {
           var userInfo = {
             email: email,
             username: username,
@@ -51,24 +50,23 @@ angular.module('newsyApp.services.user', [])
           };
 
           $http.post('/login', userInfo)
-            .success(function(res){ // res contains userInfo with updated role
-              if(res === ''){
+            .success(function (res) {
+              if (res === '') {
                 //user info does not match
-              }else{
+              } else {
                 $location.path('/');
               }
             });
             
         },
 
-        logout: function() {
+        logout: function () {
           $cookieStore.remove('currentUser');
           $cookieStore.put( 'currentUser', { role: 1 } );
-          //send logout request to server
           $location.path('/');
         },
 
-        newArticle: function(url){
+        newArticle: function (url) {
           $http.post('/newpost', {url: url})
             .success(function(res){
               $rootScope.articleId = JSON.parse(res);
@@ -76,5 +74,5 @@ angular.module('newsyApp.services.user', [])
             });
         }
       };
-      return user;
     }]);
+}());
