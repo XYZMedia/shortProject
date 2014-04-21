@@ -21,7 +21,7 @@ var MongoClient = require('mongodb').MongoClient,
     db          = mongoclient.db('newsapp');
 
 mongoclient.open(function (error, mongoclient) {
-    if(error) throw error;
+    if (error) throw error;
 });
 
 
@@ -77,15 +77,15 @@ exports.signup = function(req, res) {
         res.send(200, savedUser);
         currentUserName = savedUser.username;
       });
-    } else { //not new
-      res.send(200, isNew); //
+    } else {
+      res.send(200, isNew);
     }
   });
 };
 
 exports.login = function(req, res){
     var userInfo = req.body;
-    var isValid = false; 
+    var isValid = false;
 
     db.collection('users').findOne({username: userInfo.username}, function(error, found){
 
@@ -109,15 +109,14 @@ exports.login = function(req, res){
 exports.getArticles = function(request, response) {
   db.collection('posts').find({}).toArray(function(error, articles) {
     if(error) throw error;
-
-    response.send(200, articles); 
+    response.send(200, articles);
   });
 };
 
 exports.createArticle = function(req, res) {
   var url           = req.body.url,
       apiKey        = apiKeys.diffbot,
-      scrapeDiffbot = 'http://api.diffbot.com/v2/article?token=' + apiKey + 
+      scrapeDiffbot = 'http://api.diffbot.com/v2/article?token=' + apiKey +
                       '&url=' + url;
   
   request(scrapeDiffbot, function(error, response, body){
@@ -130,8 +129,6 @@ exports.createArticle = function(req, res) {
       hashtags: "",
       article   : {
         title     : diffbotArticle.title,
-
-        // note this is an array of images, we can make a selection in the future
         image     : diffbotArticle.images[0].url,
         paragraphs: [],
         contributors :[]
@@ -152,17 +149,13 @@ exports.createArticle = function(req, res) {
       doc.article.paragraphs.push(paragraph);
     }
 
-    //we might need some sort of "wait while processing msg to the user here"
     db.collection('posts').insert(doc, function(error, insertedDocument) {
       if (error) throw new Error("This document wasn't created.");
-
       var objectId = doc._id;
-
       res.send(200, objectId);
     });
   });
 };
-
 
 exports.newEdit = function(req, res) {
   var articleId      = req.body.articleId,
@@ -176,12 +169,17 @@ exports.newEdit = function(req, res) {
   db.collection('posts').findOne(query, function(err, post) {
     if(err) throw err;
 
-    var obj = {username: username, text: newEditText, url: sources, vote: 0}
+    var obj = {
+      username: username,
+      text: newEditText,
+      url: sources,
+      vote: 0
+    };
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText.push(obj);
     db.collection('posts').update(query, post, function(err, post){
       if(err) throw err;
-    })
-  })
+    });
+  });
 };
 
 exports.getArticle = function(req, res) {
@@ -193,9 +191,7 @@ exports.getArticle = function(req, res) {
   });
 };
 
-
 exports.newestHeadlinesPost = function(req, res) {
-
 };
 
 exports.voteUp = function(req, res) {
@@ -221,7 +217,6 @@ exports.editParagraph = function(req, res){
   var paragraphIndex = req.body.paragraphIndex;
   var editIndex = req.body.editIndex;
   var username = req.body.user;
-
   var query    = {_id: new ObjectId(articleId)};
 
   db.collection('posts').findOne(query, function(err, post) {
@@ -233,9 +228,9 @@ exports.editParagraph = function(req, res){
       if(key !== '_id' && key !== 'timeline'){
         currentPost[key] = post[key];
       }
-    };
+    }
 
-    post.timeline.push(currentPost)
+    post.timeline.push(currentPost);
 
     var contributor;
 
@@ -255,11 +250,9 @@ exports.editParagraph = function(req, res){
           contributorIndex = i;
           break;
         }
-      };
+      }
 
-
-
-      if( newContributor ){ // new contributor
+      if( newContributor ){
         contributors.push(contributor);
       }else{
         contributors[contributorIndex].contribution++;
@@ -270,7 +263,7 @@ exports.editParagraph = function(req, res){
           }else{
             break;
           }
-        };
+        }
       }
 
       if( contributors.length > 0 ){
@@ -295,7 +288,6 @@ exports.editParagraph = function(req, res){
   });
 };
 
-
 exports.voteDown = function(req, res) {
   var articleId = req.body.articleId;
   var paragraphIndex = req.body.paragraphIndex;
@@ -315,7 +307,6 @@ exports.voteDown = function(req, res) {
   });
 };
 
-
 exports.hashtags = function(req, res) {
   var hashtagInsert = req.body.hashtags;
   var query    = {_id: new ObjectId(req.body.articleId)};
@@ -323,20 +314,19 @@ exports.hashtags = function(req, res) {
 };
 
 exports.getTweets = function(req, res) {
-
     var hashtags        = req.body.data['hashtags'];
-
     var CONSUMER_KEY    = apiKeys.twitterConsumerKey;
     var CONSUMER_SECRET = apiKeys.twitterConsumerSecret;
     var keySecret       = CONSUMER_KEY + ":" + CONSUMER_SECRET;
     var keySecret64     = new Buffer(keySecret, 'utf8').toString('base64');
-
-    var qs = require('querystring');
-    var headersWithKey = { 'User-Agent': 'request', 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8', 'Authorization': 'Basic ' + keySecret64 };
+    var headersWithKey = { 
+      'User-Agent': 'request',
+      'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+      'Authorization': 'Basic ' + keySecret64 };
     var url = 'https://api.twitter.com/oauth2/token';
 
     request.post({url:url, headers:headersWithKey,
-      qs:{ 'grant_type': 'client_credentials' }
+      querystring:{ 'grant_type': 'client_credentials' }
     }, function (e, r, body) {
       var twitterBearerToken = body;
       twitterBearerToken = JSON.parse(twitterBearerToken);
@@ -346,7 +336,7 @@ exports.getTweets = function(req, res) {
       hashtags = hashtags.replace("#", "%23");
       var twitterSearchUrl = 'https://api.twitter.com/1.1/search/tweets.json?q=' + hashtags + '&count=12';
       
-      request.get({url:twitterSearchUrl, headers:headersWithToken, qs:{} }, function (e, r, body) {
+      request.get({url:twitterSearchUrl, headers:headersWithToken, querystring:{} }, function (e, r, body) {
         body = JSON.parse(body);
         res.send(200, body);
       });
