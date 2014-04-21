@@ -200,45 +200,46 @@ $scope.hashtags = "#obama1";
     }
 
     function diff( o, n ) {
-      var ns = {},
-          os = {};
+      var ns = new Object();
+      var os = new Object();
 
       for ( var i = 0; i < n.length; i++ ) {
-        if ( ns[ n[i] ] === null )
-          ns[ n[i] ] = { rows: [], o: null };
+        if ( ns[ n[i] ] == null )
+          ns[ n[i] ] = { rows: new Array(), o: null };
         ns[ n[i] ].rows.push( i );
       }
 
-      for ( var j = 0; i < o.length; j++ ) {
-        if ( os[ o[j] ] === null )
-          os[ o[j] ] = { rows: [], n: null };
-        os[ o[j] ].rows.push( j );
+      for ( var i = 0; i < o.length; i++ ) {
+        if ( os[ o[i] ] == null )
+          os[ o[i] ] = { rows: new Array(), n: null };
+        os[ o[i] ].rows.push( i );
       }
 
-      for ( var k in ns ) {
-        if ( ns[k].rows.length === 1 && typeof(os[k]) != "undefined" && os[k].rows.length === 1 ) {
-          n[ ns[k].rows[0] ] = { text: n[ ns[k].rows[0] ], row: os[k].rows[0] };
-          o[ os[k].rows[0] ] = { text: o[ os[k].rows[0] ], row: ns[k].rows[0] };
+      for ( var i in ns ) {
+        if ( ns[i].rows.length == 1 && typeof(os[i]) != "undefined" && os[i].rows.length == 1 ) {
+          n[ ns[i].rows[0] ] = { text: n[ ns[i].rows[0] ], row: os[i].rows[0] };
+          o[ os[i].rows[0] ] = { text: o[ os[i].rows[0] ], row: ns[i].rows[0] };
         }
       }
 
-      for ( var l = 0; i < n.length - 1; l++ ) {
-        if ( n[l].text !== null && n[l+1].text === null && n[l].row + 1 < o.length && o[ n[l].row + 1 ].text === null &&
-             n[l+1] === o[ n[l].row + 1 ] ) {
-          n[l+1] = { text: n[l+1], row: n[l].row + 1 };
-          o[n[l].row+1] = { text: o[n[l].row+1], row: l + 1 };
+      for ( var i = 0; i < n.length - 1; i++ ) {
+        if ( n[i].text != null && n[i+1].text == null && n[i].row + 1 < o.length && o[ n[i].row + 1 ].text == null &&
+             n[i+1] == o[ n[i].row + 1 ] ) {
+          n[i+1] = { text: n[i+1], row: n[i].row + 1 };
+          o[n[i].row+1] = { text: o[n[i].row+1], row: i + 1 };
         }
       }
 
-      for ( var m = n.length - 1; m > 0; m-- ) {
-        if ( n[m].text !== null && n[m-1].text === null && n[m].row > 0 && o[ n[m].row - 1 ].text === null &&
-             n[m-1] === o[ n[m].row - 1 ] ) {
-          n[m-1] = { text: n[m-1], row: n[m].row - 1 };
-          o[n[m].row-1] = { text: o[n[m].row-1], row: m - 1 };
+      for ( var i = n.length - 1; i > 0; i-- ) {
+        if ( n[i].text != null && n[i-1].text == null && n[i].row > 0 && o[ n[i].row - 1 ].text == null &&
+             n[i-1] == o[ n[i].row - 1 ] ) {
+          n[i-1] = { text: n[i-1], row: n[i].row - 1 };
+          o[n[i].row-1] = { text: o[n[i].row-1], row: i - 1 };
         }
       }
 
       return { o: o, n: n };
-    }
-}]);
+    };
+  }]);
+
 }());
