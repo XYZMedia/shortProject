@@ -10,11 +10,7 @@ angular.module('newsyApp.controllers.header', [])
       $scope.getUser = function(){
         if($scope.currentUser.role > 1){
           $scope.authorized = true;
-<<<<<<< HEAD
         };
-=======
-        }
->>>>>>> 2820f439cb5aaf5c019110bdbfdfb5f458c44f7d
       };
 
       $scope.logout = function() {

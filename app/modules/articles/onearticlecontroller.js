@@ -50,11 +50,7 @@ angular.module('newsyApp.controllers.onearticle', [])
               updateText();
               $scope.$apply();
             }, 1000);
-<<<<<<< HEAD
           };
-=======
-          }
->>>>>>> 2820f439cb5aaf5c019110bdbfdfb5f458c44f7d
         };
 
         updateText();
