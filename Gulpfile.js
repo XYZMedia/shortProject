@@ -4,9 +4,9 @@ var gulp    = require('gulp'),
     notify  = require('gulp-notify');
 
 var paths = {
-  scripts: ["./modules/**/*.js", "./*.js"],
+  scripts: ["./app/modules/**/*.js", "./*.js"],
   server : {
-  express: './server.js',
+  express: './backend/server.js',
   specs  : [] 
   }
 };
@@ -24,7 +24,7 @@ gulp.task('nodemon', function() {
 
 gulp.task('build', ['jshint']);
 
-gulp.task('default', ['nodemon', 'watch']);
+gulp.task('default', ['nodemon', 'jshint', 'watch']);
 
 gulp.task('watch', function() {
   gulp.watch(paths.scripts, ['build']);
