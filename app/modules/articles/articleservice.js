@@ -7,7 +7,6 @@ angular.module('newsyApp.services.articles', [])
         collection: function(cb) {
           $http.get('/articles')
             .success(function(res){
-              console.log('get request success:' + res);
               cb(res);
             });
         }
@@ -16,7 +15,6 @@ angular.module('newsyApp.services.articles', [])
           $http.get('/getArticle', {
             params: {id : articleId}
           }).success(function(res){
-            console.log('getArticle request success:' + res);
             cb(res);
           })
         }
@@ -38,7 +36,6 @@ angular.module('newsyApp.services.articles', [])
           editIndex: editIndex,
           user: user
         }
-        console.log('paragraphInfo is, ', paragraphInfo);
         $http.post('/edit', paragraphInfo)
            .success(function(res){})
       }
@@ -51,7 +48,6 @@ angular.module('newsyApp.services.articles', [])
           sources: [source],
           user: user
         }
-        console.log(paragraphInfo)
         $http.post('/newEdit', paragraphInfo)
            .success(function(res){});
       }
@@ -73,7 +69,6 @@ angular.module('newsyApp.services.articles', [])
           }).success(function(res){
             cb(res);
           }).error(function(res){
-            console.log('getTweets error:' + res);
             cb(res);
           })
         }

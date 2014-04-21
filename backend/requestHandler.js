@@ -5,7 +5,7 @@ var apiKeys       = require('./../config.js'),
     path          = require("path"),
     querystring   = require("querystring"),
     request       = require('request'),
-    routingConfig = require ('../app/routingConfig.js'),
+    routingConfig = require('../app/routingConfig.js'),
     url           = require("url");
 
 var currentUserName;
@@ -20,7 +20,7 @@ var MongoClient = require('mongodb').MongoClient,
     mongoclient = new MongoClient(new Server('localhost', 27017)),
     db          = mongoclient.db('newsapp');
 
-mongoclient.open(function(error, mongoclient) {
+mongoclient.open(function (error, mongoclient) {
     if(error) throw error;
 });
 
