@@ -6,7 +6,7 @@ var gulp    = require('gulp'),
 var paths = {
   scripts: ["./modules/**/*.js", "./*.js"],
   server : {
-  express: './server.js',
+  express: './backend/server.js',
   specs  : [] 
   }
 };
