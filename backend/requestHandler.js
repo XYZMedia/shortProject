@@ -319,14 +319,11 @@ exports.getTweets = function(req, res) {
     var CONSUMER_SECRET = apiKeys.twitterConsumerSecret;
     var keySecret       = CONSUMER_KEY + ":" + CONSUMER_SECRET;
     var keySecret64     = new Buffer(keySecret, 'utf8').toString('base64');
-    var headersWithKey = { 
-      'User-Agent': 'request',
-      'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
-      'Authorization': 'Basic ' + keySecret64 };
+    var headersWithKey = { 'User-Agent':'request', 'Content-Type':'application/x-www-form-urlencoded; charset=utf-8','Authorization':'Basic ' + keySecret64 };
     var url = 'https://api.twitter.com/oauth2/token';
-
+    var qs = require('querystring');
     request.post({url:url, headers:headersWithKey,
-      querystring:{ 'grant_type': 'client_credentials' }
+      qs:{ 'grant_type': 'client_credentials' }
     }, function (e, r, body) {
       var twitterBearerToken = body;
       twitterBearerToken = JSON.parse(twitterBearerToken);
@@ -336,7 +333,7 @@ exports.getTweets = function(req, res) {
       hashtags = hashtags.replace("#", "%23");
       var twitterSearchUrl = 'https://api.twitter.com/1.1/search/tweets.json?q=' + hashtags + '&count=12';
       
-      request.get({url:twitterSearchUrl, headers:headersWithToken, querystring:{} }, function (e, r, body) {
+      request.get({url:twitterSearchUrl, headers:headersWithToken, qs:{} }, function (e, r, body) {
         body = JSON.parse(body);
         res.send(200, body);
       });
