@@ -1,6 +1,7 @@
+
 'use strict';
 
-angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles'])
+angular.module('newsyApp.controllers.onearticle', [])
   .controller('OneArticleController', ['$scope','$routeParams', '$location', '$modal', '$log', '$sce', '$cookieStore', 'Articles',
     function($scope, $routeParams, $location, $modal, $log, $sce, $cookieStore, Articles) {
       

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('newsyApp.controllers.header', ['newsyApp.services.user'])
+angular.module('newsyApp.controllers.header', [])
   .controller('HeaderController', ['$scope', '$location', 'userService', '$cookieStore', 
     function($scope, $location, userService, $cookieStore) {
 

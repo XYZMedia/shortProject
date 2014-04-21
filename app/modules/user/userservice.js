@@ -30,9 +30,9 @@ angular.module('newsyApp.services.user', [])
           };
 
           $http.post('/signup', userInfo)
-            .success(function (res) { // res contains userInfo with updated role
-              if (res === 'false') {  //signup failed
-                $location.path('/signup'); // ASK
+            .success(function (res) {
+              if (res === 'false') {
+                $location.path('/signup');
               } else {
                 $location.path('/');
               }

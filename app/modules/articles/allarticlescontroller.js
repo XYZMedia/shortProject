@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('newsyApp.controllers.allarticles', ['newsyApp.services.articles'])
+angular.module('newsyApp.controllers.allarticles', [])
   .controller('AllArticlesController', ['$scope','$routeParams', '$location', 'Articles',
     function($scope, $routeParams, $location, Articles) {
 
