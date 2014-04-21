@@ -9,6 +9,8 @@ var app = angular.module('newsyApp',
   , 'newsyApp.controllers.onearticle'
   , 'newsyApp.controllers.allarticles'
   , 'newsyApp.controllers.newpost'
+  , 'newsyApp.services.articles'
+  , 'newsyApp.services.user'
   , 'ui.bootstrap'
   , 'xeditable'
   , 'ngCookies'

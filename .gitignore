@@ -3,5 +3,5 @@
 config.js
 
 backend/apiKeys.js
-node_modules/
 app/lib/
+node_modules/

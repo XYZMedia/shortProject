@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles'])
-  .controller('OneArticleController', ['$scope','$routeParams', '$location', '$modal', '$log', '$sce', '$cookieStore', 'Articles',
-    function($scope, $routeParams, $location, $modal, $log, $sce, $cookieStore, Articles) {
+angular.module('newsyApp.controllers.onearticle', [])
+  .controller('OneArticleController', ['$scope', '$location', '$modal', '$log', '$sce', '$cookieStore', 'Articles',
+    function($scope, $location, $modal, $log, $sce, $cookieStore, Articles) {
       
       $scope.articleId = $location.search().articleId;
 
@@ -23,11 +23,11 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
 //==========Timeline Functionality===========
       $scope.stringOrHTML = function(paragraph){
         if(typeof paragraph === 'string'){
-          return 'string'
+          return 'string';
         } else {
-          return 'HTML'
+          return 'HTML';
         }
-      }
+      };
 
       $scope.enableTimeline = function(){
         $scope.timelineActive = true;
@@ -36,7 +36,7 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
         var currentTextEdited = $scope.article.article.paragraphs;
 
         var updateText = function(){
-          $scope.currentEditIndex--
+          $scope.currentEditIndex--;
 
           var timelineEdit = $scope.timeline[$scope.currentEditIndex].article.paragraphs;
 
@@ -46,14 +46,14 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
 
           if($scope.currentEditIndex > 0){
             setTimeout(function(){
-              updateText()
-              $scope.$apply()
-            }, 1000)
-          }
-        }
+              updateText();
+              $scope.$apply();
+            }, 1000);
+          };
+        };
 
         updateText();
-      }
+      };
 
 //==========Twitter Functionality===========
       $scope.showHashtags = false;
@@ -83,11 +83,12 @@ angular.module('newsyApp.controllers.onearticle', ['newsyApp.services.articles']
           }
         });
 
+        //function to handle the result of modal closure
         modalInstance.result.then(function(refresh){
           if(refresh){
             $scope.findArticle();
           }
-        })
+        });
       };
 $scope.hashtags = "#obama1";
       $scope.getTweets = function(){
@@ -100,7 +101,6 @@ $scope.hashtags = "#obama1";
     //function to create the modal that gets displayed
     var ModalInstanceCtrl = function ($scope, $modalInstance, paragraph, paragraphIndex) {
 
-
       $scope.articleId = $location.search().articleId;
       $scope.modalHeader = 'Current Text:';
       $scope.currentText = paragraph.currentText;
@@ -111,15 +111,10 @@ $scope.hashtags = "#obama1";
       $scope.voteUp = function(editIndex){
         if(++this.proposedText.vote > 1){
           Articles.replaceParagraph($scope.articleId, paragraphIndex, editIndex, $cookieStore.get('currentUser').username);
-
           $scope.refresh = true;
         } else {
           Articles.voteUp($scope.articleId, paragraphIndex, editIndex);
         }
-
-      };
-
-      $scope.voteDown = function(){
       };
 
       $scope.newEdit = function(){
@@ -140,7 +135,7 @@ $scope.hashtags = "#obama1";
       $scope.getDiff = function(currentText, item){
         return $sce.trustAsHtml(diffString(currentText, item))
       };
-    }
+    };
 
 //==========Compare Text Functionality===========
 //==========Contained within Modal===========
@@ -152,7 +147,7 @@ $scope.hashtags = "#obama1";
         n = n.replace(/"/g, "&quot;");
 
         return n;
-    }
+    };
 
     function diffString( o, n ) {
       o = o.replace(/\s+$/, '');
