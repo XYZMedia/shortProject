@@ -21,7 +21,7 @@ var MongoClient = require('mongodb').MongoClient,
     db          = mongoclient.db('newsapp');
 
 mongoclient.open(function (error, mongoclient) {
-    if(error) throw error;
+    if (error) throw error;
 });
 
 
@@ -169,12 +169,17 @@ exports.newEdit = function(req, res) {
   db.collection('posts').findOne(query, function(err, post) {
     if(err) throw err;
 
-    var obj = {username: username, text: newEditText, url: sources, vote: 0}
+    var obj = {
+      username: username,
+      text: newEditText,
+      url: sources,
+      vote: 0
+    };
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText.push(obj);
     db.collection('posts').update(query, post, function(err, post){
       if(err) throw err;
-    })
-  })
+    });
+  });
 };
 
 exports.getArticle = function(req, res) {
@@ -223,7 +228,7 @@ exports.editParagraph = function(req, res){
       if(key !== '_id' && key !== 'timeline'){
         currentPost[key] = post[key];
       }
-    };
+    }
 
     post.timeline.push(currentPost);
 
@@ -314,8 +319,10 @@ exports.getTweets = function(req, res) {
     var CONSUMER_SECRET = apiKeys.twitterConsumerSecret;
     var keySecret       = CONSUMER_KEY + ":" + CONSUMER_SECRET;
     var keySecret64     = new Buffer(keySecret, 'utf8').toString('base64');
-
-    var headersWithKey = { 'User-Agent': 'request', 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8', 'Authorization': 'Basic ' + keySecret64 };
+    var headersWithKey = { 
+      'User-Agent': 'request',
+      'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+      'Authorization': 'Basic ' + keySecret64 };
     var url = 'https://api.twitter.com/oauth2/token';
 
     request.post({url:url, headers:headersWithKey,

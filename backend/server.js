@@ -18,7 +18,6 @@ app.configure(function() {
   app.get('/getArticle', handler.getArticle);
   app.post('/newEdit', handler.newEdit);
 
-
   app.post('/signup', handler.signup);
   app.post('/login', handler.login);
 
@@ -30,7 +29,6 @@ app.configure(function() {
 
   app.post('/hashtags', handler.hashtags);
   app.post('/getTweets', handler.getTweets);
-
 
   app.use(express.cookieParser());
   app.use(express.cookieSession(apiKeys.secret));
