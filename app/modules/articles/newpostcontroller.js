@@ -1,4 +1,5 @@
-'use strict';
+(function () {
+  'use strict';
 
 angular.module('newsyApp.controllers.newpost', ['newsyApp.services.articles', 'newsyApp.services.user'])
   .controller('NewPostController', ['$scope','$routeParams', '$location', 'Articles', 'userService',
@@ -8,3 +9,4 @@ angular.module('newsyApp.controllers.newpost', ['newsyApp.services.articles', 'n
         userService.newArticle($scope.url);
       };
 }]);
+}());
