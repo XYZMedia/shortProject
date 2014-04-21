@@ -1,4 +1,5 @@
-'use strict';
+(function () {
+  'use strict';
 
 angular.module('newsyApp.controllers.allarticles', [])
   .controller('AllArticlesController', ['$scope', '$location', 'Articles',
@@ -16,3 +17,4 @@ angular.module('newsyApp.controllers.allarticles', [])
       };
 
     }]);
+}());

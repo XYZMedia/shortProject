@@ -1,4 +1,5 @@
-'use strict';
+(function () {
+  'use strict';
 
 angular.module('newsyApp.services.articles', [])
   .factory('Articles', ['$http', '$rootScope', '$location', 
@@ -79,5 +80,6 @@ angular.module('newsyApp.services.articles', [])
             cb(res);
           });
         }
-      };
-  }])
+    };
+  }]);
+}());
