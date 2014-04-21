@@ -1,81 +1,84 @@
 'use strict';
 
 angular.module('newsyApp.services.articles', [])
-  .factory('Articles', ['$location', '$http',
-    function($location, $http) {
+  .factory('Articles', ['$http', '$rootScope', '$location', 
+    function ($http, $rootScope, $location) {
       return {
-        collection: function(cb) {
+        collection: function (cb) {
           $http.get('/articles')
-            .success(function(res){
-              console.log('get request success:' + res);
+            .success(function (res) {
               cb(res);
             });
-        }
+        },
 
-      , find: function(articleId, cb) {
+        find: function (articleId, cb) {
           $http.get('/getArticle', {
             params: {id : articleId}
-          }).success(function(res){
-            console.log('getArticle request success:' + res);
+          }).success(function (res) {
             cb(res);
-          })
-        }
+          });
+        },
 
-      , voteUp: function(articleId, paragraphIndex, editIndex) {
-        var paragraphInfo = {
-          articleId: articleId,
-          paragraphIndex: paragraphIndex,
-          editIndex: editIndex
-        }
-        $http.post('/voteUp', paragraphInfo)
-           .success(function(res){})
-      }
 
-      , replaceParagraph: function(articleId, paragraphIndex, editIndex, user) {
-        var paragraphInfo = {
-          articleId: articleId,
-          paragraphIndex: paragraphIndex,
-          editIndex: editIndex,
-          user: user
-        }
-        console.log('paragraphInfo is, ', paragraphInfo);
-        $http.post('/edit', paragraphInfo)
-           .success(function(res){})
-      }
+        newArticle: function(url){
+          $http.post('/newpost', {url: url})
+            .success(function(res){
+              $rootScope.articleId = JSON.parse(res);
+              $location.path('/article').search({ articleId: $rootScope.articleId });
 
-      , newEdit: function(articleId, paragraphIndex, newEditText, source, user) {
-        var paragraphInfo = {
-          articleId: articleId,
-          paragraphIndex: paragraphIndex,
-          newEditText: newEditText,
-          sources: [source],
-          user: user
-        }
-        console.log(paragraphInfo)
-        $http.post('/newEdit', paragraphInfo)
-           .success(function(res){});
-      }
+            });
+        },
 
-      , replaceHashtags: function(articleId, hashtags) {
+        voteUp: function (articleId, paragraphIndex, editIndex) {
+          var paragraphInfo = {
+            articleId: articleId,
+            paragraphIndex: paragraphIndex,
+            editIndex: editIndex
+          };
+          $http.post('/voteUp', paragraphInfo)
+             .success(function (res) {});
+        },
 
-        var tagObject = {
-          articleId : articleId,
-          hashtags  : hashtags
-        };
-        $http.post('/hashtags', tagObject)
-          .success();
+        replaceParagraph: function (articleId, paragraphIndex, editIndex, user) {
+          var paragraphInfo = {
+            articleId: articleId,
+            paragraphIndex: paragraphIndex,
+            editIndex: editIndex,
+            user: user
+          };
+          $http.post('/edit', paragraphInfo)
+             .success(function (res) {});
+        },
 
-      }
+        newEdit: function (articleId, paragraphIndex, newEditText, source, user) {
+          var paragraphInfo = {
+            articleId: articleId,
+            paragraphIndex: paragraphIndex,
+            newEditText: newEditText,
+            sources: [source],
+            user: user
+          };
+          $http.post('/newEdit', paragraphInfo)
+             .success(function (res) {});
+        },
 
-      , getTweets: function(hashtags, cb) {
+        replaceHashtags: function (articleId, hashtags) {
+          var tagObject = {
+            articleId : articleId,
+            hashtags  : hashtags
+          };
+          $http.post('/hashtags', tagObject)
+            .success(function (res) {});
+        },
+
+        getTweets: function (hashtags, cb) {
           $http.post('/getTweets', {
             data: {hashtags : hashtags}
-          }).success(function(res){
+          }).success(function (res) {
             cb(res);
-          }).error(function(res){
-            console.log('getTweets error:' + res);
+          }).error(function (res) {
             cb(res);
-          })
+          });
         }
-    }
+      };
   }])
