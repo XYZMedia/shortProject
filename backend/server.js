@@ -31,7 +31,9 @@ app.configure(function() {
   app.post('/getTweets', handler.getTweets);
 
   app.use(express.cookieParser());
-  app.use(express.cookieSession(apiKeys.secret));
+  app.use(express.cookieSession({
+    secret: 'hello'
+  }));
 
   app.listen(8080);
   console.log('Listening on port 8080');
