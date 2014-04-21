@@ -222,23 +222,11 @@ exports.editParagraph = function(req, res){
   db.collection('posts').findOne(query, function(err, post) {
     if(err) throw new Error('error on finding post for edit paragraph');
 
-    var currentPost = {};
-
-    for (var key in post){
-      if(key !== '_id' && key !== 'timeline'){
-        currentPost[key] = post[key];
-      }
-    }
-
-    post.timeline.push(currentPost);
-
     var contributor;
 
     db.collection('users').findOne({username: username}, function(err, foundUser){
       contributor = foundUser;
-      contributor.contribution = 1;
-
-
+      
       var contributors = post.article.contributors;
       var topContributors = post.article.topContributors;
       var contributorIndex;
@@ -246,6 +234,7 @@ exports.editParagraph = function(req, res){
 
       for (var i = 0; i < contributors.length; i++) {
         if( contributors[i].username === contributor.username ){
+          contributor = contributors[i];
           newContributor = false;
           contributorIndex = i;
           break;
@@ -254,25 +243,43 @@ exports.editParagraph = function(req, res){
 
       if( newContributor ){
         contributors.push(contributor);
+        console.log('new contributor ,', contributor);
       }else{
         contributors[contributorIndex].contribution++;
+        console.log('after 3', contributors);
         for (var i = contributorIndex - 1 ; i > -1 ; i--) {
           if( contributors[contributorIndex].contribution > contributors[i].contribution ){
             contributors[contributorIndex] = contributors[i];
+            console.log('252 , ', contributors)
             contributors[i] = contributor;
+            console.log('254 , ', contributors)
+            console.log('contributos after')
           }else{
             break;
           }
         }
+          console.log('contributors after reposition , ', contributors)
       }
 
       if( contributors.length > 0 ){
-        topContributors = contributors.slice(0,2);
+        topContributors = contributors.slice(0,3);
       }else{
         topContributors = [];
       }
+      console.log('contributors, ', contributors);
+      console.log('topContributors, ', topContributors);
       post.article.contributors = contributors;
       post.article.topContributors = topContributors;
+
+      var currentPost = {};
+
+      for (var key in post){
+        if(key !== '_id' && key !== 'timeline'){
+          currentPost[key] = post[key];
+        }
+      }
+
+      post.timeline.push(currentPost);
 
       newContributor = true;
 
