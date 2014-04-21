@@ -1,5 +1,7 @@
 .DS_Store
 
-backend/apiKeys.js
-node_modules/
+config.js
 
+backend/apiKeys.js
+app/lib/
+node_modules/
