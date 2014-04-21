@@ -27,13 +27,12 @@
         $ gulp
 
 8. Open an Internet browser and type in the URL http://127.0.0.1:8080/
-{<9>}![Main Page](/screenshots/mainpage.jpg "main page")
 
 ## What You Should See: ##
-{<8>}![Main Page](/screenshots/mainpage.jpg "main page")
-{<2>}![Sign Up](/screenshots/signup.jpg "sign up")
-{<3>}![New Post](/screenshots/newpost.jpg "newpost")
-{<4>}![Article Page](/screenshots/article.jpg "article")
-{<5>}![Proposed Edit Page](/screenshots/proposeEdit.jpg "edit")
-{<6>}![Vote](/screenshots/vote.jpg "vote")
-{<7>}![Timeline](/screenshots/timeline.jpg "timeline")
+![Main Page](/screenshots/mainpage.jpg "main page")
+![Sign Up](/screenshots/signup.jpg "sign up")
+![New Post](/screenshots/newpost.jpg "newpost")
+![Article Page](/screenshots/article.jpg "article")
+![Proposed Edit Page](/screenshots/proposeEdit.jpg "edit")
+![Vote](/screenshots/vote.jpg "vote")
+![Timeline](/screenshots/timeline.jpg "timeline")
