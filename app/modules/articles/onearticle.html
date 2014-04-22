@@ -46,7 +46,7 @@
   <!-- Twitter section -->
   <div class="col-md-2 col-sm-4 col-xs-12 twitterSection">
     <h5>Related Tweets</h5>
-      <div ng-repeat="tweet in tweets.statuses | limitTo:3">
+      <div ng-repeat="tweet in tweets.statuses | limitTo:15">
         <a href="{{tweet.user.url}}" class="twitterTitle">{{tweet.user.name}}</a>
         <h6 class="twitterTitle">{{tweet.text}}</h6>
       </div>

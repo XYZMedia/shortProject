@@ -338,7 +338,9 @@ exports.getTweets = function(req, res) {
       };
       
       hashtags = hashtags.replace("#", "%23");
-      var twitterSearchUrl = 'https://api.twitter.com/1.1/search/tweets.json?q=' + hashtags + '&count=12';
+      hashtags = hashtags.replace(" ", "+");
+
+      var twitterSearchUrl = 'https://api.twitter.com/1.1/search/tweets.json?q=' + hashtags + '&count=20';
       
       request.get({url:twitterSearchUrl, headers:headersWithToken, qs:{} }, function (e, r, body) {
         body = JSON.parse(body);

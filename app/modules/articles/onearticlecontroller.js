@@ -50,7 +50,7 @@ angular.module('newsyApp.controllers.onearticle', [])
               updateText();
               $scope.$apply();
             }, 1000);
-          };
+          }
         };
 
         updateText();
@@ -64,6 +64,9 @@ angular.module('newsyApp.controllers.onearticle', [])
           $scope.hashtags = '';
         }
         Articles.replaceHashtags($scope.articleId, $scope.hashtags);
+        Articles.getTweets($scope.hashtags, function(res){
+                $scope.tweets=res;
+        });
       };
 
 //==========Modal Functionality===========
@@ -91,7 +94,6 @@ angular.module('newsyApp.controllers.onearticle', [])
           }
         });
       };
-$scope.hashtags = "#obama1";
       $scope.getTweets = function(){
       Articles.getTweets($scope.hashtags, function(res){
         //not sure how to angularize this res object..
