@@ -123,7 +123,7 @@ angular.module('newsyApp.controllers.onearticle', [])
 
       $scope.voteUp = function(editIndex){
         if(!$scope.edits.editIndex){
-          if(++this.proposedText.vote > 1){
+          if(++this.proposedText.upVote > 1){
             Articles.replaceParagraph($scope.articleId, paragraphIndex, editIndex, $cookieStore.get('currentUser').username);
             $scope.refresh = true;
             $modalInstance.close($scope.refresh);
@@ -136,6 +136,7 @@ angular.module('newsyApp.controllers.onearticle', [])
 
       $scope.voteDown = function(editIndex){
         if(!$scope.edits.editIndex){
+          this.proposedText.downVote--;
           Articles.voteDown($scope.articleId, paragraphIndex, editIndex);
           $scope.edits.editIndex = true;            
         }

@@ -72,7 +72,7 @@
         <div ng-repeat="proposedText in proposedTexts" ng-init="proposedText.text = updateText(proposedText.text)">
           <div id="left">
             <p id="up"><span ng-click="voteUp($index)" class="glyphicon glyphicon-circle-arrow-up"</span>{{proposedText.upVote}}</p>
-            <p id="down"><span ng-click="voteDown($index)" class="glyphicon glyphicon-circle-arrow-down"</span>-{{proposedText.downVote}}</p>
+            <p id="down"><span ng-click="voteDown($index)" class="glyphicon glyphicon-circle-arrow-down"</span>{{proposedText.downVote}}</p>
           </div>
           <div id="right">
             <div>

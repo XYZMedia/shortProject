@@ -297,6 +297,7 @@ exports.editParagraph = function(req, res){
 };
 
 exports.voteDown = function(req, res) {
+  console.log('downvote')
   var articleId = req.body.articleId;
   var paragraphIndex = req.body.paragraphIndex;
   var editIndex = req.body.editIndex;
