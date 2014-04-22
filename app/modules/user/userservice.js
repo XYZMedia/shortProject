@@ -32,7 +32,7 @@ angular.module('newsyApp.services.user', [])
           $http.post('/signup', userInfo)
             .success(function (res) { // res contains userInfo with updated role
               if (res === 'false') {  //signup failed
-                $location.path('/signup'); // ASK
+                $rootScope.$broadcast('invalidSignUp', 'the username you provided is already in use. please provide a new username to continue');
               } else {
                 $location.path('/');
               }
@@ -52,7 +52,7 @@ angular.module('newsyApp.services.user', [])
           $http.post('/login', userInfo)
             .success(function (res) {
               if (res === '') {
-                //user info does not match
+                $rootScope.$broadcast('invalidLogIn', 'Username and password do not match or you do not have an account yet.');
               } else {
                 $location.path('/');
               }

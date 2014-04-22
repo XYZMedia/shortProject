@@ -7,15 +7,14 @@ app.config(['$routeProvider', '$locationProvider',
     function($routeProvider, $locationProvider) {
 
       var access = routingConfig.accessLevels;
-      //EUGENECHOI
       $routeProvider
+      
       .when('/',
               {
                 templateUrl: 'modules/articles/allarticles.html',
                 access: access.anon
               }
       )
-      //consolidate all routes to use location variables
 
       .when('/breakingnews',
               {
@@ -99,4 +98,10 @@ app.run(['$rootScope', '$location', '$cookieStore', 'userService', function ($ro
             }
         }
     });
+    $rootScope.$on('invalidSignUp', function(event, message){
+      alert(message);
+    });  
+    $rootScope.$on('invalidLogIn', function(event, message){
+      alert(message);
+    });   
 }]);

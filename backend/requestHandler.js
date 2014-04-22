@@ -173,7 +173,8 @@ exports.newEdit = function(req, res) {
       username: username,
       text: newEditText,
       url: sources,
-      vote: 0
+      upVote: 0,
+      downVote: 0
     };
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText.push(obj);
     db.collection('posts').update(query, post, function(err, post){
@@ -203,8 +204,8 @@ exports.voteUp = function(req, res) {
   db.collection('posts').findOne(query, function(err, post) {
     if(err) throw err;
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
-    proposedText.vote++;
-    var vote = proposedText.vote;
+    proposedText.upVote++;
+    var vote = proposedText.upVote;
 
     db.collection('posts').update(query, post, function(err, dontcare){
       if(err) throw err;
@@ -305,8 +306,8 @@ exports.voteDown = function(req, res) {
     if(err) throw err;
 
     var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
-    proposedText.vote--;
-    var vote = proposedText.vote;
+    proposedText.downVote--;
+    var vote = proposedText.downVote;
 
     db.collection('posts').update(query, post, function(err, dontcare){
       if(err) throw err;
