@@ -50,7 +50,7 @@ angular.module('newsyApp.controllers.onearticle', [])
               updateText();
               $scope.$apply();
             }, 1000);
-          };
+          }
         };
 
         updateText();
@@ -91,7 +91,7 @@ angular.module('newsyApp.controllers.onearticle', [])
           }
         });
       };
-$scope.hashtags = "#obama1";
+
       $scope.getTweets = function(){
       Articles.getTweets($scope.hashtags, function(res){
         //not sure how to angularize this res object..
@@ -108,19 +108,39 @@ $scope.hashtags = "#obama1";
       $scope.proposedTexts = paragraph.proposedText;
       $scope.showEdit = false;
       $scope.refresh = false;
+      $scope.edits = {};
+
+      $scope.updateText = function(text){
+        if(typeof text === 'string'){
+          return $sce.trustAsHtml(diffString($scope.currentText, text));
+        } else {
+          return text;
+        }
+      };
 
       $scope.voteUp = function(editIndex){
-        if(++this.proposedText.vote > 1){
-          Articles.replaceParagraph($scope.articleId, paragraphIndex, editIndex, $cookieStore.get('currentUser').username);
-          $scope.refresh = true;
-        } else {
-          Articles.voteUp($scope.articleId, paragraphIndex, editIndex);
+        if(!$scope.edits.editIndex){
+          if(++this.proposedText.vote > 1){
+            Articles.replaceParagraph($scope.articleId, paragraphIndex, editIndex, $cookieStore.get('currentUser').username);
+            $scope.refresh = true;
+            $modalInstance.close($scope.refresh);
+          } else {
+            Articles.voteUp($scope.articleId, paragraphIndex, editIndex);
+            $scope.edits.editIndex = true;            
+          }
+        }
+      };
+
+      $scope.voteDown = function(editIndex){
+        if(!$scope.edits.editIndex){
+          Articles.voteDown($scope.articleId, paragraphIndex, editIndex);
+          $scope.edits.editIndex = true;            
         }
       };
 
       $scope.newEdit = function(){
         $scope.showEdit = true;
-        $scope.modalHeader = "Proposed Edit:";
+        $scope.modalHeader = 'Proposed Edit:';
       };
 
       $scope.submit = function(currentText, source){
@@ -150,9 +170,9 @@ $scope.hashtags = "#obama1";
         return n;
     }
 
-    function diffString( o, n ) {
-      o = o.replace(/\s+$/, '');
-      n = n.replace(/\s+$/, '');
+    function diffString( oldString, newString ) {
+      var o = oldString.replace(/\s+$/, '');
+      var n = newString.replace(/\s+$/, '');
 
       var out = diff(o == "" ? [] : o.split(/\s+/), n == "" ? [] : n.split(/\s+/) );
       var str = "";

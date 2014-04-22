@@ -227,6 +227,17 @@ exports.editParagraph = function(req, res){
     db.collection('users').findOne({username: username}, function(err, foundUser){
       contributor = foundUser;
       
+
+      var currentPost = {};
+
+      for (var key in post){
+        if(key !== '_id' && key !== 'timeline'){
+          currentPost[key] = post[key];
+        }
+      }
+
+      post.timeline.push(currentPost);
+
       var contributors = post.article.contributors;
       var topContributors = post.article.topContributors;
       var contributorIndex;
@@ -270,17 +281,6 @@ exports.editParagraph = function(req, res){
       console.log('topContributors, ', topContributors);
       post.article.contributors = contributors;
       post.article.topContributors = topContributors;
-
-      var currentPost = {};
-
-      for (var key in post){
-        if(key !== '_id' && key !== 'timeline'){
-          currentPost[key] = post[key];
-        }
-      }
-
-      post.timeline.push(currentPost);
-
       newContributor = true;
 
       var proposedText = post.article.paragraphs[paragraphIndex].proposedText[editIndex];
