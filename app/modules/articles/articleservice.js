@@ -39,6 +39,16 @@ angular.module('newsyApp.services.articles', [])
              .success(function (res) {});
         },
 
+        voteDown: function (articleId, paragraphIndex, editIndex) {
+          var paragraphInfo = {
+            articleId: articleId,
+            paragraphIndex: paragraphIndex,
+            editIndex: editIndex
+          };
+          $http.post('/voteDown', paragraphInfo)
+             .success(function (res) {});
+        },
+
         replaceParagraph: function (articleId, paragraphIndex, editIndex, user) {
           var paragraphInfo = {
             articleId: articleId,

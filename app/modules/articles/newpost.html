@@ -1,11 +1,17 @@
 <div class="row" data-ng-controller="NewPostController">
-  <h1>Post a new article</h1>
-    <form role="form">
-      <div class="form-group">
-        <label>Article</label>
-        <input type="text" class="form-control" placeholder="Enter the URL here" ng-model="url">
-      </div>
-        <button type="submit" class="btn btn-info" ng-click="submit()">Submit</button>
-    </form>
-  <br>
+  <div ng-hide="showLoading">
+    <h1>Post a new article</h1>
+      <form role="form">
+        <div class="form-group">
+          <label>Article</label>
+          <input type="text" class="form-control" placeholder="Enter the URL here" ng-model="url">
+        </div>
+          <button type="submit" class="btn btn-info" ng-click="submit()">Submit</button>
+      </form>
+    </div>
+    <div ng-show="showLoading" class="loadingDiv">
+      <h3>Now scraping data from source</h3>
+      <h4>We'll redirect you automatically once it's finished</h4>
+      <img class="loadingImg" src="http://www.barakabits.com/wp-content/themes/barakabits/images/loading-animation.gif">
+    </div>
 </div>

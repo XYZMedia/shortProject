@@ -4,7 +4,7 @@
 angular.module('newsyApp.controllers.allarticles', [])
   .controller('AllArticlesController', ['$scope', '$location', 'Articles',
     function ($scope, $location, Articles) {
-
+      
       $scope.findArticles = function () {
         Articles.collection(function (res) {
           $scope.articles = res;
