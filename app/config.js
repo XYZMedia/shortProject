@@ -100,8 +100,8 @@ app.run(['$rootScope', '$location', '$cookieStore', 'userService', function ($ro
     });
     $rootScope.$on('invalidSignUp', function(event, message){
       alert(message);
-    });  
+    });
     $rootScope.$on('invalidLogIn', function(event, message){
       alert(message);
-    });   
+    });
 }]);

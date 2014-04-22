@@ -4,6 +4,7 @@
 angular.module('newsyApp.controllers.login', ['newsyApp.services.user'])
   .controller('LoginController', ['$scope', 'userService',
     function ($scope, userService) {
+      
       $scope.signup = function () {
         userService.signup($scope.email, $scope.image, $scope.username, $scope.password);
         $scope.email = '';
