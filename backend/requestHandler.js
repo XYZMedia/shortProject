@@ -17,7 +17,7 @@ var currentUserName;
 var MongoClient = require('mongodb').MongoClient,
     Server      = require('mongodb').Server,
     ObjectId    = require('mongodb').ObjectID,
-    mongoclient = new MongoClient(new Server('localhost', 27017)),
+    mongoclient = new MongoClient(new Server('localhost', '27017')),
     db          = mongoclient.db('newsapp');
 
 mongoclient.open(function (error, mongoclient) {
